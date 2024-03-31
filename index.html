@@ -43,11 +43,10 @@
   </div>
   <script>
     const gameBoard = document.getElementById('game-board');
+    const snakeBody = [{ x: 10, y: 10 }];
     const snake = document.getElementById('snake');
     const food = document.getElementById('food');
 
-    let snakeX = 10;
-    let snakeY = 10;
     let foodX = 5;
     let foodY = 5;
     let dx = 0;
@@ -64,20 +63,28 @@
       const keyPressed = event.key;
       switch (keyPressed) {
         case 'ArrowUp':
-          dx = 0;
-          dy = -1;
+          if (dy !== 1) {
+            dx = 0;
+            dy = -1;
+          }
           break;
         case 'ArrowDown':
-          dx = 0;
-          dy = 1;
+          if (dy !== -1) {
+            dx = 0;
+            dy = 1;
+          }
           break;
         case 'ArrowLeft':
-          dx = -1;
-          dy = 0;
+          if (dx !== 1) {
+            dx = -1;
+            dy = 0;
+          }
           break;
         case 'ArrowRight':
-          dx = 1;
-          dy = 0;
+          if (dx !== -1) {
+            dx = 1;
+            dy = 0;
+          }
           break;
       }
     }
@@ -100,67 +107,90 @@
         // horizontal swipe
         if (diffX > 0) {
           // swipe right
-          dx = 1;
-          dy = 0;
+          if (dx !== -1) {
+            dx = 1;
+            dy = 0;
+          }
         } else {
           // swipe left
-          dx = -1;
-          dy = 0;
+          if (dx !== 1) {
+            dx = -1;
+            dy = 0;
+          }
         }
       } else {
         // vertical swipe
         if (diffY > 0) {
           // swipe down
-          dx = 0;
-          dy = 1;
+          if (dy !== -1) {
+            dx = 0;
+            dy = 1;
+          }
         } else {
           // swipe up
-          dx = 0;
-          dy = -1;
+          if (dy !== 1) {
+            dx = 0;
+            dy = -1;
+          }
         }
       }
     }
 
     function updateGame() {
-      snakeX += dx;
-      snakeY += dy;
-      
-      if (snakeX < 0 || snakeX >= 20 || snakeY < 0 || snakeY >= 20) {
+      const newSnakeX = snakeBody[0].x + dx;
+      const newSnakeY = snakeBody[0].y + dy;
+
+      if (newSnakeX < 0 || newSnakeX >= 20 || newSnakeY < 0 || newSnakeY >= 20) {
         alert('Game Over! You hit the edge of the screen.');
         resetGame();
         return;
       }
 
-      // Randomly glitch the snake's position
-      if (Math.random() < 0.1) {
-        snakeX += Math.floor(Math.random() * 3) - 1;
-        snakeY += Math.floor(Math.random() * 3) - 1;
-      }
+      snakeBody.unshift({ x: newSnakeX, y: newSnakeY });
 
-      // Randomly spawn food outside the game board
-      if (Math.random() < 0.05) {
-        foodX = -1;
-        foodY = -1;
-      }
-
-      snake.style.left = snakeX * 20 + 'px';
-      snake.style.top = snakeY * 20 + 'px';
-
-      if (snakeX === foodX && snakeY === foodY) {
+      if (newSnakeX === foodX && newSnakeY === foodY) {
+        // Snake ate the food
         foodX = Math.floor(Math.random() * 20);
         foodY = Math.floor(Math.random() * 20);
-        food.style.left = foodX * 20 + 'px';
-        food.style.top = foodY * 20 + 'px';
+        // Make sure food doesn't spawn on the snake
+        while (snakeBody.some(segment => segment.x === foodX && segment.y === foodY)) {
+          foodX = Math.floor(Math.random() * 20);
+          foodY = Math.floor(Math.random() * 20);
+        }
+      } else {
+        // Remove the tail segment
+        snakeBody.pop();
       }
+
+      drawSnake();
+      drawFood();
+    }
+
+    function drawSnake() {
+      snake.innerHTML = '';
+      snakeBody.forEach(segment => {
+        const snakeSegment = document.createElement('div');
+        snakeSegment.style.width = '20px';
+        snakeSegment.style.height = '20px';
+        snakeSegment.style.backgroundColor = 'green';
+        snakeSegment.style.position = 'absolute';
+        snakeSegment.style.left = segment.x * 20 + 'px';
+        snakeSegment.style.top = segment.y * 20 + 'px';
+        snake.appendChild(snakeSegment);
+      });
+    }
+
+    function drawFood() {
+      food.style.left = foodX * 20 + 'px';
+      food.style.top = foodY * 20 + 'px';
     }
 
     function resetGame() {
-      snakeX = 10;
-      snakeY = 10;
+      snakeBody.length = 1;
+      snakeBody[0] = { x: 10, y: 10 };
       dx = 0;
       dy = 0;
-      snake.style.left = snakeX * 20 + 'px';
-      snake.style.top = snakeY * 20 + 'px';
+      drawSnake();
     }
 
     main();
