@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glitchy Snake</title>
+  <style>
+    body {
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #game-board {
+      width: 400px;
+      height: 400px;
+      background-color: #333;
+      position: relative;
+    }
+
+    #snake {
+      width: 20px;
+      height: 20px;
+      background-color: green;
+      position: absolute;
+    }
+
+    #food {
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-board">
+    <div id="snake"></div>
+    <div id="food"></div>
+  </div>
+  <script>
+    const gameBoard = document.getElementById('game-board');
+    const snake = document.getElementById('snake');
+    const food = document.getElementById('food');
+
+    let snakeX = 10;
+    let snakeY = 10;
+    let foodX = 5;
+    let foodY = 5;
+    let dx = 0;
+    let dy = 0;
+
+    function main() {
+      document.addEventListener('keydown', changeDirection);
+      gameBoard.addEventListener('touchstart', handleTouchStart);
+      gameBoard.addEventListener('touchmove', handleTouchMove);
+      setInterval(updateGame, 1000 / 10);
+    }
+
+    function changeDirection(event) {
+      const keyPressed = event.key;
+      switch (keyPressed) {
+        case 'ArrowUp':
+          dx = 0;
+          dy = -1;
+          break;
+        case 'ArrowDown':
+          dx = 0;
+          dy = 1;
+          break;
+        case 'ArrowLeft':
+          dx = -1;
+          dy = 0;
+          break;
+        case 'ArrowRight':
+          dx = 1;
+          dy = 0;
+          break;
+      }
+    }
+
+    let startX = 0;
+    let startY = 0;
+
+    function handleTouchStart(event) {
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    }
+
+    function handleTouchMove(event) {
+      event.preventDefault();
+      const endX = event.touches[0].clientX;
+      const endY = event.touches[0].clientY;
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        // horizontal swipe
+        if (diffX > 0) {
+          // swipe right
+          dx = 1;
+          dy = 0;
+        } else {
+          // swipe left
+          dx = -1;
+          dy = 0;
+        }
+      } else {
+        // vertical swipe
+        if (diffY > 0) {
+          // swipe down
+          dx = 0;
+          dy = 1;
+        } else {
+          // swipe up
+          dx = 0;
+          dy = -1;
+        }
+      }
+    }
+
+    function updateGame() {
+      snakeX += dx;
+      snakeY += dy;
+      
+      if (snakeX < 0 || snakeX >= 20 || snakeY < 0 || snakeY >= 20) {
+        alert('Game Over! You hit the edge of the screen.');
+        resetGame();
+        return;
+      }
+
+      // Randomly glitch the snake's position
+      if (Math.random() < 0.1) {
+        snakeX += Math.floor(Math.random() * 3) - 1;
+        snakeY += Math.floor(Math.random() * 3) - 1;
+      }
+
+      // Randomly spawn food outside the game board
+      if (Math.random() < 0.05) {
+        foodX = -1;
+        foodY = -1;
+      }
+
+      snake.style.left = snakeX * 20 + 'px';
+      snake.style.top = snakeY * 20 + 'px';
+
+      if (snakeX === foodX && snakeY === foodY) {
+        foodX = Math.floor(Math.random() * 20);
+        foodY = Math.floor(Math.random() * 20);
+        food.style.left = foodX * 20 + 'px';
+        food.style.top = foodY * 20 + 'px';
+      }
+    }
+
+    function resetGame() {
+      snakeX = 10;
+      snakeY = 10;
+      dx = 0;
+      dy = 0;
+      snake.style.left = snakeX * 20 + 'px';
+      snake.style.top = snakeY * 20 + 'px';
+    }
+
+    main();
+  </script>
+</body>
+</html>
