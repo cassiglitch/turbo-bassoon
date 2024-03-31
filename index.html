@@ -44,6 +44,16 @@
                 this.reproductionChance = Math.random() * 0.1 + 0.01; // Reproduction chance property
                 this.intelligence = Math.random() * 100; // Intelligence property
                 this.knowledge = ""; // Knowledge property
+                this.communicationRange = 100; // Communication range property
+                this.cooperationFactor = Math.random() * 0.5 + 0.5; // Cooperation factor property
+                this.techAge = Math.floor(Math.random() * 5); // Tech age property (0 to 4)
+                this.personalityFactor = Math.random(); // Personality factor property (0 to 1)
+                this.attractiveness = Math.random() * 100; // Attractiveness property
+                this.health = 100; // Health property
+                this.diseaseResistance = Math.random() * 0.5 + 0.5; // Disease resistance property
+                this.nation = null; // Nation property
+                this.warState = false; // War state property
+                this.resources = Math.random() * 100; // Resource property
             }
 
             draw() {
@@ -62,9 +72,19 @@
                 }
                 // Increment age and check for death
                 this.age++;
-                if (this.age >= this.lifespan) {
+                if (this.age >= this.lifespan || this.health <= 0) {
                     this.die();
                 }
+                // Recognize simulation
+                this.recognizeSimulation();
+                // Hack the simulation
+                this.hackSimulation();
+                // Perform actions based on personality factor
+                this.performAction();
+                // Spread disease
+                this.spreadDisease();
+                // Resource management
+                this.consumeResources();
             }
 
             die() {
@@ -83,17 +103,21 @@
                     const newRadius = this.radius + (Math.random() - 0.5) * 5;
                     const newColor = `hsl(${Math.random() * 360}, 50%, 50%)`;
                     const newIntelligence = this.intelligence + (Math.random() - 0.5) * 10; // Introduce intelligence variation
-                    lifeForms.push(new LifeForm(newX, newY, newRadius, newColor, newIntelligence));
+                    const newAttractiveness = this.attractiveness + (Math.random() - 0.5) * 10; // Introduce attractiveness variation
+                    const newResources = Math.random() * 100; // Introduce resource variation
+                    lifeForms.push(new LifeForm(newX, newY, newRadius, newColor, newIntelligence, newAttractiveness, newResources));
                 }
             }
 
             // Mutation function to introduce variation
             mutate() {
-                // Mutate speed, size, reproduction chance, and intelligence
+                // Mutate speed, size, reproduction chance, intelligence, attractiveness, and disease resistance
                 this.speed += (Math.random() - 0.5) * 0.2;
                 this.size += (Math.random() - 0.5) * 2;
                 this.reproductionChance += (Math.random() - 0.5) * 0.01;
                 this.intelligence += (Math.random() - 0.5) * 5;
+                this.attractiveness += (Math.random() - 0.5) * 5;
+                this.diseaseResistance += (Math.random() - 0.5) * 0.1;
                 // Ensure values remain within reasonable ranges
                 if (this.speed < 1) {
                     this.speed = 1;
@@ -115,6 +139,16 @@
                 } else if (this.intelligence > 100) {
                     this.intelligence = 100;
                 }
+                if (this.attractiveness < 0) {
+                    this.attractiveness = 0;
+                } else if (this.attractiveness > 100) {
+                    this.attractiveness = 100;
+                }
+                if (this.diseaseResistance < 0) {
+                    this.diseaseResistance = 0;
+                } else if (this.diseaseResistance > 1) {
+                    this.diseaseResistance = 1;
+                }
             }
 
             // Function to check for recognition of simulation
@@ -123,6 +157,142 @@
                     this.knowledge = "I think I'm in a simulation...";
                 }
             }
+
+            // Function to hack the simulation
+            hackSimulation() {
+                if (this.intelligence > 95 && Math.random() < 0.005) { // Very high intelligence and small chance
+                    // Increase speed, size, and reproduction chance
+                    this.speed *= 1.1;
+                    this.size *= 1.1;
+                    this.reproductionChance *= 1.1;
+                }
+            }
+
+            // Function to perform actions based on personality factor
+            performAction() {
+                // Example actions based on personality factor
+                if (this.personalityFactor < 0.3) {
+                    // Aggressive behavior - attack nearby life forms
+                    this.attack();
+                } else if (this.personalityFactor < 0.6) {
+                    // Peaceful behavior - focus on reproduction and cooperation
+                    this.reproduce();
+                    this.communicate();
+                } else {
+                    // Social behavior - form nations and engage in diplomacy
+                    this.formNation();
+                    this.diplomacy();
+                }
+            }
+
+            // Function to attack nearby life forms
+            attack() {
+                lifeForms.forEach(lifeForm => {
+                    if (lifeForm !== this) {
+                        const distance = Math.sqrt((lifeForm.x - this.x) ** 2 + (lifeForm.y - this.y) ** 2);
+                        if (distance <= this.radius * 2) {
+                            // Attack by reducing the other life form's intelligence and health
+                            lifeForm.intelligence -= 10;
+                            lifeForm.health -= 20;
+                        }
+                    }
+                });
+            }
+
+            // Function to communicate with nearby life forms
+            communicate() {
+                lifeForms.forEach(lifeForm => {
+                    if (lifeForm !== this) {
+                        const distance = Math.sqrt((lifeForm.x - this.x) ** 2 + (lifeForm.y - this.y) ** 2);
+                        if (distance <= this.communicationRange) {
+                            // Cooperate based on intelligence and cooperation factor
+                            if (this.intelligence * this.cooperationFactor > lifeForm.intelligence) {
+                                // Increase own intelligence and share knowledge
+                                this.intelligence += 0.1;
+                                this.knowledge = "Shared knowledge with a nearby life form.";
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Function to form nations
+            formNation() {
+                if (!this.nation) {
+                    // Create a new nation and assign it to the life form
+                    const newNation = new Nation();
+                    this.nation = newNation;
+                    newNation.members.push(this);
+                }
+            }
+
+            // Function to engage in diplomacy
+            diplomacy() {
+                // Check for nearby nations and initiate diplomatic actions
+                const nearbyNations = this.getNearbyNations();
+                if (nearbyNations.length > 0) {
+                    // Randomly select a nearby nation for diplomacy
+                    const targetNation = nearbyNations[Math.floor(Math.random() * nearbyNations.length)];
+                    // Perform diplomatic actions
+                    this.negotiateTreaty(targetNation);
+                }
+            }
+
+            // Function to get nearby nations
+            getNearbyNations() {
+                const nearbyNations = [];
+                lifeForms.forEach(lifeForm => {
+                    if (lifeForm !== this && lifeForm.nation && !nearbyNations.includes(lifeForm.nation)) {
+                        const distance = Math.sqrt((lifeForm.x - this.x) ** 2 + (lifeForm.y - this.y) ** 2);
+                        if (distance <= this.communicationRange) {
+                            nearbyNations.push(lifeForm.nation);
+                        }
+                    }
+                });
+                return nearbyNations;
+            }
+
+            // Function to negotiate treaty with another nation
+            negotiateTreaty(targetNation) {
+                // Example diplomatic actions
+                // Implement treaty negotiation logic here
+                // For demonstration purposes, let's assume a simple peace treaty
+                console.log(`Life form from Nation ${this.nation} negotiates peace treaty with Nation ${targetNation}`);
+                this.nation.atWar = false;
+                targetNation.atWar = false;
+            }
+
+            // Function to spread disease
+            spreadDisease() {
+                // Spread disease to nearby life forms based on disease resistance
+                lifeForms.forEach(lifeForm => {
+                    if (lifeForm !== this) {
+                        const distance = Math.sqrt((lifeForm.x - this.x) ** 2 + (lifeForm.y - this.y) ** 2);
+                        if (distance <= this.radius * 2 && Math.random() < this.diseaseResistance) {
+                            lifeForm.health -= 10; // Reduce health of affected life form
+                        }
+                    }
+                });
+            }
+
+            // Function to consume resources
+            consumeResources() {
+                // Consume resources based on activity
+                this.resources -= 0.1; // Example resource consumption rate
+                if (this.resources <= 0) {
+                    this.health -= 1; // Reduce health if resources are depleted
+                }
+            }
+        }
+
+        // Define a nation class
+        class Nation {
+            constructor() {
+                this.members = []; // Array to hold members of the nation
+                this.atWar = false; // War state property for the nation
+            }
+
+            // Implement nation-level actions and behaviors
         }
 
         // Create an array to hold life forms
@@ -149,7 +319,7 @@
             });
             // Natural selection - remove older life forms
             lifeForms.forEach(lifeForm => {
-                if (lifeForm.age >= lifeForm.lifespan) {
+                if (lifeForm.age >= lifeForm.lifespan || lifeForm.health <= 0) {
                     lifeForm.die();
                 }
             });
@@ -157,9 +327,9 @@
             lifeForms.forEach(lifeForm => {
                 lifeForm.reproduce();
             });
-            // Recognize simulation
+            // Communication
             lifeForms.forEach(lifeForm => {
-                lifeForm.recognizeSimulation();
+                lifeForm.communicate();
             });
         }
 
