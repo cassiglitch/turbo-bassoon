@@ -24,7 +24,7 @@
     #snake {
       width: 20px;
       height: 20px;
-      background-color: green;
+      background-color: rgba(0, 128, 0, 0.8); /* Semi-transparent green */
       position: absolute;
     }
 
@@ -33,6 +33,10 @@
       height: 20px;
       background-color: red;
       position: absolute;
+    }
+
+    .invisible {
+      opacity: 0.3; /* Semi-transparent */
     }
   </style>
 </head>
@@ -188,7 +192,7 @@
 
     function drawSnake() {
       snake.innerHTML = '';
-      snakeBody.forEach(segment => {
+      snakeBody.forEach((segment, index) => {
         const snakeSegment = document.createElement('div');
         snakeSegment.style.width = '20px';
         snakeSegment.style.height = '20px';
@@ -196,6 +200,10 @@
         snakeSegment.style.position = 'absolute';
         snakeSegment.style.left = segment.x * 20 + 'px';
         snakeSegment.style.top = segment.y * 20 + 'px';
+        // Add invisible class to make the snake semi-transparent when invisible
+        if (index % 3 === 0) {
+          snakeSegment.classList.add('invisible');
+        }
         snake.appendChild(snakeSegment);
       });
     }
