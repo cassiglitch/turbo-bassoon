@@ -1,220 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Glitchy Snake</title>
-  <style>
-    body {
-      background-color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Simulation</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
 
-    #game-board {
-      width: 400px;
-      height: 400px;
-      background-color: #333;
-      position: relative;
-    }
-
-    #snake {
-      width: 20px;
-      height: 20px;
-      background-color: green;
-      position: absolute;
-    }
-
-    #food {
-      width: 20px;
-      height: 20px;
-      background-color: red;
-      position: absolute;
-    }
-  </style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: #000;
+        }
+    </style>
 </head>
 <body>
-  <div id="game-board">
-    <div id="snake"></div>
-    <div id="food"></div>
-  </div>
-  <script>
-    const gameBoard = document.getElementById('game-board');
-    const snakeBody = [{ x: 10, y: 10 }];
-    const snake = document.getElementById('snake');
-    const food = document.getElementById('food');
+    <canvas id="simulationCanvas"></canvas>
+    <script>
+        // Get the canvas element and its context
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
 
-    let foodX = 5;
-    let foodY = 5;
-    let dx = 0;
-    let dy = 0;
-    let speed = 10; // Initial speed
+        // Set canvas dimensions
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    function main() {
-      document.addEventListener('keydown', changeDirection);
-      gameBoard.addEventListener('touchstart', handleTouchStart);
-      gameBoard.addEventListener('touchmove', handleTouchMove);
-      setInterval(updateGame, 1000 / speed); // Initial speed
-    }
+        // Define a simple life form class
+        class LifeForm {
+            constructor(x, y, radius, color) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.color = color;
+                this.speed = Math.random() * 2 + 1; // Speed property
+                this.size = radius; // Size property
+                this.lifespan = Math.random() * 200 + 100; // Lifespan property
+                this.age = 0; // Age property
+                this.reproductionChance = Math.random() * 0.1 + 0.01; // Reproduction chance property
+                this.intelligence = Math.random() * 100; // Intelligence property
+                this.knowledge = ""; // Knowledge property
+            }
 
-    function changeDirection(event) {
-      const keyPressed = event.key;
-      switch (keyPressed) {
-        case 'ArrowUp':
-          if (dy !== 1) {
-            dx = 0;
-            dy = -1;
-          }
-          break;
-        case 'ArrowDown':
-          if (dy !== -1) {
-            dx = 0;
-            dy = 1;
-          }
-          break;
-        case 'ArrowLeft':
-          if (dx !== 1) {
-            dx = -1;
-            dy = 0;
-          }
-          break;
-        case 'ArrowRight':
-          if (dx !== -1) {
-            dx = 1;
-            dy = 0;
-          }
-          break;
-      }
-    }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
 
-    let startX = 0;
-    let startY = 0;
+            update() {
+                this.draw();
+                this.x += this.speed;
+                // Simulate wrapping around canvas
+                if (this.x - this.radius > canvas.width) {
+                    this.x = -this.radius;
+                }
+                // Increment age and check for death
+                this.age++;
+                if (this.age >= this.lifespan) {
+                    this.die();
+                }
+            }
 
-    function handleTouchStart(event) {
-      startX = event.touches[0].clientX;
-      startY = event.touches[0].clientY;
-    }
+            die() {
+                // Remove the life form from the simulation
+                const index = lifeForms.indexOf(this);
+                if (index !== -1) {
+                    lifeForms.splice(index, 1);
+                }
+            }
 
-    function handleTouchMove(event) {
-      event.preventDefault();
-      const endX = event.touches[0].clientX;
-      const endY = event.touches[0].clientY;
-      const diffX = endX - startX;
-      const diffY = endY - startY;
-      if (Math.abs(diffX) > Math.abs(diffY)) {
-        // horizontal swipe
-        if (diffX > 0) {
-          // swipe right
-          if (dx !== -1) {
-            dx = 1;
-            dy = 0;
-          }
-        } else {
-          // swipe left
-          if (dx !== 1) {
-            dx = -1;
-            dy = 0;
-          }
+            reproduce() {
+                if (Math.random() < this.reproductionChance) {
+                    // Create a new life form with slight variations
+                    const newX = this.x + (Math.random() - 0.5) * 50;
+                    const newY = this.y + (Math.random() - 0.5) * 50;
+                    const newRadius = this.radius + (Math.random() - 0.5) * 5;
+                    const newColor = `hsl(${Math.random() * 360}, 50%, 50%)`;
+                    const newIntelligence = this.intelligence + (Math.random() - 0.5) * 10; // Introduce intelligence variation
+                    lifeForms.push(new LifeForm(newX, newY, newRadius, newColor, newIntelligence));
+                }
+            }
+
+            // Mutation function to introduce variation
+            mutate() {
+                // Mutate speed, size, reproduction chance, and intelligence
+                this.speed += (Math.random() - 0.5) * 0.2;
+                this.size += (Math.random() - 0.5) * 2;
+                this.reproductionChance += (Math.random() - 0.5) * 0.01;
+                this.intelligence += (Math.random() - 0.5) * 5;
+                // Ensure values remain within reasonable ranges
+                if (this.speed < 1) {
+                    this.speed = 1;
+                } else if (this.speed > 3) {
+                    this.speed = 3;
+                }
+                if (this.size < 5) {
+                    this.size = 5;
+                } else if (this.size > 30) {
+                    this.size = 30;
+                }
+                if (this.reproductionChance < 0.01) {
+                    this.reproductionChance = 0.01;
+                } else if (this.reproductionChance > 0.2) {
+                    this.reproductionChance = 0.2;
+                }
+                if (this.intelligence < 0) {
+                    this.intelligence = 0;
+                } else if (this.intelligence > 100) {
+                    this.intelligence = 100;
+                }
+            }
+
+            // Function to check for recognition of simulation
+            recognizeSimulation() {
+                if (this.intelligence > 90 && Math.random() < 0.01) { // High intelligence and small chance
+                    this.knowledge = "I think I'm in a simulation...";
+                }
+            }
         }
-      } else {
-        // vertical swipe
-        if (diffY > 0) {
-          // swipe down
-          if (dy !== -1) {
-            dx = 0;
-            dy = 1;
-          }
-        } else {
-          // swipe up
-          if (dy !== 1) {
-            dx = 0;
-            dy = -1;
-          }
+
+        // Create an array to hold life forms
+        const lifeForms = [];
+
+        // Function to initialize life forms
+        function init() {
+            for (let i = 0; i < 50; i++) {
+                const radius = Math.random() * 20 + 10;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+                lifeForms.push(new LifeForm(x, y, radius, color));
+            }
         }
-      }
-    }
 
-    function updateGame() {
-      const newSnakeX = snakeBody[0].x + dx;
-      const newSnakeY = snakeBody[0].y + dy;
-
-      // Check if snake hits the wall
-      if (newSnakeX < 0 || newSnakeX >= 20 || newSnakeY < 0 || newSnakeY >= 20) {
-        alert('Game Over! You hit the edge of the screen.');
-        resetGame();
-        return;
-      }
-
-      // Randomly reverse direction
-      if (Math.random() < 0.05) {
-        dx = -dx;
-        dy = -dy;
-      }
-
-      // Randomly teleport the snake to a different location
-      if (Math.random() < 0.03) {
-        snakeBody[0] = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) };
-      } else {
-        snakeBody.unshift({ x: newSnakeX, y: newSnakeY });
-      }
-
-      // Check if snake eats the food
-      if (newSnakeX === foodX && newSnakeY === foodY) {
-        foodX = Math.floor(Math.random() * 20);
-        foodY = Math.floor(Math.random() * 20);
-        while (snakeBody.some(segment => segment.x === foodX && segment.y === foodY)) {
-          foodX = Math.floor(Math.random() * 20);
-          foodY = Math.floor(Math.random() * 20);
+        // Function to simulate evolution
+        function evolve() {
+            // Introduce mutation to life forms
+            lifeForms.forEach(lifeForm => {
+                if (Math.random() < 0.05) { // Chance of mutation
+                    lifeForm.mutate();
+                }
+            });
+            // Natural selection - remove older life forms
+            lifeForms.forEach(lifeForm => {
+                if (lifeForm.age >= lifeForm.lifespan) {
+                    lifeForm.die();
+                }
+            });
+            // Reproduction
+            lifeForms.forEach(lifeForm => {
+                lifeForm.reproduce();
+            });
+            // Recognize simulation
+            lifeForms.forEach(lifeForm => {
+                lifeForm.recognizeSimulation();
+            });
         }
-        // Increase snake length
-        snakeBody.push({ x: newSnakeX, y: newSnakeY });
-        // Increase speed
-        speed += 2;
-      } else {
-        // Remove the tail segment
-        snakeBody.pop();
-      }
 
-      // Draw the snake and food
-      drawSnake();
-      drawFood();
-      // Update game speed
-      clearInterval();
-      setInterval(updateGame, 1000 / speed);
-    }
+        // Function to animate life forms
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            evolve(); // Simulate evolution
+            lifeForms.forEach(lifeForm => {
+                lifeForm.update();
+            });
+            // Display knowledge
+            lifeForms.forEach(lifeForm => {
+                if (lifeForm.knowledge) {
+                    console.log(lifeForm.knowledge);
+                }
+            });
+        }
 
-    function drawSnake() {
-      snake.innerHTML = '';
-      snakeBody.forEach(segment => {
-        const snakeSegment = document.createElement('div');
-        snakeSegment.style.width = '20px';
-        snakeSegment.style.height = '20px';
-        snakeSegment.style.backgroundColor = 'green';
-        snakeSegment.style.position = 'absolute';
-        snakeSegment.style.left = segment.x * 20 + 'px';
-        snakeSegment.style.top = segment.y * 20 + 'px';
-        snake.appendChild(snakeSegment);
-      });
-    }
-
-    function drawFood() {
-      food.style.left = foodX * 20 + 'px';
-      food.style.top = foodY * 20 + 'px';
-    }
-
-    function resetGame() {
-      snakeBody.length = 1;
-      snakeBody[0] = { x: 10, y: 10 };
-      dx = 0;
-      dy = 0;
-      speed = 10; // Reset speed
-      drawSnake();
-    }
-
-    main();
-  </script>
+        // Initialize and start animation
+        init();
+        animate();
+    </script>
 </body>
 </html>
