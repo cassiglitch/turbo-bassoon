@@ -160,7 +160,7 @@ function drawInvincibilityAura() {
 }
 
 function drawEatingAnimation() {
-    const animationColor = 'rgba(0, 0, 255, 0.5)'; // Blue color with transparency
+    const animationColor = '#0000FF'; // Blue color without transparency
 
     const head = snake[0];
     const eatenSegments = snake.slice(1, eatingAnimationFrames + 1);
@@ -176,7 +176,7 @@ function drawEatingAnimation() {
         ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
 
         // Draw the animated segment
-        if (index === 0) {
+        if (index === 0 && animationFrame !== 0) {
             ctx.fillStyle = animationColor;
             ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
         } else if (nextSegment) {
