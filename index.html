@@ -160,10 +160,10 @@ function drawInvincibilityAura() {
 }
 
 function drawEatingAnimation() {
-    const animationColor = '#0000FF'; // Blue color without transparency
+    const animationColor = 'rgba(0, 0, 255, 1)'; // Standard blue color without transparency
 
-    const head = snake[snake.length - 1];
-    const tail = snake[0];
+    const head = snake[0];
+    const tail = snake[snake.length - 1];
     const eatenSegments = snake.slice(1, eatingAnimationFrames + 1).reverse();
 
     eatenSegments.forEach((segment, index) => {
@@ -179,17 +179,20 @@ function drawEatingAnimation() {
         // Draw the animated segment
         if (index === 0) {
             ctx.fillStyle = animationColor;
-            ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
+            const offsetY = Math.sin(animationFrame * 0.2) * 5; // Adjust the amplitude and frequency for desired effect
+            ctx.fillRect(segmentX, segmentY + offsetY, gridSize, gridSize);
         } else if (nextSegment) {
             const nextSegmentX = nextSegment.x * gridSize;
             const nextSegmentY = nextSegment.y * gridSize;
             ctx.fillStyle = animationColor;
-            ctx.fillRect(nextSegmentX, nextSegmentY, gridSize, gridSize);
+            const offsetY = Math.sin(animationFrame * 0.2) * 5; // Adjust the amplitude and frequency for desired effect
+            ctx.fillRect(nextSegmentX, nextSegmentY + offsetY, gridSize, gridSize);
         }
     });
 
     originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 }
+
 
 
         function getFoodColor(foodType) {
