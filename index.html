@@ -161,54 +161,33 @@ function drawInvincibilityAura() {
 
 function drawEatingAnimation() {
     const animationColor = 'rgba(0, 0, 255, 0.5)'; // Blue color with transparency
-    const segmentSize = gridSize; // Adjust segment size based on anti-zoom factor
-    const waveSize = 5 * antiZoomFactor; // Adjust the size of the wave based on anti-zoom factor
-    const maxFrames = 8; // Number of frames for the eating animation
 
     const head = snake[0];
     const eatenSegments = snake.slice(1, eatingAnimationFrames + 1);
 
     eatenSegments.forEach((segment, index) => {
         const animationFrame = eatingAnimationFrames - index;
-        const segmentX = segment.x * gridSize * antiZoomFactor;
-        const segmentY = segment.y * gridSize * antiZoomFactor;
-        const scaledOffset = (waveSize * (maxFrames - animationFrame) * antiZoomFactor);
-
-        // Draw the wave-like effect
-        for (let i = 0; i < 5; i++) {
-            drawSquare(segmentX, segmentY, segmentSize, scaledOffset, i);
-        }
+        const nextSegment = snake[index + 1];
+        const segmentX = segment.x * gridSize;
+        const segmentY = segment.y * gridSize;
 
         // Draw the original segment
-        drawSegment(segmentX, segmentY, segmentSize);
+        ctx.fillStyle = originalSnakeColor;
+        ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
+
+        // Draw the animated segment
+        if (index === 0) {
+            ctx.fillStyle = animationColor;
+            ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
+        } else if (nextSegment) {
+            const nextSegmentX = nextSegment.x * gridSize;
+            const nextSegmentY = nextSegment.y * gridSize;
+            ctx.fillStyle = animationColor;
+            ctx.fillRect(nextSegmentX, nextSegmentY, gridSize, gridSize);
+        }
     });
 
     originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
-}
-
-function drawSquare(x, y, size, offset, direction) {
-    ctx.fillStyle = animationColor;
-    switch (direction) {
-        case 0:
-            ctx.fillRect(x, y, size, size);
-            break;
-        case 1:
-            ctx.fillRect(x - offset, y, size, size);
-            break;
-        case 2:
-            ctx.fillRect(x + offset, y, size, size);
-            break;
-        case 3:
-            ctx.fillRect(x, y - offset, size, size);
-            break;
-        case 4:
-            ctx.fillRect(x, y + offset, size, size);
-            break;
-    }
-}
-
-function drawSegment(x, y, size) {
-    ctx.fillRect(x, y, size, size);
 }
 
 
