@@ -160,14 +160,13 @@ function drawInvincibilityAura() {
 }
 
 function drawEatingAnimation() {
-    const animationColor = 'rgba(0, 0, 255, 1)'; // Standard blue color without transparency
+    const animationColor = '#0000FF'; // Blue color without transparency
 
     const head = snake[0];
-    const tail = snake[snake.length - 1];
-    const eatenSegments = snake.slice(1, eatingAnimationFrames + 1).reverse();
+    const eatenSegments = snake.slice(1, eatingAnimationFrames + 1);
 
     eatenSegments.forEach((segment, index) => {
-        const animationFrame = index + 1;
+        const animationFrame = eatingAnimationFrames - index;
         const nextSegment = snake[index + 1];
         const segmentX = segment.x * gridSize;
         const segmentY = segment.y * gridSize;
@@ -177,16 +176,14 @@ function drawEatingAnimation() {
         ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
 
         // Draw the animated segment
-        if (index === 0) {
+        if (index === 0 && animationFrame !== 0) {
             ctx.fillStyle = animationColor;
-            const offsetY = Math.sin(animationFrame * 0.2) * 5; // Adjust the amplitude and frequency for desired effect
-            ctx.fillRect(segmentX, segmentY + offsetY, gridSize, gridSize);
+            ctx.fillRect(segmentX, segmentY, gridSize, gridSize);
         } else if (nextSegment) {
             const nextSegmentX = nextSegment.x * gridSize;
             const nextSegmentY = nextSegment.y * gridSize;
             ctx.fillStyle = animationColor;
-            const offsetY = Math.sin(animationFrame * 0.2) * 5; // Adjust the amplitude and frequency for desired effect
-            ctx.fillRect(nextSegmentX, nextSegmentY + offsetY, gridSize, gridSize);
+            ctx.fillRect(nextSegmentX, nextSegmentY, gridSize, gridSize);
         }
     });
 
