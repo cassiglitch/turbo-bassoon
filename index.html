@@ -168,12 +168,11 @@ function shootLaser(targetX, targetY) {
 
     // Check if the cooldown period has elapsed
     if (currentTime - lastLaserShot < laserCooldown) {
-        charging = true
-        drawInvincibilityAura()
+        charging = true;
         return; // Laser is still on cooldown
     } else {
         isShooting = true;
-charging = false
+        charging = false;
         // Calculate the angle and distance to the canvas edge
         const snakeHeadX = snake[0].x * gridSize;
         const snakeHeadY = snake[0].y * gridSize;
