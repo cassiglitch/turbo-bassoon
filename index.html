@@ -326,9 +326,11 @@ function draw() {
 
     // Layer 1: Draw Invincibility Aura
     if (isInvincible) {
-        drawInvincibilityAura();
+        drawInvincibilityAura('orange');
     }
-
+ if (charging === true){
+     drawInvincibilityAura('red');
+ }
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
         ctx.fillStyle = segment.color;
@@ -365,20 +367,30 @@ function draw() {
     drawLaser();
 }
 
-function drawInvincibilityAura() {
-    var deviceWidth, landscape = Math.abs(window.orientation) == 90
-            // workaround for strange screen.height on the iPhone (v3.1.3)
-            if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
-            else deviceWidth = window.screen[landscape ? "height" : "width"]
-            var zoomFactor = deviceWidth / window.innerWidth;
-            var antiZoomFactor = 1 / zoomFactor;
-        getZoomFactor()
-        snake.forEach((segment, index) => {
+function drawInvincibilityAura(colorName) {
+    // Mapping of color names to RGBA values
+    const colorMap = {
+        'red': 'rgba(255, 0, 0, 0.3)',
+        'green': 'rgba(0, 255, 0, 0.3)',
+        'blue': 'rgba(0, 0, 255, 0.3)',
+        // Add more colors as needed
+    };
+    
+    var deviceWidth, landscape = Math.abs(window.orientation) == 90;
+    // workaround for strange screen.height on the iPhone (v3.1.3)
+    if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320;
+    else deviceWidth = window.screen[landscape ? "height" : "width"];
+    var zoomFactor = deviceWidth / window.innerWidth;
+    var antiZoomFactor = 1 / zoomFactor;
+    getZoomFactor();
+    snake.forEach((segment, index) => {
         const shadowSize = 8 * antiZoomFactor; // Adjust the size of the shadow
-        ctx.fillStyle = 'rgba(255, 100, 0, 0.3)'; // Orange color with transparency
+        // Set color based on the input color name
+        ctx.fillStyle = colorMap[colorName.toLowerCase()] || 'rgba(255, 135, 0, 0.3)'; // Default to orange if color name not found
         ctx.fillRect(segment.x * gridSize - shadowSize, segment.y * gridSize - shadowSize, gridSize + shadowSize * 2, gridSize + shadowSize * 2);
     });
 }
+
 
 function drawEatingAnimation() {
     getZoomFactor()
