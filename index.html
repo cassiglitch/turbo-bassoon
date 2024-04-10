@@ -436,7 +436,7 @@ function drawAura() {
             var antiZoomFactor = 1 / zoomFactor;
         // Draw aura around the snake
     snake.forEach((segment, index) => {
-        let auraSize = chargeLevel * antiZoomFactor; // Adjust the size of the aura based on charge level
+        let auraSize = 10; // Adjust the size of the aura based on charge level
         let auraColor = `rgba(255, 0, 0, 0.5)`; // Red color with dynamic transparency based on charge level
         ctx.fillStyle = auraColor;
         ctx.fillRect(segment.x * gridSize - auraSize, segment.y * gridSize - auraSize, gridSize + auraSize * 2, gridSize + auraSize * 2);
