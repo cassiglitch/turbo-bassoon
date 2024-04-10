@@ -85,6 +85,7 @@
         let invincibilityDuration = 0;
         let isColliding = false;
         let collisionAnimationFrames = 10;
+        let charging = false;
         let isPaused = false;
         let originalSnakeColor = '#00FF00';
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
@@ -93,6 +94,49 @@
             else deviceWidth = window.screen[landscape ? "height" : "width"]
             var zoomFactor = deviceWidth / window.innerWidth;
             var antiZoomFactor = 1 / zoomFactor;
+
+        const laser = {
+    isShooting: false,
+    x1: 0,
+    y1: 0,
+    x2: 0,
+    y2: 0,
+    width: gridSize // Width of the laser (in pixels)
+};
+
+// Handle tap events for shooting the laser
+let tapStartX = 0;
+let tapStartY = 0;
+let tapEndX = 0;
+let tapEndY = 0;
+
+function handleTapStart(event) {
+    tapStartX = event.touches[0].clientX;
+    tapStartY = event.touches[0].clientY;
+}
+
+function handleTapEnd(event) {
+    tapEndX = event.changedTouches[0].clientX;
+    tapEndY = event.changedTouches[0].clientY;
+
+    // Calculate the distance between start and end points
+    const deltaX = Math.abs(tapEndX - tapStartX);
+    const deltaY = Math.abs(tapEndY - tapStartY);
+
+    // If the distance is small enough, treat it as a tap
+    if (deltaX < 10 && deltaY < 10) {
+        // Only shoot the laser if it's not already shooting
+        if (!laser.isShooting) {
+            const canvasRect = canvas.getBoundingClientRect();
+            const canvasX = tapEndX - canvasRect.left;
+            const canvasY = tapEndY - canvasRect.top;
+            shootLaser(canvasX, canvasY);
+        }
+    }
+}
+
+canvas.addEventListener('touchstart', handleTapStart);
+canvas.addEventListener('touchend', handleTapEnd);
 
 const laser = {
     isShooting: false,
@@ -167,8 +211,11 @@ function shootLaser(targetX, targetY) {
 
     // Check if the cooldown period has elapsed
     if (currentTime - lastLaserShot < laserCooldown) {
+        charging = true;
         return; // Laser is still on cooldown
     } else {
+        
+    charging = false;
         isShooting = true;
 
         // Calculate the angle and distance to the canvas edge
@@ -325,7 +372,9 @@ function draw() {
     if (isInvincible) {
         drawInvincibilityAura();
     }
-
+ if (charging){
+drawAura()
+ }
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
         ctx.fillStyle = segment.color;
@@ -415,6 +464,17 @@ eatenSegments.forEach((segment, index) => {
 originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 }
 
+// Function to draw the aura around the snake
+function drawAura() {
+    const shadowSize = chargeLevel * 20; // Adjust the size of the aura based on charge level
+    const auraColor = `rgba(255, 0, 0, ${chargeLevel * 0.3})`; // Red color with dynamic transparency based on charge level
+    
+    // Draw aura around the snake
+    snake.forEach((segment, index) => {
+        ctx.fillStyle = auraColor;
+        ctx.fillRect(segment.x * gridSize - shadowSize, segment.y * gridSize - shadowSize, gridSize + shadowSize * 2, gridSize + shadowSize * 2);
+    });
+}
 
         function getFoodColor(foodType) {
             switch (foodType) {
