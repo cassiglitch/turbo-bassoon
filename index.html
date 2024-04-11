@@ -338,7 +338,7 @@ function draw() {
 const numberOfTimes = 5;
 let repeatnumber = 0;
 
-if (!isFoodOrange && repeatnumber < 5) {
+if (isFoodOrange && repeatnumber < 5) {
     const interval = setInterval(() => {
         for (let i = 0; i < numberOfTimes; i++) {
             drawInvincibilityAura('green');
