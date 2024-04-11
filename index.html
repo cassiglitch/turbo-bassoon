@@ -330,7 +330,9 @@ function draw() {
     const currentTime = new Date().getTime();
  if (charging === true & !(currentTime - lastLaserShot < laserCooldown)){
      drawInvincibilityAura('red');
-     setTimeout(charging = false;, 1000)
+     setTimeout(() => {
+    charging = false;
+    }, 1000);
  }
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
