@@ -168,7 +168,6 @@ function shootLaser(targetX, targetY) {
 
     // Check if the cooldown period has elapsed
     if (currentTime - lastLaserShot < laserCooldown) {
-        charging = true;
         return; // Laser is still on cooldown
     } else {
         isShooting = true;
@@ -637,6 +636,7 @@ HaHaNoCollision(50)
             score = 0;
             isEating = false;
             eatingAnimationFrames = 0;
+            lives = 0.5
             spawnFood();
         }
 
