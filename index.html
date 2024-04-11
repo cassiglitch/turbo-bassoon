@@ -160,7 +160,7 @@ function drawLaser() {
 }
 
 let lastLaserShot = 0; // Timestamp of the last laser shot
-const laserCooldown = 5 * 1000; // Cooldown period in milliseconds (30 seconds)
+const laserCooldown = 15 * 1000; // Cooldown period in milliseconds (30 seconds)
 
 // Function to handle shooting the laser
 function shootLaser(targetX, targetY) {
@@ -525,15 +525,15 @@ function HaHaNoCollision(duration) {
     direction = directions[randomIndex];
     HaHaNoCollision(10)
                 } else if (food.type === 'invincibility') {
-HaHaNoCollision(100)
                 lives = (lives/2);
                 const numberOfTimes = 5;
-
+HaHaNoCollision(1)
 // Use a for loop to repeat the action
 for (let i = 0; i < numberOfTimes; i++) {
               setTimeout(drawInvincibilityAura('green'), 200);
                 setTimeout(drawInvincibilityAura('blue'), 200);
 }
+HaHaNoCollision(100)
                 } else {
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
