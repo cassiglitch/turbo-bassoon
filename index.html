@@ -525,7 +525,15 @@ function HaHaNoCollision(duration) {
     direction = directions[randomIndex];
     HaHaNoCollision(10)
                 } else if (food.type === 'invincibility') {
-HaHaNoCollision(50)
+HaHaNoCollision(100)
+                lives = (lives/2);
+                const numberOfTimes = 5;
+
+// Use a for loop to repeat the action
+for (let i = 0; i < numberOfTimes; i++) {
+              setTimeout(drawInvincibilityAura('green'), 200);
+                setTimeout(drawInvincibilityAura('blue'), 200);
+}
                 } else {
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
@@ -602,7 +610,7 @@ HaHaNoCollision(50)
         function generateFoodType() {
             // Adjust the probability for different types of food as needed
             const random = Math.random();
-            if (random <= 0.01) {
+            if (random <= 0.91) {
                 return 'invincibility';
             } else if (random <= 0.2) {
                 return 'superfood';
