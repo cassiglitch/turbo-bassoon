@@ -335,19 +335,19 @@ function draw() {
     charging = false;
     }, 1000);
  }
-const numberOfTimes = 5;
+const numberOfTimes = 2;
 let repeatnumber = 0;
 
-if (isFoodOrange && repeatnumber < 5) {
+if (isFoodOrange && repeatnumber < 2) {
     const interval = setInterval(() => {
         for (let i = 0; i < numberOfTimes; i++) {
             drawInvincibilityAura('green');
             setTimeout(() => {
                 drawInvincibilityAura('blue');
             }, 100);
+            repeatnumber++;
         }
-        repeatnumber++;
-        if (isFoodOrange || repeatnumber >= 5) {
+        if (isFoodOrange || repeatnumber >= 2) {
             clearInterval(interval);
         }
     }, 200);
