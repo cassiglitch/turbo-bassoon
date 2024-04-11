@@ -527,11 +527,11 @@ function HaHaNoCollision(duration) {
                 } else if (food.type === 'invincibility') {
                 lives = (lives/2);
                 const numberOfTimes = 5;
-HaHaNoCollision(1)
+HaHaNoCollision(100)
 // Use a for loop to repeat the action
 for (let i = 0; i < numberOfTimes; i++) {
-              setTimeout(drawInvincibilityAura('green'), 200);
-                setTimeout(drawInvincibilityAura('blue'), 200);
+                drawInvincibilityAura('green');
+                drawInvincibilityAura('blue');
 }
                 } else {
                     score += 1;
