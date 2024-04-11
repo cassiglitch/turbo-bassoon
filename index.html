@@ -335,21 +335,24 @@ function draw() {
     charging = false;
     }, 1000);
  }
- const numberOfTimes = 5;
- let repeatnumber = 0
-    if (isFoodOrange && repeatnumber <= 5 ) {
-    for (let i = 0; i < numberOfTimes; i++) {
-                drawInvincibilityAura('green');
-        setTimeout(() => {
-    isFoodOrange = false;
-    }, 100);
-   drawInvincibilityAura('blue');
-   setTimeout(() => {
-    isFoodOrange = true;
-    }, 100);
-    repeatnumber = (repeatnumber + 1)
+const numberOfTimes = 5;
+let repeatnumber = 0;
+
+if (!isFoodOrange && repeatnumber < 5) {
+    const interval = setInterval(() => {
+        for (let i = 0; i < numberOfTimes; i++) {
+            drawInvincibilityAura('green');
+            setTimeout(() => {
+                drawInvincibilityAura('blue');
+            }, 100);
+        }
+        repeatnumber++;
+        if (isFoodOrange || repeatnumber >= 5) {
+            clearInterval(interval);
+        }
+    }, 200);
 }
-    }
+
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
         ctx.fillStyle = segment.color;
