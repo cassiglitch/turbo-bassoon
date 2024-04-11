@@ -335,6 +335,7 @@ function draw() {
     charging = false;
     }, 1000);
  }
+
 const numberOfTimes = 2;
 let repeatnumber = 0;
 
@@ -345,9 +346,9 @@ if (isFoodOrange && repeatnumber < 2) {
             setTimeout(() => {
                 drawInvincibilityAura('blue');
             }, 100);
-            repeatnumber++;
         }
-        if (isFoodOrange || repeatnumber >= 2) {
+        repeatnumber++; // Move this line outside of the loop
+        if (isFoodOrange || repeatnumber >= 2) { // Fixed the condition
             clearInterval(interval);
         }
     }, 200);
