@@ -339,20 +339,15 @@ function draw() {
 const numberOfTimes = 2;
 let repeatnumber = 0;
 
-if (isFoodOrange && repeatnumber < 2) {
-    const interval = setInterval(() => {
+if (isFoodOrange = true;) {
         for (let i = 0; i < numberOfTimes; i++) {
             drawInvincibilityAura('green');
             setTimeout(() => {
                 drawInvincibilityAura('blue');
             }, 100);
         }
-        repeatnumber++; // Move this line outside of the loop
-        if (isFoodOrange || repeatnumber >= 2) { // Fixed the condition
-            clearInterval(interval);
-        }
-    }, 200);
-}
+isFoodOrange = false;
+
 
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
