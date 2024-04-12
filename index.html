@@ -100,6 +100,92 @@
             var antiZoomFactor = 1 / zoomFactor;
 
 
+
+// Define a function for Earth Bending - Earthquake ability
+// Define a function for Earth Bending - Earthquake ability with visual effects
+function triggerEarthquakeWithVisuals(context, canvas, obstacles) {
+    // Set the initial radius and maximum radius for the shockwave
+    let initialRadius = 10;
+    let maxRadius = Math.max(canvas.width, canvas.height);
+
+    // Define the shockwave animation function
+    function animateShockwave(radius) {
+        // Clear the canvas on each frame to draw the shockwave
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw a circle representing the shockwave
+        context.beginPath();
+        context.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
+        context.fillStyle = 'rgba(255, 0, 0, 0.2)'; // Semi-transparent red color
+        context.fill();
+
+        // Increase the radius for the next frame
+        radius += 10; // Adjust speed of expansion as needed
+
+        // Check if the shockwave has reached its maximum radius
+        if (radius <= maxRadius) {
+            // Request the next frame of animation
+            requestAnimationFrame(() => animateShockwave(radius));
+        } else {
+            // Once the shockwave animation is complete, trigger the earthquake
+            applyEarthquake(obstacles);
+        }
+    }
+
+    // Start the shockwave animation
+    animateShockwave(initialRadius);
+}
+
+// Define a function to apply the earthquake (without visual effects)
+function applyEarthquake(obstacles) {
+    // Iterate through obstacles
+    obstacles.forEach(obstacle => {
+        // Randomly decide whether to shift or collapse the obstacle
+        if (Math.random() < 0.5) {
+            // Shift the obstacle by a random amount
+            obstacle.x += Math.floor(Math.random() * 3) - 1; // Shift left or right by 1 grid
+            obstacle.y += Math.floor(Math.random() * 3) - 1; // Shift up or down by 1 grid
+            dynamicObstacle.x += Math.floor(Math.random() * 3) - 1; // Shift left or right by 1 grid
+            dynamicObstacle.y += Math.floor(Math.random() * 3) - 1; // Shift up or down by 1 grid
+        } else {
+            // Collapse the obstacle by removing it from the array
+            let index = obstacles.indexOf(obstacle);
+            obstacles.splice(index, 1);
+            let index2 = dynamicObstacles.indexOf(dynamicObstacle);
+            dynamicObstacles.splice(index2, 1);
+        }
+    });
+}
+
+// Define a function for Earth Bending - Tunneling ability
+function burrowThroughGround(snake, obstacles) {
+    // Move the snake through the ground by creating tunnels
+    for (let i = 0; i < 5; i++) { // Create 5 tunnels (adjust as needed)
+        // Calculate new position for tunnel
+        let newX = snake.head.x + Math.floor(Math.random() * 3) - 1; // Move left or right by 1 grid
+        let newY = snake.head.y + Math.floor(Math.random() * 3) - 1; // Move up or down by 1 grid
+
+        // Check if new position is within bounds
+        if (newX >= 0 && newX < gridSize && newY >= 0 && newY < gridSize) {
+            // Check if new position is not already occupied by an obstacle
+            let isOccupied = obstacles.some(obstacle => obstacle.x === newX && obstacle.y === newY);
+            let isOccupied2 = dynamicObstacles.some(dynamicObstacle => dynamicObstacle.x === newX && dynamicObstacle.y === newY);
+            if (!isOccupied) {
+                // Move snake's head to the new position
+                snake.head.x = newX;
+                snake.head.y = newY;
+
+                // Add the new position as an obstacle (creates a tunnel)
+                obstacles.push({ x: newX, y: newY });
+                dynamicObstacles.push({ x: newX, y: newY });
+            }
+        }
+    }
+
+    // Display visual effects for tunneling (optional)
+    // Your code to animate or visualize the tunneling effect goes here
+}
+
 // Define a function to shoot fire projectile
 function shootFire(obstacles, snakeHead) {
     let obstaclesWithinRange = [];
@@ -491,6 +577,8 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 
         function getFoodColor(foodType) {
             switch (foodType) {
+                case 'earth':
+                    return 'brown';
                 case 'ice':
                     return 'lightblue';
                 case 'normal':
@@ -504,7 +592,7 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
                 case 'invincibility':
                     return 'orange';
                 case 'firebending':
-                    return 'lightred';
+                    return 'pink';
             }
         }
 
@@ -595,6 +683,9 @@ HaHaNoCollision(100)
                     freeze = true;
                 } else if (food.type === 'firebending'){
                     shootFire(obstacles, snake[0])
+                    } else if (food.type === 'earth'){
+                    triggerEarthquakeWithVisuals(ctx, ctx, obstacles) 
+                    burrowThroughGround(snake[0], obstacles) 
                 }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
