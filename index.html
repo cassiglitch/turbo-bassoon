@@ -387,6 +387,8 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 
         function getFoodColor(foodType) {
             switch (foodType) {
+                case 'ice'
+                    return 'light'
                 case 'normal':
                     return 'red';
                 case 'superfood':
@@ -483,7 +485,10 @@ function HaHaNoCollision(duration) {
                 livecount = livecount + 1;
 HaHaNoCollision(100)
 // Use a for loop to repeat the action
-                } else{
+                } else if (food.type === 'ice') {
+                    freeze = true
+                    HaHaNoCollision(10)
+                }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
                 }
@@ -570,7 +575,7 @@ if (!freeze) {
             } else if (random <= 0.3) {
                 return 'teleport';
             } else if (random <= 0.1){
-                return 'freeze';
+                return 'ice';
             } else {
                 return 'normal';
             }
