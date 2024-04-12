@@ -99,6 +99,109 @@
             var zoomFactor = deviceWidth / window.innerWidth;
             var antiZoomFactor = 1 / zoomFactor;
 
+
+// Define a function to shoot fire projectile
+function shootFire(obstacles, snakeHead) {
+    let obstaclesWithinRange = [];
+
+    // Iterate through obstacles to find ones within range
+    obstacles.forEach(obstacle => {
+        // Calculate distance between obstacle and snake's head
+        let distance = Math.abs(obstacle.x - snakeHead.x) + Math.abs(obstacle.y - snakeHead.y);
+
+        // If obstacle is within range, add it to the array
+        if (distance <= 10) {
+            obstaclesWithinRange.push(obstacle);
+        }
+    });
+
+    // If there are obstacles within range, shoot fire at them
+    if (obstaclesWithinRange.length > 0) {
+        obstaclesWithinRange.forEach(obstacle => {
+            // Shoot fire projectile at obstacle
+            shootProjectile(snakeHead.x, snakeHead.y, obstacle.x, obstacle.y);
+        });
+    } else {
+        // If no obstacles within range, find the closest one
+        let closestObstacle = findClosestObstacle(obstacles, snakeHead);
+        
+        // Shoot fire projectile at closest obstacle
+        shootProjectile(snakeHead.x, snakeHead.y, closestObstacle.x, closestObstacle.y);
+    }
+}
+
+// Define a function to animate firing of projectile
+// Define a function to animate firing of projectile
+function shootProjectile(startX, startY, targetX, targetY) {
+    // Create a new projectile object
+    let projectile = {
+        startX: startX,
+        startY: startY,
+        targetX: targetX,
+        targetY: targetY,
+        speed: 5, // Adjust speed as needed
+        active: true // Indicates whether the projectile is active or not
+    };
+
+    // Add the projectile to a list of active projectiles
+    activeProjectiles.push(projectile);
+
+    // Start animation loop for the projectile
+    animateProjectile(projectile);
+}
+
+// Define a function to animate the movement of the projectile
+function animateProjectile(projectile) {
+    // Your animation logic goes here
+    // For example, you can use HTML5 Canvas to draw the projectile and update its position
+    // This is just a simple example, you can customize it based on your game's graphics system
+
+    // Calculate the distance between current position and target position
+    let dx = projectile.targetX - projectile.startX;
+    let dy = projectile.targetY - projectile.startY;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+
+    // Calculate the unit vector for direction
+    let directionX = dx / distance;
+    let directionY = dy / distance;
+
+    // Move the projectile towards the target position
+    projectile.startX += directionX * projectile.speed;
+    projectile.startY += directionY * projectile.speed;
+
+    // Check if the projectile has reached the target position
+    if (Math.abs(projectile.startX - projectile.targetX) < 1 && Math.abs(projectile.startY - projectile.targetY) < 1) {
+        // Deactivate the projectile
+        projectile.active = false;
+    } else {
+        // Request next frame of animation
+        requestAnimationFrame(() => animateProjectile(projectile));
+    }
+}
+
+
+// Define a function to delete obstacles hit by fire after 5 iterations
+function deleteHitObstacles(obstacles, fireProjectiles) {
+    // Iterate through fire projectiles
+    fireProjectiles.forEach(projectile => {
+        // Iterate through obstacles
+        obstacles.forEach((obstacle, index) => {
+            // Check if obstacle is hit by fire projectile
+            if (obstacle.x === projectile.targetX && obstacle.y === projectile.targetY) {
+                // Remove obstacle from array
+                obstacles.splice(index, 1);
+                // Remove fire projectile from array or mark it as inactive
+                projectile.active = false; // Assuming fire projectile has an 'active' property
+                console.log(`Obstacle at (${obstacle.x}, ${obstacle.y}) hit by fire and deleted`);
+            }
+        });
+    });
+}
+
+// Example usage:
+// Call shootFire function when you want to shoot fire
+// Call deleteHitObstacles function after 5 iterations of game loop
+
 const laser = {
     isShooting: false,
     x1: 0,
@@ -400,6 +503,8 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
                     return 'blue';
                 case 'invincibility':
                     return 'orange';
+                case 'firebending':
+                    return 'darkred';
             }
         }
 
@@ -488,6 +593,8 @@ HaHaNoCollision(100)
 // Use a for loop to repeat the action
                 } else if (food.type === 'ice') {
                     freeze = true;
+                } else if (food.type === 'firebending'){
+                    shootFire(obstacles, snake[0])
                 }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
@@ -576,6 +683,8 @@ if (!freeze) {
                 return 'teleport';
             } else if (random <= 0.5){
                 return 'ice';
+                 } else if (random <= 0.51){
+                return 'firebending';
             } else {
                 return 'normal';
             }
