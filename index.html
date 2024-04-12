@@ -88,6 +88,7 @@
         let isPaused = false;
         let charging = false;
         let freeze = false;
+        let freezetimer = 5;
         let isFoodOrange = false;
         let livecount = 2; 
         let originalSnakeColor = '#00FF00';
@@ -282,7 +283,7 @@ if (freeze === true) {
                     drawInvincibilityAura('blue');
 setTimeout(() => {
     freeze = false;
-            }, 400);
+            },freezetimer * 1000);
 
 }
     // Layer 2: Draw Snake Body
@@ -486,8 +487,7 @@ function HaHaNoCollision(duration) {
 HaHaNoCollision(100)
 // Use a for loop to repeat the action
                 } else if (food.type === 'ice') {
-                    freeze = true
-                    HaHaNoCollision(10)
+                    freeze = true;
                 }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
@@ -574,7 +574,7 @@ if (!freeze) {
                 return 'poison';
             } else if (random <= 0.3) {
                 return 'teleport';
-            } else if (random <= 0.9){
+            } else if (random <= 0.5){
                 return 'ice';
             } else {
                 return 'normal';
