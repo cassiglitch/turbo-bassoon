@@ -388,7 +388,7 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
         function getFoodColor(foodType) {
             switch (foodType) {
                 case 'ice':
-                    return 'green';
+                    return 'lightblue';
                 case 'normal':
                     return 'red';
                 case 'superfood':
@@ -574,7 +574,7 @@ if (!freeze) {
                 return 'poison';
             } else if (random <= 0.3) {
                 return 'teleport';
-            } else if (random <= 0.1){
+            } else if (random <= 0.9){
                 return 'ice';
             } else {
                 return 'normal';
