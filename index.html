@@ -87,6 +87,7 @@
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
+        let freeze = false;
         let isFoodOrange = false;
         let livecount = 2; 
         let originalSnakeColor = '#00FF00';
@@ -277,6 +278,13 @@ setTimeout(() => {
 
 }
 
+if (freeze === true) {
+                    drawInvincibilityAura('blue');
+setTimeout(() => {
+    freeze = false;
+            }, 400);
+
+}
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
         ctx.fillStyle = segment.color;
@@ -389,6 +397,8 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
                     return 'blue';
                 case 'invincibility':
                     return 'orange';
+                case 'freeze'
+                    return 'lightblue';
             }
         }
 
@@ -470,12 +480,14 @@ function HaHaNoCollision(duration) {
     direction = directions[randomIndex];
     HaHaNoCollision(10)
                 } else if (food.type === 'invincibility') {
-                isFoodOrange = true; 
+          isFoodOrange = true;
                 lives = (lives/2);
                 livecount = livecount + 1;
 HaHaNoCollision(100)
 // Use a for loop to repeat the action
-                } else {
+                } else if (food.type === 'freeze'){
+                    freeze = true;
+                } else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
                 }
@@ -494,6 +506,7 @@ HaHaNoCollision(100)
         snake.pop();
         snake.unshift(head);
 
+if (!freeze) {
         // Move Dynamic Obstacles
         dynamicObstacles.forEach(obstacle => {
             if (obstacle.id === 1) {
@@ -510,6 +523,7 @@ HaHaNoCollision(100)
                 }
             }
         });
+}
     }
 
             // Check for victory
@@ -559,6 +573,8 @@ HaHaNoCollision(100)
                 return 'poison';
             } else if (random <= 0.3) {
                 return 'teleport';
+            } else if (random <= 0.1){
+                return 'freeze';
             } else {
                 return 'normal';
             }
