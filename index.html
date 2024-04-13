@@ -110,8 +110,8 @@ function triggerEarthquakeWithVisuals(context, canvas, obstacles) {
 
     // Define the shockwave animation function
     function animateShockwave(radius) {
-        // Clear the canvas on each frame to draw the shockwave
-
+        // Clear the canvas on each frame to draw the 
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Draw a circle representing the shockwave
         context.beginPath();
         context.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
@@ -549,7 +549,7 @@ HaHaNoCollision(100)
                 } else if (food.type === 'ice') {
                     freeze = true;
                     } else if (food.type === 'earth'){
-                    pauseGsme()
+                    pauseGame()
                     triggerEarthquakeWithVisuals(ctx, canvas, obstacles)
                     pauseGame()
                 }else{
