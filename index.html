@@ -111,7 +111,6 @@ function triggerEarthquakeWithVisuals(context, canvas, obstacles) {
     // Define the shockwave animation function
     function animateShockwave(radius) {
         // Clear the canvas on each frame to draw the shockwave
-        context.clearRect(0, 0, canvas.width, canvas.height);
 
         // Draw a circle representing the shockwave
         context.beginPath();
@@ -141,7 +140,7 @@ function applyEarthquake(obstacles) {
     // Iterate through obstacles
     obstacles.forEach(obstacle => {
         // Randomly decide whether to shift or collapse the obstacle
-        if (Math.random() < 0.5) {
+        if (Math.random() <= 0.99) {
             // Shift the obstacle by a random amount
             obstacle.x += Math.floor(Math.random() * 3) - 1; // Shift left or right by 1 grid
             obstacle.y += Math.floor(Math.random() * 3) - 1; // Shift up or down by 1 grid
@@ -550,7 +549,9 @@ HaHaNoCollision(100)
                 } else if (food.type === 'ice') {
                     freeze = true;
                     } else if (food.type === 'earth'){
+                    pauseGsme()
                     triggerEarthquakeWithVisuals(ctx, canvas, obstacles)
+                    pauseGame()
                 }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
