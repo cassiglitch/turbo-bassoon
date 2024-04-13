@@ -551,7 +551,7 @@ HaHaNoCollision(100)
                     } else if (food.type === 'earth'){
                     pauseGame()
                     triggerEarthquakeWithVisuals(ctx, canvas, obstacles)
-                    setTimeout(pauseGame, 4000)
+                    setTimeout(pauseGame, 3200)
                 }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
