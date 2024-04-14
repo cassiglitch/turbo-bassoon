@@ -100,40 +100,50 @@
             var antiZoomFactor = 1 / zoomFactor;
 
 
+function shockwaveAnimation(x, y) {
+    // Get the canvas element
+    // Set up animation parameters
+    const radiusMax = Math.max(canvas.width, canvas.height);
+    let radius = 0;
+    const maxOpacity = 0.6;
+    let opacity = maxOpacity;
 
-// Define a function for Earth Bending - Earthquake ability
-// Define a function for Earth Bending - Earthquake ability with visual effects
-function triggerEarthquakeWithVisuals(context, canvas, obstacles) {
-    // Set the initial radius and maximum radius for the shockwave
-    let initialRadius = 10;
-    let maxRadius = Math.max(canvas.width, canvas.height);
+    // Animation loop
+    function animate() {
+        // Decrease opacity
+        opacity -= 0.005;
 
-    // Define the shockwave animation function
-    function animateShockwave(radius) {
-        // Clear the canvas on each frame to draw the 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Draw a circle representing the shockwave
-        context.beginPath();
-        context.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
-        context.fillStyle = 'rgba(255, 0, 0, 0.2)'; // Semi-transparent red color
-        context.fill();
+        // Draw the shockwave
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(165, 42, 42, ${opacity})`;
+        ctx.fill();
 
-        // Increase the radius for the next frame
-        radius += 10; // Adjust speed of expansion as needed
+        // Increase radius
+        radius += 5;
 
-        // Check if the shockwave has reached its maximum radius
-        if (radius <= maxRadius) {
-            // Request the next frame of animation
-            requestAnimationFrame(() => animateShockwave(radius));
-        } else {
-            // Once the shockwave animation is complete, trigger the earthquake
-            applyEarthquake(obstacles);
+        // Check if animation is complete
+        if (opacity <= 0) {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Reset parameters for next animation
+            radius = 0;
+            opacity = maxOpacity;
+            cancelAnimationFrame(animationId);
+            applyEarthquake(obstacles)
+            return;
         }
+
+        // Request next frame
+        animationId = requestAnimationFrame(animate);
     }
 
-    // Start the shockwave animation
-    animateShockwave(initialRadius);
+    // Start the animation
+    let animationId = requestAnimationFrame(animate);
 }
+
+
+
 
 // Define a function to apply the earthquake (without visual effects)
 function applyEarthquake(obstacles) {
@@ -144,8 +154,6 @@ function applyEarthquake(obstacles) {
             // Shift the obstacle by a random amount
             obstacle.x += Math.floor(Math.random() * 3) - 1; // Shift left or right by 1 grid
             obstacle.y += Math.floor(Math.random() * 3) - 1; // Shift up or down by 1 grid
-            dynamicObstacle.x += Math.floor(Math.random() * 3) - 1; // Shift left or right by 1 grid
-            dynamicObstacle.y += Math.floor(Math.random() * 3) - 1; // Shift up or down by 1 grid
         } else {
             // Collapse the obstacle by removing it from the array
             let index = obstacles.indexOf(obstacle);
@@ -549,9 +557,11 @@ HaHaNoCollision(100)
                 } else if (food.type === 'ice') {
                     freeze = true;
                     } else if (food.type === 'earth'){
+                    let x = getSnakeHeadX()
+                    let y = getSnakeHeadY()
                     pauseGame()
-                    triggerEarthquakeWithVisuals(ctx, canvas, obstacles)
-                    setTimeout(pauseGame, 3200)
+                    shockwaveAnimation(x, y)
+                    setTimeout(pauseGame, 2900)
                 }else{
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
