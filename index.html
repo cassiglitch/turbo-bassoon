@@ -86,7 +86,7 @@
         let isFoodOrange = false;
         let livecount = 2;
         let mgold = #d4af37;
-        let mbronze = #6b4a3a;
+        let mbronze = #6B4A3A;
         let pausetimer = 900;
         let originalSnakeColor = '#00FF00';
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
@@ -555,19 +555,19 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
         function getFoodColor(foodType) {
             switch (foodType) {
                 case 'earth':
-                    return mbronze;
+                    return 'bronze';
                 case 'ice':
                     return 'lightblue';
                 case 'normal':
                     return 'red';
                 case 'superfood':
-                    return mgold;
+                    return 'gold';
                 case 'poison':
                     return 'purple';
                 case 'teleport':
                     return 'blue';
                 case 'invincibility':
-                    return mrosegold;
+                    return 'rosegold';
                 case 'fire':
                     return 'orange';
             }
