@@ -746,18 +746,12 @@ if (!freeze) {
                 return 'invincibility';
             } else if (random <= 0.2) {
                 return 'superfood';
-            } else if (random <= 0.21) {
-                return 'poison';
-            } else if (random <= 0.3) {
-                return 'teleport';
-            } else if (random <= 0.1){
-                return 'ice';
-                 } else if (random <= 0.15){
-                return 'earth';
-            } else if (random <= 0.12){
-                return 'fire';
-            } else {
-                return 'normal';
+            } else if (random <= 0.9) {
+    const Special = ['teleport', 'earth', 'ice', 'fire', 'poison']; // Possible directions
+    const randomIndex2 = Math.floor(Math.random() * Special.length);
+    return Special[randomIndex2];
+} else {
+     return 'normal';
             }
         }
 
