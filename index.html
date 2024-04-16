@@ -59,8 +59,8 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let rosegold = #c18562;
-        let silver = #C0C0C0;
+        let mrosegold = #c18562;
+        let msilver = #C0C0C0;
         let lives = 0.5;
         let maxscore = 100;
         let psize = 20;
@@ -86,7 +86,7 @@
         let isFoodOrange = false;
         let livecount = 2;
         let mgold = #d4af37;
-        let bronze = #6b4a3a;
+        let mbronze = #6b4a3a;
         let pausetimer = 900;
         let originalSnakeColor = '#00FF00';
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
@@ -555,7 +555,7 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
         function getFoodColor(foodType) {
             switch (foodType) {
                 case 'earth':
-                    return 'bronze';
+                    return 'mbronze';
                 case 'ice':
                     return 'lightblue';
                 case 'normal':
@@ -567,7 +567,7 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
                 case 'teleport':
                     return 'blue';
                 case 'invincibility':
-                    return 'rosegold';
+                    return 'mrosegold';
                 case 'fire':
                     return 'orange';
             }
