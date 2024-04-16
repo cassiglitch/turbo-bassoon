@@ -745,16 +745,18 @@ if (!freeze) {
         function generateFoodType() {
             // Adjust the probability for different types of food as needed
             const random = Math.random();
-            if (random <= 0.01) {
-                return 'invincibility';
-            } else if (random <= 0.2) {
-                return 'superfood';
-            } else if (random <= 0.9) {
+            if (random <= 0.91) {
+const rare = ['invincibility']; // Possible directions
+    const randomIndex2 = Math.floor(Math.random() * rare.length);
+    return rare[randomIndex2];
+            } else if (random <= 0.4) {
     const Special = ['teleport', 'earth', 'ice', 'fire', 'poison']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
 } else {
-     return 'normal';
+                const common = ['normal', 'superfood']; // Possible directions
+    const randomIndex2 = Math.floor(Math.random() * common.length);
+    return common[randomIndex2];
             }
         }
 
