@@ -553,28 +553,22 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 
 
 function getFoodColor(foodType) {
-    const colorMap2 = {
-        bronze: 'rgb(107, 74, 58)',
-        gold: 'rgb(212, 175, 55)',
-        rosegold: 'rgb(193, 133, 98)',
-        // Add more colors as needed
-    };
 
     switch (foodType) {
         case 'earth':
-            return colorMap2['bronze'];
+            return 'brown';
         case 'ice':
             return 'lightblue';
         case 'normal':
             return 'red';
         case 'superfood':
-            return colorMap2['gold'];
+            return 'gold';
         case 'poison':
             return 'purple';
         case 'teleport':
             return 'blue';
         case 'invincibility':
-            return colorMap2['rosegold'];
+            return 'turquoise';
         case 'fire':
             return 'orange';
     }
