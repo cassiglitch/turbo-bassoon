@@ -240,11 +240,12 @@ function shockwaveAnimation(x, y) {
     let animationId = requestAnimationFrame(animate);
 }
 
-function checkIfPaused{
-if (isPaused && !Object.is(direction, previousDirection))
-    direction = previousDirection
+function checkIfPaused() {
+    if (isPaused && !Object.is(direction, previousDirection))
+        direction = previousDirection;
 }
-setInterval(checkIfPaused, 0.1)
+setInterval(checkIfPaused, 1);
+
 
 // Define a function to apply the earthquake (without visual effects)
 function applyEarthquake(obstacles) {
