@@ -271,7 +271,7 @@ const laser = {
     width: gridSize// Width of the laser (in pixels)
 };
 
-
+if (!isPaused) {
 // Handle tap events for shooting the laser
 let tapStartX = 0;
 let tapStartY = 0;
@@ -409,7 +409,7 @@ function shootLaser(targetX, targetY) {
         lastLaserShot = currentTime;
     }
 }
-
+}
 // Function to pause the game
 function pauseGame() {
     isPaused = !isPaused; // Toggle the paused state
@@ -981,7 +981,7 @@ document.addEventListener('keydown', event => {
         }
     }
 });
-
+if (!isPaused) {
 // Handle touch events for mobile controls
 let touchStartX = 0;
 let touchStartY = 0;
@@ -1013,7 +1013,7 @@ function handleTouchEnd(event) {
 
 canvas.addEventListener('touchstart', handleTouchStart);
 canvas.addEventListener('touchend', handleTouchEnd);
-
+}
 
         // Start the game loop
         const gameInterval = setInterval(gameLoop, 100); // Adjust the interval as needed
