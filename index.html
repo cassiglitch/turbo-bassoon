@@ -71,6 +71,7 @@
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
+        let previousDirection = 'direction';
         let score = 0;
         let isEating = false;
         let eatingAnimationFrames = 0;
@@ -239,8 +240,11 @@ function shockwaveAnimation(x, y) {
     let animationId = requestAnimationFrame(animate);
 }
 
-
-
+function checkIfPaused{
+if (isPaused && !Object.is(direction, previousDirection))
+    direction = previousDirection
+}
+setInterval(checkIfPaused, 0.1)
 
 // Define a function to apply the earthquake (without visual effects)
 function applyEarthquake(obstacles) {
@@ -589,20 +593,28 @@ function HaHaNoCollision(duration) {
 
             // Update Snake position
             const head = { ...snake[0] };
-            switch (direction) {
-                case 'up':
-                    head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
-                    break;
-                case 'down':
-                    head.y = (head.y + 1) % (canvas.height / gridSize);
-                    break;
-                case 'left':
-                    head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
-                    break;
-                case 'right':
-                    head.x = (head.x + 1) % (canvas.width / gridSize);
-                    break;
-            }
+// Define a variable to store the previous direction
+
+// Store the current direction as the previous direction
+previousDirection = direction;
+
+// Update the direction based on user input or logic
+switch (direction) {
+    case 'up':
+        head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        break;
+    case 'down':
+        head.y = (head.y + 1) % (canvas.height / gridSize);
+        break;
+    case 'left':
+        head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+        break;
+    case 'right':
+        head.x = (head.x + 1) % (canvas.width / gridSize);
+        break;
+}
+
+
 
             // Check if Snake hits obstacles
             if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y) ||
