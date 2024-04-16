@@ -59,8 +59,10 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
+        let rosegold = #c18562;
+        let silver = #C0C0C0;
         let lives = 0.5;
-        let maxscore = 50;
+        let maxscore = 100;
         let psize = 20;
         let startingGridSize = 20;
         let gridSize = 20;
@@ -82,7 +84,9 @@
         let freeze = false;
         let freezetimer = 5;
         let isFoodOrange = false;
-        let livecount = 2; 
+        let livecount = 2;
+        let mgold = #d4af37;
+        let bronze = #6b4a3a;
         let pausetimer = 900;
         let originalSnakeColor = '#00FF00';
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
@@ -96,7 +100,7 @@
         let numberOfProjectiles = 10; // Number of projectiles in the wave
             const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
             const projectileSpeed = 10; // Speed of the projectiles
-            const projectileColor = 'red'; // Color of the projectiles
+            const projectileColor = 'orange'; // Color of the projectiles
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction) {
     // Get the canvas context
@@ -551,21 +555,21 @@ originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
         function getFoodColor(foodType) {
             switch (foodType) {
                 case 'earth':
-                    return 'brown';
+                    return 'bronze';
                 case 'ice':
                     return 'lightblue';
                 case 'normal':
                     return 'red';
                 case 'superfood':
-                    return 'gold';
+                    return 'mgold';
                 case 'poison':
                     return 'purple';
                 case 'teleport':
                     return 'blue';
                 case 'invincibility':
-                    return 'orange';
+                    return 'rosegold';
                 case 'fire':
-                    return 'darkred';
+                    return 'orange';
             }
         }
 
