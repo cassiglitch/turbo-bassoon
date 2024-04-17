@@ -100,6 +100,7 @@
             const projectileSpeed = 10; // Speed of the projectiles
             const projectileColor = 'orange'; // Color of the projectiles
         // Define the Enemy module
+// Define the Enemy module
 const Enemy = (function() {
   // Private variables and functions
   const enemies = []; // Array to store enemies' positions and lengths
@@ -128,12 +129,12 @@ const Enemy = (function() {
       // Check if the enemy collides with the snake
       if (checkCollision(snake, enemy)) {
         // Handle collision (e.g., decrease snake length)
-        snake.decreaseLength(1); // Assuming there's a method to decrease snake length
+        snake.splice(0, 1)
         
         // Remove the enemy from the array
         enemies.splice(i, 1);
       } else {
-        // Move the enemy based on some AI logic (e.g., avoid snake)
+        // Move the enemy towards the snake's head
         moveEnemy(enemy, snake);
       }
     }
@@ -149,18 +150,17 @@ const Enemy = (function() {
     );
   }
   
-  // Private method to move enemy based on basic AI logic
+  // Private method to move enemy towards snake's head
   function moveEnemy(enemy, snake) {
-    // Move enemy away from the snake in the opposite direction
-    if (enemy.x < snake.x) {
-      enemy.x++;
-    } else if (enemy.x > snake.x) {
-      enemy.x--;
-    }
-    if (enemy.y < snake.y) {
-      enemy.y++;
-    } else if (enemy.y > snake.y) {
-      enemy.y--;
+    // Calculate direction towards snake's head
+    let dx = snake[0].x - enemy.x;
+    let dy = snake[0].y - enemy.y;
+    
+    // Move enemy one step closer to snake's head
+    if (Math.abs(dx) > Math.abs(dy)) {
+      enemy.x += Math.sign(dx);
+    } else {
+      enemy.y += Math.sign(dy);
     }
   }
   
@@ -188,8 +188,6 @@ const Enemy = (function() {
 // Usage example:
 // Add enemies to the game
 Enemy.addEnemy(100, 100, 5); // Add an enemy at position (100, 100) with length 5
-
-// Update enemies' positions (call this in the game loop)
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction) {
     // Get the canvas context
