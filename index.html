@@ -1008,8 +1008,25 @@ function animateExplosion() {
             update();
             draw();
 Enemy.updateEnemies(snake);
+                        // Handle eating animation
+            if (isEating) {
+                eatingAnimationFrames--;
 
+                // Apply the wavelike animation
+                for (let i = 1; i < snake.length; i++) {
+                    if (i <= eatingAnimationFrames) {
+                        snake[i].color = 'blue';
+                    } else {
+                        snake[i].color = 'green';
+                    }
+                }
+
+                if (eatingAnimationFrames === 0) {
+                    isEating = false;
+                }
+            }
         }
+
 
 function closestNumber(n, m) {
     // Find the quotient
