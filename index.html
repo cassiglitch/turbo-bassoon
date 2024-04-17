@@ -158,6 +158,9 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
 
                     // Create an explosion shockwave
                     createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+                    projectile.splice(index, 1);
+                    clearInterval(updateInterval);
+                    ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
                 }
             });
 
@@ -170,6 +173,9 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
 
                     // Create an explosion shockwave
                     createExplosion(projectile.x, projectile.y, projectileColor);
+                    projectile.splice(index, 1);
+                    clearInterval(updateInterval);
+                    ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
                 }
             });
 
@@ -762,10 +768,12 @@ const rare = ['invincibility']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * rare.length);
     return rare[randomIndex2];
             } else if (random <= 0.4) {
-    const Special = ['teleport', 'earth', 'ice', 'fire', 'poison']; // Possible directions
+    const Special = ['teleport', 'earth', 'ice', 'fire',]; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
-} else {
+} else if (random <= 0.2) {
+                return 'poison';
+            } else{
                 const common = ['normal', 'superfood']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * common.length);
     return common[randomIndex2];
