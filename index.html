@@ -93,101 +93,14 @@
             else deviceWidth = window.screen[landscape ? "height" : "width"]
             var zoomFactor = deviceWidth / window.innerWidth;
             var antiZoomFactor = 1 / zoomFactor;
-        let pX = 0;
-        let pY = 0;
-        let numberOfProjectiles = 10; // Number of projectiles in the wave
-            const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
-            const projectileSpeed = 10; // Speed of the projectiles
-            const projectileColor = 'orange'; // Color of the projectiles
-        // Define the Enemy module
-// Define the Enemy module
-const Enemy = (function() {
-  // Private variables and functions
-  const enemies = []; // Array to store enemies' positions and lengths
-  
-  // Constructor function for creating a new enemy
-  function createEnemy(x, y, length) {
-    return {
-      x: x,
-      y: y,
-      length: length
-    };
-  }
-  
-  // Public method to add a new enemy
-  function addEnemy(x, y, length) {
-    const newEnemy = createEnemy(x, y, length);
-    enemies.push(newEnemy);
-  }
-  
-  // Public method to update enemies' positions
-  function updateEnemies(snake) {
-    // Loop through each enemy
-    for (let i = 0; i < enemies.length; i++) {
-      const enemy = enemies[i];
-      
-      // Check if the enemy collides with the snake
-      if (checkCollision(snake, enemy)) {
-        // Handle collision (e.g., decrease snake length)
-        snake.splice(0, 1)
-        
-        // Remove the enemy from the array
-        enemies.splice(i, 1);
-      } else {
-        // Move the enemy towards the snake's head
-        moveEnemy(enemy, snake);
-      }
-    }
-  }
-  
-  // Private method to check collision between enemy and snake
-  function checkCollision(snake, enemy) {
-    // Check if enemy's position overlaps with snake's position
-    return (
-      enemy.x === snake.x && enemy.y === snake.y ||
-      (enemy.x >= snake.x && enemy.x < snake.x + snake.length &&
-       enemy.y >= snake.y && enemy.y < snake.y + snake.length)
-    );
-  }
-  
-  // Private method to move enemy towards snake's head
-  function moveEnemy(enemy, snake) {
-    // Calculate direction towards snake's head
-    let dx = snake[0].x - enemy.x;
-    let dy = snake[0].y - enemy.y;
-    
-    // Move enemy one step closer to snake's head
-    if (Math.abs(dx) > Math.abs(dy)) {
-      enemy.x += Math.sign(dx);
-    } else {
-      enemy.y += Math.sign(dy);
-    }
-  }
-  
-  // Public method to render enemies on the HTML5 canvas
-  function renderEnemies(ctx) {
-    // Loop through each enemy and render it on the canvas
-    for (let i = 0; i < enemies.length; i++) {
-      const enemy = enemies[i];
-      
-      // Render enemy on canvas (e.g., draw a shape)
-      ctx.fillStyle = 'red';
-      ctx.fillRect(enemy.x, enemy.y, 10, 10); // Assuming enemies are rectangles of size 10x10
-    }
-  }
-  
-  // Return public methods and variables
-  return {
-    addEnemy: addEnemy,
-    updateEnemies: updateEnemies,
-    renderEnemies: renderEnemies,
-    enemies: enemies // Public array to access enemies' positions and lengths
-  };
-})();
 
-// Usage example:
-// Add enemies to the game
-Enemy.addEnemy(100, 100, 5); // Add an enemy at position (100, 100) with length 5
+let pX = 0;
+let pY = 0;
+let numberOfProjectiles = 10; // Number of projectiles in the wave
+const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
+const projectileSpeed = 10; // Speed of the projectiles
+const projectileColor = 'orange'; // Color of the projectiles
+let projectiles = []; // Array to store projectiles
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction) {
     // Get the canvas context
@@ -223,14 +136,14 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             color: projectileColor
         };
 
-        // Draw the projectile
-        ctx.beginPath();
-        ctx.fillStyle = projectile.color;
-        ctx.arc(projectile.x, projectile.y, 10, 0, Math.PI * 2);
-        ctx.fill();
+        // Push the projectile into the array
+        projectiles.push(projectile);
+    }
 
-        // Update the projectile's position and redraw
-        const updateInterval = setInterval(() => {
+    // Update and draw projectiles
+    const updateInterval = setInterval(() => {
+        // Loop through each projectile
+        projectiles.forEach((projectile, index) => {
             // Clear the previous projectile
             ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
 
@@ -238,49 +151,55 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             projectile.x += projectile.velocityX;
             projectile.y += projectile.velocityY;
 
-            // Check for collision with obstacles
-            obstacles.forEach((obstacle, index) => {
-                if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
-                    projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize) {
-                    // Remove the obstacle from the array
-                    obstacles.splice(index, 1);
-
-                    // Create an explosion shockwave
-                    createExplosion(ctx, projectile.x, projectile.y, projectileColor);
-                    projectile.splice(index, 1);
-                    clearInterval(updateInterval);
-                    ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
-                }
-            });
-
-            // Check for collision with dynamic obstacles
-            dynamicObstacles.forEach((obstacle, index) => {
-                if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 2) * gridSize &&
-                    projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 2) * gridSize) {
-                    // Remove the dynamic obstacle from the array
-                    dynamicObstacles.splice(index, 1);
-
-                    // Create an explosion shockwave
-                    createExplosion(projectile.x, projectile.y, projectileColor);
-                    projectile.splice(index, 1);
-                    clearInterval(updateInterval);
-                    ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
-                }
-            });
-
             // Draw the projectile at its new position
             ctx.beginPath();
             ctx.fillStyle = projectile.color;
             ctx.arc(projectile.x, projectile.y, 10, 0, Math.PI * 2);
             ctx.fill();
 
+            // Check for collision with obstacles
+            obstacles.forEach((obstacle, obstacleIndex) => {
+                if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
+                    projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize) {
+                    // Remove the obstacle from the array
+                    obstacles.splice(obstacleIndex, 1);
+
+                    // Create an explosion shockwave
+                    createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+
+                    // Remove the projectile from the array
+                    projectiles.splice(index, 1);
+                }
+            });
+
+            // Check for collision with dynamic obstacles
+            dynamicObstacles.forEach((dynamicObstacle, dynamicObstacleIndex) => {
+                if (projectile.x >= dynamicObstacle.x * gridSize && projectile.x <= (dynamicObstacle.x + 2) * gridSize &&
+                    projectile.y >= dynamicObstacle.y * gridSize && projectile.y <= (dynamicObstacle.y + 2) * gridSize) {
+                    // Remove the dynamic obstacle from the array
+                    dynamicObstacles.splice(dynamicObstacleIndex, 1);
+
+                    // Create an explosion shockwave
+                    createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+
+                    // Remove the projectile from the array
+                    projectiles.splice(index, 1);
+                }
+            });
+
             // Check if the projectile is out of bounds
             if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
-                // Clear the interval and stop updating this projectile
-                clearInterval(updateInterval);
+                // Remove the projectile from the array
+                createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+                projectiles.splice(index, 1);
             }
-        }, 20); // Update every 20 milliseconds
-    }
+        });
+
+        // If all projectiles are removed, stop the interval
+        if (projectiles.length === 0) {
+            clearInterval(updateInterval);
+        }
+    }, 20); // Update every 20 milliseconds
 }
 
 function createExplosion(ctx, x, y, color) {
@@ -582,7 +501,6 @@ setTimeout(() => {
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
-    Enemy.renderEnemies(ctx);
 }
 
 function drawInvincibilityAura(colorName) {
@@ -1005,7 +923,6 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-Enemy.updateEnemies(snake);
                         // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
