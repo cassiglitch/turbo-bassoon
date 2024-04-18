@@ -101,6 +101,7 @@ const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
 const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
+let food = []
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction) {
     // Get the canvas context
@@ -199,7 +200,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 if (projectile.x >= food.x && projectile.x <= food.x + gridSize &&
                     projectile.y >= food.y && projectile.y <= food.y + gridSize) {
                     // Handle collision based on food type
-                    handleFoodCollision(food.type, projectile.color);
+                    handleFoodCollision();
 
                     // Remove the projectile from the array
                     projectiles.splice(index, 1);
@@ -223,9 +224,8 @@ function createExplosion(ctx, x, y, color) {
 }
 
 
-function handleFoodCollision(foodtype, projectileColor) {
-foodtype === food.type
-    if (foodtype === 'superfood') {
+function handleFoodCollision() {
+    if (food.type === 'superfood') {
                     gamefoods.push('superfood')
                     score += 2;
                     snake.unshift({ ...snake[0], color: 'blue' });
@@ -240,40 +240,40 @@ foodtype === food.type
                     snake.pop();
                     snake.pop();
                     score = Math.max(0, Math.ceil(score / 2)); // Reduce score by 50% rounded up
-                } else if (foodtype === 'teleport') {
+                } else if (food.type === 'teleport') {
                     gamefoods.push('teleport')
     // Teleport the snake to a random location
-    const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
-    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
-    head.x = randomX;
-    head.y = randomY;
+    const randomX2 = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY2 = Math.floor(Math.random() * (canvas.height / gridSize));
+    head.x = randomX2;
+    head.y = randomY2;
 
     // Randomize the direction
-    const directions = ['up', 'down', 'left', 'right']; // Possible directions
-    const randomIndex = Math.floor(Math.random() * directions.length);
-    direction = directions[randomIndex];
+    const directions2 = ['up', 'down', 'left', 'right']; // Possible directions
+    const randomIndex2 = Math.floor(Math.random() * directions.length);
+    direction = directions2[randomIndex2];
     HaHaNoCollision(10)
-                } else if (foodtype === 'invincibility') {
+                } else if (food.type === 'invincibility') {
                     gamefoods.push('invincibility')
           isFoodOrange = true;
                 lives = (lives/2);
                 livecount = livecount + 1;
 HaHaNoCollision(100)
 // Use a for loop to repeat the action
-                } else if (foodtype === 'ice') {
+                } else if (food.type === 'ice') {
                     gamefoods.push('ice')
  if (freeze === false){                    
      freeze = true;
  } else {
      return;         
  }
-                } else if (foodtype === 'earth'){
+                } else if (food.type === 'earth'){
                     gamefoods.push('earth')
                     let x = getSnakeHeadX()
                     let y = getSnakeHeadY()
                     pauseGame()
                     shockwaveAnimation(x, y)
-                } else if (foodtype === 'fire'){
+                } else if (food.type === 'fire'){
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
@@ -841,6 +841,7 @@ if (!freeze) {
                     (newFood.y >= obstacle.y && newFood.y < obstacle.y + 1)));
 
             food = newFood;
+            
         }
 
         function generateFoodType() {
