@@ -195,7 +195,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             }
         }
                            
-                                       foods.forEach((food, foodIndex) => {
+                                       
                 if (projectile.x >= food.x && projectile.x <= food.x + gridSize &&
                     projectile.y >= food.y && projectile.y <= food.y + gridSize) {
                     // Handle collision based on food type
@@ -204,7 +204,6 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     // Remove the projectile from the array
                     projectiles.splice(index, 1);
                 }
-            });
                            }
         // If all projectiles are removed, stop the interval
         if (projectiles.length === 0) {
