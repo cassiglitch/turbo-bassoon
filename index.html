@@ -201,9 +201,6 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     // Handle collision based on food type
                     handleFoodCollision(food.type, projectile.color);
 
-                    // Remove the food from the array
-                    foods.splice(foodIndex, 1);
-
                     // Remove the projectile from the array
                     projectiles.splice(index, 1);
                 }
