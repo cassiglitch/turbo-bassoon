@@ -61,6 +61,7 @@
 
 
         let lives = 0.5;
+        let gamefoods = [];
         let maxscore = 100;
         let psize = 20;
         let startingGridSize = 20;
@@ -93,17 +94,15 @@
             else deviceWidth = window.screen[landscape ? "height" : "width"]
             var zoomFactor = deviceWidth / window.innerWidth;
             var antiZoomFactor = 1 / zoomFactor;
-
-let pX = 0;
+  let pX = 0;
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
 const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
-let food = []
 
-function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction) {
+function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, proectileSizw, explode) {
     // Get the canvas context
     // Mapping of directions to radians
     const directionRadians = {
@@ -144,7 +143,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
     // Update and draw projectiles
     const updateInterval = setInterval(() => {
         // Loop through each projectile
-        projectiles.forEach{(projectile, index) => {
+        projectiles.forEach((projectile, index) => {
             // Clear the previous projectile
             ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
 
@@ -155,7 +154,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             // Draw the projectile at its new position
             ctx.beginPath();
             ctx.fillStyle = projectile.color;
-            ctx.arc(projectile.x, projectile.y, 10, 0, Math.PI * 2);
+            ctx.arc(projectile.x, projectile.y, proectileSizw, 0, Math.PI * 2);
             ctx.fill();
 
             // Check for collision with obstacles
@@ -166,7 +165,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     obstacles.splice(obstacleIndex, 1);
 
                     // Create an explosion shockwave
-                    createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+                    createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode)
 
                     // Remove the projectile from the array
                     projectiles.splice(index, 1);
@@ -181,7 +180,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     dynamicObstacles.splice(dynamicObstacleIndex, 1);
 
                     // Create an explosion shockwave
-                    createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+                    createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode)
 
                     // Remove the projectile from the array
                     projectiles.splice(index, 1);
@@ -191,21 +190,11 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             // Check if the projectile is out of bounds
             if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
                 // Remove the projectile from the array
-                createExplosion(ctx, projectile.x, projectile.y, projectileColor);
+                                    createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
                 projectiles.splice(index, 1);
             }
-        }
-                           
-                                       
-                if (projectile.x >= food.x && projectile.x <= food.x + gridSize &&
-                    projectile.y >= food.y && projectile.y <= food.y + gridSize) {
-                    // Handle collision based on food type
-                    handleFoodCollision();
+        });
 
-                    // Remove the projectile from the array
-                    projectiles.splice(index, 1);
-                }
-                           }
         // If all projectiles are removed, stop the interval
         if (projectiles.length === 0) {
             clearInterval(updateInterval);
@@ -213,80 +202,43 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
     }, 20); // Update every 20 milliseconds
 }
 
-function createExplosion(ctx, x, y, color) {
+function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
     // Draw the explosion shockwave
     ctx.beginPath();
-    ctx.arc(x, y, 70, 0, Math.PI * 2);
+    ctx.arc(x, y, explode, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.globalAlpha = 0.5; // Adjust the transparency for effect
     ctx.fill();
     ctx.globalAlpha = 1; // Reset the transparency
+    
+    // Loop through obstacles and check for destruction
+    obstacles.forEach((obstacle, obstacleIndex) => {
+        const obstacleCenterX = (obstacle.x + 0.5) * gridSize;
+        const obstacleCenterY = (obstacle.y + 0.5) * gridSize;
+        
+        const distance = Math.sqrt((obstacleCenterX - x) ** 2 + (obstacleCenterY - y) ** 2);
+        
+        // If the obstacle is within the explosion radius, destroy it
+        if (distance <= explode) {
+            obstacles.splice(obstacleIndex, 1);
+        }
+    });
+    
+    // Loop through dynamic obstacles and check for destruction
+    dynamicObstacles.forEach((dynamicObstacle, dynamicObstacleIndex) => {
+        const dynamicObstacleCenterX = (dynamicObstacle.x + 1) * gridSize;
+        const dynamicObstacleCenterY = (dynamicObstacle.y + 1) * gridSize;
+        
+        const distance = Math.sqrt((dynamicObstacleCenterX - x) ** 2 + (dynamicObstacleCenterY - y) ** 2);
+        
+        // If the dynamic obstacle is within the explosion radius, destroy it
+        if (distance <= explode) {
+            dynamicObstacles.splice(dynamicObstacleIndex, 1);
+        }
+    });
 }
 
 
-function handleFoodCollision() {
-    if (food.type === 'superfood') {
-                    gamefoods.push('superfood')
-                    score += 2;
-                    snake.unshift({ ...snake[0], color: 'blue' });
-                    snake.unshift({ ...snake[0], color: 'blue' });
-                } else if (foodtype === 'poison') {
-                    gamefoods.push('poison')
-                    if (snake.length < 4) {
-                        restartGame();
-                        return;
-                    }
-                    snake.pop();
-                    snake.pop();
-                    snake.pop();
-                    score = Math.max(0, Math.ceil(score / 2)); // Reduce score by 50% rounded up
-                } else if (food.type === 'teleport') {
-                    gamefoods.push('teleport')
-    // Teleport the snake to a random location
-    const randomX2 = Math.floor(Math.random() * (canvas.width / gridSize));
-    const randomY2 = Math.floor(Math.random() * (canvas.height / gridSize));
-    head.x = randomX2;
-    head.y = randomY2;
-
-    // Randomize the direction
-    const directions2 = ['up', 'down', 'left', 'right']; // Possible directions
-    const randomIndex2 = Math.floor(Math.random() * directions.length);
-    direction = directions2[randomIndex2];
-    HaHaNoCollision(10)
-                } else if (food.type === 'invincibility') {
-                    gamefoods.push('invincibility')
-          isFoodOrange = true;
-                lives = (lives/2);
-                livecount = livecount + 1;
-HaHaNoCollision(100)
-// Use a for loop to repeat the action
-                } else if (food.type === 'ice') {
-                    gamefoods.push('ice')
- if (freeze === false){                    
-     freeze = true;
- } else {
-     return;         
- }
-                } else if (food.type === 'earth'){
-                    gamefoods.push('earth')
-                    let x = getSnakeHeadX()
-                    let y = getSnakeHeadY()
-                    pauseGame()
-                    shockwaveAnimation(x, y)
-                } else if (food.type === 'fire'){
-                    gamefoods.push('fire')
-                pX = snake[0].x * gridSize + gridSize / 2;
-                pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction)
-                }else{
-                    gamefoods.push('normal')
-                    score += 1;
-                    snake.unshift({ ...snake[0], color: 'blue' });
-                }
-                isEating = true;
-                eatingAnimationFrames = 8; // Set the number of frames for the eating animation
-                spawnFood();
-}
 function shockwaveAnimation(x, y) {
     // Get the canvas element
     // Set up animation parameters
@@ -318,6 +270,7 @@ function shockwaveAnimation(x, y) {
             opacity = maxOpacity;
             cancelAnimationFrame(animationId);
             applyEarthquake(obstacles)
+            pauseGame()
             return;
         }
 
@@ -345,6 +298,7 @@ function applyEarthquake(obstacles) {
             // Shift the obstacle by a random amount
             obstacle.x += Math.floor(Math.random() * 3) - 1; // Shift left or right by 1 grid
             obstacle.y += Math.floor(Math.random() * 3) - 1; // Shift up or down by 1 grid
+             
         } else {
             // Collapse the obstacle by removing it from the array
             let index = obstacles.indexOf(obstacle);
@@ -365,7 +319,6 @@ const laser = {
     width: gridSize// Width of the laser (in pixels)
 };
 
-if (!isPaused) {
 // Handle tap events for shooting the laser
 let tapStartX = 0;
 let tapStartY = 0;
@@ -375,7 +328,6 @@ let tapEndY = 0;
 function handleTapStart(event) {
     tapStartX = event.touches[0].clientX;
     tapStartY = event.touches[0].clientY;
-}
 }
 function handleTapEnd(event) {
     tapEndX = event.changedTouches[0].clientX;
@@ -661,6 +613,10 @@ function getFoodColor(foodType) {
             return 'turquoise';
         case 'fire':
             return 'orange';
+        case 'ultrafood':
+            return 'darkblue';
+        case 'bigfire':
+            return 'lightgrey';
     }
 }
 
@@ -724,12 +680,14 @@ switch (direction) {
             }
 
             // Check if Snake eats Food
-            if (head.x === food.x && head.y === food.y) {
+            if (head.x === food.x && head.y === food.y){
                 if (food.type === 'superfood') {
+                    gamefoods.push('superfood')
                     score += 2;
                     snake.unshift({ ...snake[0], color: 'blue' });
                     snake.unshift({ ...snake[0], color: 'blue' });
                 } else if (food.type === 'poison') {
+                    gamefoods.push('poison')
                     if (snake.length < 4) {
                         restartGame();
                         return;
@@ -739,6 +697,7 @@ switch (direction) {
                     snake.pop();
                     score = Math.max(0, Math.ceil(score / 2)); // Reduce score by 50% rounded up
                 } else if (food.type === 'teleport') {
+                    gamefoods.push('teleport')
     // Teleport the snake to a random location
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
@@ -751,24 +710,47 @@ switch (direction) {
     direction = directions[randomIndex];
     HaHaNoCollision(10)
                 } else if (food.type === 'invincibility') {
+                    gamefoods.push('invincibility')
           isFoodOrange = true;
                 lives = (lives/2);
                 livecount = livecount + 1;
 HaHaNoCollision(100)
 // Use a for loop to repeat the action
                 } else if (food.type === 'ice') {
-                    freeze = true;
-                    } else if (food.type === 'earth'){
+                    gamefoods.push('ice')
+                    let pcolor = 'lightblue';
+ if (freeze === false){                    
+     freeze = true;
+     pX = snake[0].x * gridSize + gridSize / 2;
+                pY = snake[0].y * gridSize + gridSize / 2;
+                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 10, 70)
+ } else {
+     return;         
+ }
+                } else if (food.type === 'earth'){
+                    gamefoods.push('earth')
                     let x = getSnakeHeadX()
                     let y = getSnakeHeadY()
                     pauseGame()
                     shockwaveAnimation(x, y)
-                    setTimeout(pauseGame, 2900)
                 } else if (food.type === 'fire'){
+                    gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70)
+                }else if (food.type === 'ultrafood'){
+                    gamefoods.push('ultrafood')
+                    score += 3;
+                    snake.unshift({ ...snake[0], color: 'blue' });
+                    snake.unshift({ ...snake[0], color: 'blue' });
+                    snake.unshift({ ...snake[0], color: 'blue' });
+                } else if (food.type === 'bigfire'){
+                let pcolourr = 'lightgrey'
+                pX = snake[0].x * gridSize + gridSize / 2;
+                pY = snake[0].y * gridSize + gridSize / 2;
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60)
                 }else{
+                    gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
                 }
@@ -824,7 +806,7 @@ if (!freeze) {
 
         function calculateObstacleSpawnProbability() {
             // Obstacle spawn probability increases with score
-            return Math.min(0.1 + score / 200, 1); // Adjust the maximum spawn probability as needed
+            return Math.min(0.1 + score / 100, 1); // Adjust the maximum spawn probability as needed
         }
 
         function spawnFood() {
@@ -841,7 +823,6 @@ if (!freeze) {
                     (newFood.y >= obstacle.y && newFood.y < obstacle.y + 1)));
 
             food = newFood;
-            
         }
 
         function generateFoodType() {
@@ -852,13 +833,11 @@ const rare = ['invincibility']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * rare.length);
     return rare[randomIndex2];
             } else if (random <= 0.4) {
-    const Special = ['teleport', 'earth', 'ice', 'fire',]; // Possible directions
+    const Special = ['teleport', 'earth', 'ice', 'fire', 'bigfire', 'poison']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
-} else if (random <= 0.2) {
-                return 'poison';
             } else{
-                const common = ['normal', 'superfood']; // Possible directions
+                const common = ['normal', 'superfood', 'ultrafood']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * common.length);
     return common[randomIndex2];
             }
@@ -885,6 +864,7 @@ const rare = ['invincibility']; // Possible directions
             pauseGame();
             snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
             obstacles = [];
+            gamefoods = [];
             dynamicObstacles = [];
             score = 0;
             isEating = false;
@@ -999,7 +979,8 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-                        // Handle eating animation
+
+            // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
 
@@ -1017,7 +998,6 @@ function animateExplosion() {
                 }
             }
         }
-
 
 function closestNumber(n, m) {
     // Find the quotient
