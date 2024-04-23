@@ -340,97 +340,63 @@ function applyEarthquake(obstacles) {
 
 // Define the enemy snake class
 class EnemySnake {
-    constructor(playerSnake) {
-        this.body = [{ x: 5, y: 5 }]; // Starting position of the enemy snake
-        this.direction = 'right'; // Initial direction of the enemy snake
-        this.playerSnake = playerSnake; // Reference to the player's snake
+    constructor(canvas, blockSize, playerSnake) {
+        this.canvas = canvas;
+        this.context = canvas.getContext('2d');
+        this.blockSize = blockSize;
+        this.playerSnake = playerSnake;
+        this.segments = [{ x: 5, y: 5 }]; // Starting position
+        this.path = []; // Pathfinding path
+        this.findPathInterval = 1000; // Interval for finding path (in milliseconds)
+        this.moveInterval = 200; // Interval for movement (in milliseconds)
+        this.init();
     }
 
-    // Method to move the enemy snake
-    move() {
-        // Perform pathfinding to find the closest segment of the player's snake
-        let target = this.findClosestSegment();
-
-        // Determine the direction to move towards the target segment
-        let newDirection = this.determineDirection(target);
-
-        // Change the direction of the enemy snake
-        this.changeDirection(newDirection);
-
-        // Move the enemy snake in the new direction
-        let head = { ...this.body[0] };
-        switch (this.direction) {
-            case 'up':
-                head.y--;
-                break;
-            case 'down':
-                head.y++;
-                break;
-            case 'left':
-                head.x--;
-                break;
-            case 'right':
-                head.x++;
-                break;
-        }
-
-        // Add the new head to the beginning of the snake's body
-        this.body.unshift(head);
-
-        // Remove the tail of the snake
-        this.body.pop();
+    init() {
+        this.findPath();
+        setInterval(() => {
+            this.move();
+        }, this.moveInterval);
+        setInterval(() => {
+            this.findPath();
+        }, this.findPathInterval);
     }
 
-    // Method to find the closest segment of the player's snake
-    findClosestSegment() {
-        let minDistance = Infinity;
-        let targetSegment = null;
-
-        // Iterate through each segment of the player's snake
-        for (let segment of this.playerSnake.body) {
-            // Calculate the distance between the enemy snake's head and the player's snake segment
-            let distance = Math.abs(segment.x - this.body[0].x) + Math.abs(segment.y - this.body[0].y);
-            
-            // Update the target segment if this segment is closer
-            if (distance < minDistance) {
-                minDistance = distance;
-                targetSegment = segment;
-            }
-        }
-
-        return targetSegment;
-    }
-
-    // Method to determine the direction towards the target segment
-    determineDirection(target) {
-        let dx = target.x - this.body[0].x;
-        let dy = target.y - this.body[0].y;
-
-        // Determine the direction based on the relative position of the target segment
+    findPath() {
+        // Simple pathfinding logic - just move towards the player's snake head
+        const playerHead = this.playerSnake.segments[0];
+        const enemyHead = this.segments[0];
+        const dx = playerHead.x - enemyHead.x;
+        const dy = playerHead.y - enemyHead.y;
         if (Math.abs(dx) > Math.abs(dy)) {
-            return dx > 0 ? 'right' : 'left';
+            this.path = [{ x: enemyHead.x + Math.sign(dx), y: enemyHead.y }];
         } else {
-            return dy > 0 ? 'down' : 'up';
+            this.path = [{ x: enemyHead.x, y: enemyHead.y + Math.sign(dy) }];
         }
     }
 
-    // Method to change the direction of the enemy snake
-    changeDirection(newDirection) {
-        // Ensure the snake can't turn back on itself
-        if (newDirection === 'up' && this.direction !== 'down') {
-            this.direction = newDirection;
-        } else if (newDirection === 'down' && this.direction !== 'up') {
-            this.direction = newDirection;
-        } else if (newDirection === 'left' && this.direction !== 'right') {
-            this.direction = newDirection;
-        } else if (newDirection === 'right' && this.direction !== 'left') {
-            this.direction = newDirection;
+    move() {
+        if (this.path.length === 0) return; // No path found
+        const nextMove = this.path.shift();
+        const head = { ...this.segments[0] };
+        this.segments.unshift(nextMove);
+        if (this.segments.length > 1) {
+            this.segments.pop();
         }
+        this.draw();
+    }
+
+    draw() {
+        // Drawing logic for the enemy snake
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = 'red';
+        this.segments.forEach(segment => {
+            this.context.fillRect(segment.x * this.blockSize, segment.y * this.blockSize, this.blockSize, this.blockSize);
+        });
     }
 }
 
-let enemySnake = new EnemySnake(snakw);
-enemySnake.move(); // Move the enemy snake towards the player's snake
+const enemySnake = new EnemySnake(canvas, gridSize, snake);
 
 const laser = {
     isShooting: false,
