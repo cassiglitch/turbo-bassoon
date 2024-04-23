@@ -105,45 +105,71 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 function saveAndRandomizeAndRestore() {
-  // Save all variables and arrays into an object
-  let savedData = {};
+  // Save all arrays into an object
+  let savedArrays = {};
   for (const key in window) {
-    if (window.hasOwnProperty(key) && typeof window[key] !== 'function') {
-      savedData[key] = JSON.stringify(window[key]);
+    if (window.hasOwnProperty(key) && Array.isArray(window[key])) {
+      savedArrays[key] = window[key].slice(); // Make a copy to avoid modifying original array
     }
   }
 
-  // Randomize everything except the saved data
-  const randomize = () => {
+  // Randomize arrays and their data
+  const randomizeArrays = () => {
     for (const key in window) {
-      if (window.hasOwnProperty(key) && key !== 'savedData' && typeof window[key] !== 'function') {
-        if (Array.isArray(window[key])) {
-          window[key] = window[key].sort(() => Math.random() - 0.5);
-        } else {
-          if (typeof window[key] === 'object') {
-            // For objects, we should skip randomization for now
-            continue;
+      if (window.hasOwnProperty(key) && Array.isArray(window[key])) {
+        const array = window[key];
+        const originalArray = savedArrays[key];
+        const types = [];
+
+        // Collect possible types in the array
+        for (const value of originalArray) {
+          if (!types.includes(typeof value)) {
+            types.push(typeof value);
           }
-          // Properly randomize non-array variables
-          window[key] = Math.random();
+        }
+
+        // Randomize the array
+        array.sort(() => Math.random() - 0.5);
+
+        // Randomize data in the array to other possible types
+        for (let i = 0; i < array.length; i++) {
+          const originalValue = originalArray[i];
+          const typeIndex = types.indexOf(typeof originalValue);
+          if (typeIndex !== -1 && types.length > 1) {
+            const newIndex = (typeIndex + Math.floor(Math.random() * (types.length - 1)) + 1) % types.length;
+            const newType = types[newIndex];
+            switch (newType) {
+              case 'number':
+                array[i] = Math.random() * 100; // Random number between 0 and 100
+                break;
+              case 'string':
+                array[i] = Math.random().toString(36).substring(7); // Random string
+                break;
+              // Add cases for other types as needed
+            }
+          }
         }
       }
     }
   };
 
-  // Restore saved variables and arrays after 5 seconds
+  // Randomize the 'snake' array if it exists
+  if (window.hasOwnProperty('snake') && Array.isArray(window['snake'])) {
+    window['snake'].sort(() => Math.random() - 0.5);
+  }
+
+  // Call the randomize function
+  randomizeArrays();
+
+  // Revert changes after 5 seconds
   setTimeout(() => {
-    for (const key in savedData) {
-      if (savedData.hasOwnProperty(key)) {
-        window[key] = JSON.parse(savedData[key]);
+    for (const key in savedArrays) {
+      if (savedArrays.hasOwnProperty(key)) {
+        window[key] = savedArrays[key];
       }
     }
   }, 5000);
-
-  // Call the randomize function
-  randomize();
 }
-
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
