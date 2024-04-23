@@ -104,7 +104,18 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-    function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode) {
+function drawPolygon(x, y, length, sides, color) {
+        ctx.beginPath();
+        ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
+        for (let i = 1; i <= sides; i++) {
+            ctx.lineTo(x + length * Math.cos(i * (2 * Math.PI) / sides), y + length * Math.sin(i * (2 * Math.PI) / sides));
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+
+    function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides) {
     // Get the canvas context
     // Mapping of directions to radians
     // Mapping of directions to radians
@@ -151,6 +162,7 @@ const directionRad = directionRadians[direction.toLowerCase()] || 0;
     // Update and draw projectiles
     const updateInterval = setInterval(() => {
         // Loop through each projectile
+        if (isPaused === false){
         projectiles.forEach((projectile, index) => {
             // Clear the previous projectile
             ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
@@ -160,10 +172,14 @@ const directionRad = directionRadians[direction.toLowerCase()] || 0;
             projectile.y += projectile.velocityY;
 
             // Draw the projectile at its new position
+            if (circle === true){
             ctx.beginPath();
             ctx.fillStyle = projectile.color;
             ctx.arc(projectile.x, projectile.y, projectileSize, 0, Math.PI * 2);
             ctx.fill();
+            } else{
+            drawPolygon(projectile.x, projectile.y, projectileSize, sides, projectile.color)
+            }
 
             // Check for collision with obstacles
             obstacles.forEach((obstacle, obstacleIndex) => {
@@ -206,6 +222,10 @@ const directionRad = directionRadians[direction.toLowerCase()] || 0;
         // If all projectiles are removed, stop the interval
         if (projectiles.length === 0) {
             clearInterval(updateInterval);
+        }
+        }
+        else{
+            return
         }
     }, 20); // Update every 20 milliseconds
 }
@@ -318,6 +338,99 @@ function applyEarthquake(obstacles) {
     });
 }
 
+// Define the enemy snake class
+class EnemySnake {
+    constructor(playerSnake) {
+        this.body = [{ x: 5, y: 5 }]; // Starting position of the enemy snake
+        this.direction = 'right'; // Initial direction of the enemy snake
+        this.playerSnake = playerSnake; // Reference to the player's snake
+    }
+
+    // Method to move the enemy snake
+    move() {
+        // Perform pathfinding to find the closest segment of the player's snake
+        let target = this.findClosestSegment();
+
+        // Determine the direction to move towards the target segment
+        let newDirection = this.determineDirection(target);
+
+        // Change the direction of the enemy snake
+        this.changeDirection(newDirection);
+
+        // Move the enemy snake in the new direction
+        let head = { ...this.body[0] };
+        switch (this.direction) {
+            case 'up':
+                head.y--;
+                break;
+            case 'down':
+                head.y++;
+                break;
+            case 'left':
+                head.x--;
+                break;
+            case 'right':
+                head.x++;
+                break;
+        }
+
+        // Add the new head to the beginning of the snake's body
+        this.body.unshift(head);
+
+        // Remove the tail of the snake
+        this.body.pop();
+    }
+
+    // Method to find the closest segment of the player's snake
+    findClosestSegment() {
+        let minDistance = Infinity;
+        let targetSegment = null;
+
+        // Iterate through each segment of the player's snake
+        for (let segment of this.playerSnake.body) {
+            // Calculate the distance between the enemy snake's head and the player's snake segment
+            let distance = Math.abs(segment.x - this.body[0].x) + Math.abs(segment.y - this.body[0].y);
+            
+            // Update the target segment if this segment is closer
+            if (distance < minDistance) {
+                minDistance = distance;
+                targetSegment = segment;
+            }
+        }
+
+        return targetSegment;
+    }
+
+    // Method to determine the direction towards the target segment
+    determineDirection(target) {
+        let dx = target.x - this.body[0].x;
+        let dy = target.y - this.body[0].y;
+
+        // Determine the direction based on the relative position of the target segment
+        if (Math.abs(dx) > Math.abs(dy)) {
+            return dx > 0 ? 'right' : 'left';
+        } else {
+            return dy > 0 ? 'down' : 'up';
+        }
+    }
+
+    // Method to change the direction of the enemy snake
+    changeDirection(newDirection) {
+        // Ensure the snake can't turn back on itself
+        if (newDirection === 'up' && this.direction !== 'down') {
+            this.direction = newDirection;
+        } else if (newDirection === 'down' && this.direction !== 'up') {
+            this.direction = newDirection;
+        } else if (newDirection === 'left' && this.direction !== 'right') {
+            this.direction = newDirection;
+        } else if (newDirection === 'right' && this.direction !== 'left') {
+            this.direction = newDirection;
+        }
+    }
+}
+
+let enemySnake = new EnemySnake(snakw);
+enemySnake.move(); // Move the enemy snake towards the player's snake
 
 const laser = {
     isShooting: false,
@@ -735,7 +848,7 @@ HaHaNoCollision(100);
      freeze = true;
      pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 10, 70)
+                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, false, 3)
  } else {
      return;         
  }
@@ -749,7 +862,7 @@ HaHaNoCollision(100);
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3)
                 }else if (food.type === 'ultrafood'){
                     gamefoods.push('ultrafood')
                     score += 3;
@@ -760,7 +873,7 @@ HaHaNoCollision(100);
                 let pcolourr = 'lightgrey'
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3)
                 }else{
                     gamefoods.push('normal')
                     score += 1;
