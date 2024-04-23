@@ -104,35 +104,7 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-function saveAndRandomizeAndRestore() {
-  // Save the 'snake' array if it exists
-  let savedSnake = [];
-    savedSnake = snake; // Make a copy to avoid modifying original array
-  
-
-  // Randomize the 'snake' array if it exists
-  const randomizeSnake = () => {
-    if (savedSnake.length > 0) {
-snake.forEach((snake, index) => {
-    const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
-    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
-    snake.x = randomX;
-    snake.y = randomY;
-      }
-    }
-  };
-
-  // Call the randomize function for the 'snake' array
-  randomizeSnake();
-
-  // Revert changes to the 'snake' array after 5 seconds
-  setTimeout(() => {
-          snake = savedSnake;
-    
-  }, 5000);
-}
-        
-        function drawPolygon(x, y, length, sides, color) {
+function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
         for (let i = 1; i <= sides; i++) {
@@ -675,8 +647,8 @@ function getFoodColor(foodType) {
             return 'darkblue';
         case 'air':
             return 'lightgrey';
-        case 'random':
-            return 'gray';
+        case '':
+            return 'red';
     }
 }
 
@@ -785,7 +757,7 @@ HaHaNoCollision(100);
      freeze = true;
      pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, false, 3)
+                    shootWaveOfProjectiles(pX, pY, 30, 360, (projectileSpeed/2), pcolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, false, 3)
  } else {
      return;         
  }
@@ -811,9 +783,7 @@ HaHaNoCollision(100);
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3)
-                }else if (food.type === 'random'){
-                saveAndRandomizeAndRestore();    
-                } else{
+                }else{
                     gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'blue' });
@@ -901,7 +871,7 @@ const rare = ['invincibility']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
             } else{
-                const common = ['normal', 'superfood', 'ultrafood', 'random']; // Possible directions
+                const common = ['normal', 'superfood', 'ultrafood']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * common.length);
     return common[randomIndex2];
             }
@@ -926,12 +896,14 @@ const rare = ['invincibility']; // Possible directions
             createParticles('red');
             animateExplosion();
             pauseGame();
+            gotextralife = false;
             snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
             obstacles = [];
             gamefoods = [];
             dynamicObstacles = [];
             score = 0;
             isEating = false;
+            isInvincible = false;
             eatingAnimationFrames = 0;
             lives = 0.5;
             livecount = 2;
