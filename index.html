@@ -113,15 +113,11 @@ function saveAndRandomizeAndRestore() {
   // Randomize the 'snake' array if it exists
   const randomizeSnake = () => {
     if (savedSnake.length > 0) {
-      // Assuming each element in the 'snake' array is a coordinate [x, y]
-      // Randomize the coordinates within the bounds of the canvas, for example, [0, 0] to [canvasWidth, canvasHeight]
-
-            const canvasWidth = closestNumber(window.innerWidth, gridSize);
-            const canvasHeight = closestNumber(window.innerHeight, gridSize);
-        for (let i = 0; i < savedSnake.length; i++) {
-        const x = Math.floor(Math.random() * canvasWidth);
-        const y = Math.floor(Math.random() * canvasHeight);
-        savedSnake[i] = [x, y];
+snake.forEach((snake, index) => {
+    const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+    snake.x = randomX;
+    snake.y = randomY;
       }
     }
   };
