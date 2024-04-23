@@ -105,72 +105,38 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 function saveAndRandomizeAndRestore() {
-  // Save all arrays into an object
-  let savedArrays = {};
-  for (const key in window) {
-    if (window.hasOwnProperty(key) && Array.isArray(window[key])) {
-      savedArrays[key] = window[key].slice(); // Make a copy to avoid modifying original array
-    }
-  }
+  // Save the 'snake' array if it exists
+  let savedSnake = [];
+    savedSnake = snake; // Make a copy to avoid modifying original array
+  
 
-  // Randomize arrays and their data
-  const randomizeArrays = () => {
-    for (const key in window) {
-      if (window.hasOwnProperty(key) && Array.isArray(window[key])) {
-        const array = window[key];
-        const originalArray = savedArrays[key];
-        const types = [];
+  // Randomize the 'snake' array if it exists
+  const randomizeSnake = () => {
+    if (savedSnake.length > 0) {
+      // Assuming each element in the 'snake' array is a coordinate [x, y]
+      // Randomize the coordinates within the bounds of the canvas, for example, [0, 0] to [canvasWidth, canvasHeight]
 
-        // Collect possible types in the array
-        for (const value of originalArray) {
-          if (!types.includes(typeof value)) {
-            types.push(typeof value);
-          }
-        }
-
-        // Randomize the array
-        array.sort(() => Math.random() - 0.5);
-
-        // Randomize data in the array to other possible types
-        for (let i = 0; i < array.length; i++) {
-          const originalValue = originalArray[i];
-          const typeIndex = types.indexOf(typeof originalValue);
-          if (typeIndex !== -1 && types.length > 1) {
-            const newIndex = (typeIndex + Math.floor(Math.random() * (types.length - 1)) + 1) % types.length;
-            const newType = types[newIndex];
-            switch (newType) {
-              case 'number':
-                array[i] = Math.random() * 100; // Random number between 0 and 100
-                break;
-              case 'string':
-                array[i] = Math.random().toString(36).substring(7); // Random string
-                break;
-              // Add cases for other types as needed
-            }
-          }
-        }
+            const canvasWidth = closestNumber(window.innerWidth, gridSize);
+            const canvasHeight = closestNumber(window.innerHeight, gridSize);
+        for (let i = 0; i < savedSnake.length; i++) {
+        const x = Math.floor(Math.random() * canvasWidth);
+        const y = Math.floor(Math.random() * canvasHeight);
+        savedSnake[i] = [x, y];
       }
     }
   };
 
-  // Randomize the 'snake' array if it exists
-  if (window.hasOwnProperty('snake') && Array.isArray(window['snake'])) {
-    window['snake'].sort(() => Math.random() - 0.5);
-  }
+  // Call the randomize function for the 'snake' array
+  randomizeSnake();
 
-  // Call the randomize function
-  randomizeArrays();
-
-  // Revert changes after 5 seconds
+  // Revert changes to the 'snake' array after 5 seconds
   setTimeout(() => {
-    for (const key in savedArrays) {
-      if (savedArrays.hasOwnProperty(key)) {
-        window[key] = savedArrays[key];
-      }
-    }
+          snake = savedSnake;
+    
   }, 5000);
 }
-function drawPolygon(x, y, length, sides, color) {
+        
+        function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
         for (let i = 1; i <= sides; i++) {
