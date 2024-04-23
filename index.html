@@ -389,7 +389,7 @@ function updateEnemies() {
     // For example:
     if (snakeCollision(enemy)) {
       // Game over logic
-      gameOver();
+      restartGame();
     }
   });
 }
@@ -1069,6 +1069,7 @@ function animateExplosion() {
         function gameLoop() {
             resizeCanvas(); // Resize the canvas on every game loop iteration
             resizeCanvasHeight();
+            updateEnemies();
             update();
             draw();
 
