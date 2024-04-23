@@ -338,66 +338,67 @@ function applyEarthquake(obstacles) {
     });
 }
 
-// Define the enemy snake class
-class EnemySnake {
-    constructor(canvas, blockSize, playerSnake) {
-        this.canvas = canvas;
-        this.context = canvas.getContext('2d');
-        this.blockSize = blockSize;
-        this.playerSnake = playerSnake;
-        this.segments = [{ x: 5, y: 5 }]; // Starting position
-        this.path = []; // Pathfinding path
-        this.findPathInterval = 1000; // Interval for finding path (in milliseconds)
-        this.moveInterval = 200; // Interval for movement (in milliseconds)
-        this.init();
-    }
+// Define the enemy class
+class Enemy {
+  constructor(x, y, speed) {
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.size = 10; // Adjust size as needed
+  }
 
-    init() {
-        this.findPath();
-        setInterval(() => {
-            this.move();
-        }, this.moveInterval);
-        setInterval(() => {
-            this.findPath();
-        }, this.findPathInterval);
+  // Method to move the enemy
+  move() {
+    this.x += this.speed;
+    if (this.x > canvas.width) {
+      // Reset enemy position if it goes off-screen
+      this.x = -this.size;
+      // Randomize y position to create variety
+      this.y = Math.random() * canvas.height;
     }
+  }
 
-    findPath() {
-        // Simple pathfinding logic - just move towards the player's snake head
-        const playerHead = this.playerSnake.segments[0];
-        const enemyHead = this.segments[0];
-        const dx = playerHead.x - enemyHead.x;
-        const dy = playerHead.y - enemyHead.y;
-        if (Math.abs(dx) > Math.abs(dy)) {
-            this.path = [{ x: enemyHead.x + Math.sign(dx), y: enemyHead.y }];
-        } else {
-            this.path = [{ x: enemyHead.x, y: enemyHead.y + Math.sign(dy) }];
-        }
-    }
-
-    move() {
-        if (this.path.length === 0) return; // No path found
-        const nextMove = this.path.shift();
-        const head = { ...this.segments[0] };
-        this.segments.unshift(nextMove);
-        if (this.segments.length > 1) {
-            this.segments.pop();
-        }
-        this.draw();
-    }
-
-    draw() {
-        // Drawing logic for the enemy snake
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.fillStyle = 'red';
-        this.segments.forEach(segment => {
-            this.context.fillRect(segment.x * this.blockSize, segment.y * this.blockSize, this.blockSize, this.blockSize);
-        });
-    }
+  // Method to draw the enemy
+  draw() {
+    ctx.fillStyle = "red"; // Adjust color as needed
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+  }
 }
 
-const enemySnake = new EnemySnake(canvas, gridSize, snake);
+// Create an array to store enemies
+let enemies = [];
 
+// Function to spawn enemies
+function spawnEnemies() {
+  // Adjust spawn rate and speed as needed
+  setInterval(() => {
+    let y = Math.random() * canvas.height;
+    let speed = Math.random() * 2 + 1; // Random speed between 1 and 3
+    let enemy = new Enemy(-10, y, speed);
+    enemies.push(enemy);
+  }, 2000); // Spawn a new enemy every 2 seconds
+}
+
+// Function to update and draw enemies
+function updateEnemies() {
+  enemies.forEach((enemy, index) => {
+    enemy.move();
+    enemy.draw();
+
+    // Check for collision with snake (you need to implement snake collision detection)
+    // For example:
+    if (snakeCollision(enemy)) {
+      // Game over logic
+      gameOver();
+    }
+  });
+}
+
+// Call the spawnEnemies function to start spawning enemies
+spawnEnemies();
+
+// Call the updateEnemies function in your game loop to update and draw enemies
+        
 const laser = {
     isShooting: false,
     x1: 0,
