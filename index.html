@@ -224,9 +224,9 @@ if (increase === true) {
     let increaseSideTimeout; // Variable to store the setTimeout reference
 
     let increaseSide = function() {
-        projectile.sides += 1; // Increment side by 1
+        projectile.sides ++; // Increment side by 1
         projectile.size += 10;
-        increaseSideTimeout = setTimeout(increaseSide, 1000); // Call increaseSide again after 1 second
+        increaseSideTimeout = setTimeout(increaseSide, 100); // Call increaseSide again after 1 second
     };
 
     increaseSide(); // Start the timeout initially
