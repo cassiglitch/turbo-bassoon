@@ -805,8 +805,10 @@ HaHaNoCollision(100);
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100)
                 }else if (food.type === 'slow'){
-                 changeInterval(150)   
-                }
+                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100)
+                setTimeout((){
+                    shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100), 100)}
+                } 
                 else{
                     gamefoods.push('normal')
                     score += 1;
