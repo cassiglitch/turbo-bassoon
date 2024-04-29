@@ -660,8 +660,10 @@ function getFoodColor(foodType) {
             return 'red';
         case 'morph':
             return neoncolor;
+        case 'breath':
+            return 'pink';
         case 'slow':
-            return 'grey';
+            return 'gray';
     }
 }
 
@@ -802,7 +804,7 @@ HaHaNoCollision(100);
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100)
-                }else if (food.type === 'slow'){
+                }else if (food.type === 'breath'){
     let repeat = 30; // Initial size
     let timeInteger = 1;
     // Define a function for shooting projectiles with a delay
@@ -828,9 +830,15 @@ HaHaNoCollision(100);
     }
     // Start shooting projectiles with a delay
     shootWithDelay(10);
-}
+
+            }else if(food.type === 'slow') {
+                      changeInterval(150)   
+                setTimeout(function() {
+    changeInterval(100);
+}, 500);
+                   
                 
-                else{
+                }else{
                     gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
@@ -914,11 +922,11 @@ const rare = ['invincibility']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * rare.length);
     return rare[randomIndex2];
             } else if (random <= 0.4) {
-    const Special = ['teleport', 'earth', 'ice', 'fire', 'bigfire', 'poison', 'morph']; // Possible directions
+    const Special = ['teleport', 'earth', 'ice', 'fire', 'air', 'poison', 'morph', 'slow', 'breath']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
             } else{
-                const common = ['normal', 'superfood', 'ultrafood', 'slow']; // Possible directions
+                const common = ['normal', 'superfood', 'ultrafood']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * common.length);
     return common[randomIndex2];
             }
