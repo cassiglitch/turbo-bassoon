@@ -90,6 +90,8 @@
         let pausetimer = 900;
         let originalSnakeColor = '#00FF00';
         let neoncolor = '#39ff14';
+        let sunset = '#00FFFF'
+        let timeslow = '#00ff8c'
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
@@ -106,12 +108,49 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
+// Gravity Well Module with Pathfinding
+const GravityWell = (function() {
+    // Private variables
+    let wellPosition = { x: 0, y: 0 };
+    let strength = 1; // Strength of the gravity well
+    gridSize = startingGridSize * antiZoomFactor; // Grid size (replace with your global variable)
+
+    // Public methods
+    function setPosition(x, y) {
+        wellPosition.x = x;
+        wellPosition.y = y;
+    }
+
+    function setStrength(newStrength) {
+        strength = newStrength;
+    }
+
+    function render(context) {
+        // Save current canvas transformation
+        ctx.save();
+
+        // Translate the canvas to the position of the gravity well
+        ctx.translate(wellPosition.x, wellPosition.y);
+
+        // Draw pulsing circle
+        const pulsation = Math.sin(Date.now() * 0.005) * 0.5 + 0.5; // Adjust pulsation speed
+        const radius = gridSize * pulsation;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 0, 255, 0.5)"; // Blue color with transparency
+        ctx.fill();
+        ctx.closePath();
+
+        // Restore canvas transformation
+        ctx.restore();
+    }
 
 function applyGravity(snake) {
     // Calculate the difference between the snake's head position and the gravity well
-    if (score > (maxscore/2){
-    const dx = 0 - snake[0].x;
-    const dy = 0 - snake[0].y;
+    if (score > 2){
+    const dx = wellPosition.x - snake[0].x;
+    const dy = wellPosition.y - snake[0].y;
 
     // Determine the direction to move based on the larger absolute difference
     if (Math.abs(dx) > Math.abs(dy)) {
@@ -123,6 +162,20 @@ function applyGravity(snake) {
     }
 }
 }
+    
+
+    // Return public methods
+    return {
+        setPosition,
+        setStrength,
+        render,
+        applyGravity
+    };
+})();
+GravityWell.setPosition(100, 100);
+GravityWell.setStrength(0.1);
+        
+
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -404,7 +457,7 @@ function handleTapEnd(event) {
 
 canvas.addEventListener('touchstart', handleTapStart);
 canvas.addEventListener('touchend', handleTapEnd);
-applyGravity(snake)
+
 
 // Drawing function to draw the laser with fade effect
 function drawLaser() {
@@ -582,6 +635,7 @@ setTimeout(() => {
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
+    GravityWell.render(ctx);
 }
 
 function drawInvincibilityAura(colorName) {
@@ -676,9 +730,9 @@ function getFoodColor(foodType) {
         case 'morph':
             return neoncolor;
         case 'breath':
-            return 'pink';
+            return sunset;
         case 'slow':
-            return 'gray';
+            return timeslow;
     }
 }
 
@@ -831,7 +885,7 @@ HaHaNoCollision(100);
             const pX = snake[0].x * gridSize + gridSize / 2;
             const pY = snake[0].y * gridSize + gridSize / 2;
             // Shoot projectiles
-            shootWaveOfProjectiles(pX, pY, 1, 1, 30, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20);
+            shootWaveOfProjectiles(pX, pY, 1, 1, 30, sunset, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20);
             // Decrease size for the next iteration
             repeat--;
             // Schedule the next execution after a delay
@@ -1087,6 +1141,7 @@ function animateExplosion() {
             update();
             draw();
 
+            GravityWell.applyGravity(snake);
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
