@@ -109,71 +109,65 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 // Gravity Well Module with Pathfinding
+// Gravity Well Module
 const GravityWell = (function() {
     // Private variables
-    let wellPosition = { x: 0, y: 0 };
-    let strength = 1; // Strength of the gravity well
-    gridSize = startingGridSize * antiZoomFactor; // Grid size (replace with your global variable)
+    let wells = []; // Array to store multiple gravity wells
+    let gridSize = 20; // Grid size (replace with your global variable)
 
     // Public methods
-    function setPosition(x, y) {
-        wellPosition.x = x;
-        wellPosition.y = y;
+    function spawn(x, y, range) {
+        wells.push({ x, y, range });
     }
 
-    function setStrength(newStrength) {
-        strength = newStrength;
+    function destroyAll() {
+        wells = [];
     }
 
     function render(context) {
-        // Save current canvas transformation
-        ctx.save();
+        for (const well of wells) {
+            // Render flashing red transparent square around the well
+            const alpha = Math.abs(Math.sin(Date.now() * 0.005)) * 0.5 + 0.1; // Adjust transparency
+            const size = well.range * gridSize;
 
-        // Translate the canvas to the position of the gravity well
-        ctx.translate(wellPosition.x, wellPosition.y);
-
-        // Draw pulsing circle
-        const pulsation = Math.sin(Date.now() * 0.005) * 0.5 + 0.5; // Adjust pulsation speed
-        const radius = gridSize * pulsation;
-
-        ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0, 0, 255, 0.5)"; // Blue color with transparency
-        ctx.fill();
-        ctx.closePath();
-
-        // Restore canvas transformation
-        ctx.restore();
+            context.beginPath();
+            context.rect(well.x - size / 2, well.y - size / 2, size, size);
+            context.fillStyle = `rgba(255, 0, 0, ${alpha})`; // Red color with transparency
+            context.fill();
+            context.closePath();
+        }
     }
 
-function applyGravity(snake) {
-    // Calculate the difference between the snake's head position and the gravity well
-    if (score > 2){
-    const dx = wellPosition.x - snake[0].x;
-    const dy = wellPosition.y - snake[0].y;
+    function applyGravity(snake) {
+        for (const well of wells) {
+            // Calculate the difference between the snake's head position and the gravity well
+            const dx = well.x - snake[0].x;
+            const dy = well.y - snake[0].y;
 
-    // Determine the direction to move based on the larger absolute difference
-    if (Math.abs(dx) > Math.abs(dy)) {
-        // Move horizontally
-        direction = dx > 0 ? "right" : "left";
-    } else {
-        // Move vertically
-        direction = dy > 0 ? "down" : "up";
+            // Check if the snake is within the range of the gravity well
+            if (Math.abs(dx) <= well.range * gridSize && Math.abs(dy) <= well.range * gridSize) {
+                // Invert the snake's movement direction
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    // Move horizontally
+                    snake[0].x -= Math.sign(dx) * gridSize;
+                } else {
+                    // Move vertically
+                    snake[0].y -= Math.sign(dy) * gridSize;
+                }
+            }
+        }
     }
-}
-}
-    
 
     // Return public methods
     return {
-        setPosition,
-        setStrength,
+        spawn,
+        destroyAll,
         render,
         applyGravity
     };
 })();
-GravityWell.setPosition(100, 100);
-GravityWell.setStrength(0.1);
+
+GravityWell.spawn(100, 105, 20);
         
 
 function drawPolygon(x, y, length, sides, color) {
