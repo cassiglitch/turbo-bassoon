@@ -808,7 +808,7 @@ HaHaNoCollision(100);
     // Define a function for shooting projectiles with a delay
     function shootWithDelay(number) {
         // Check if size is greater than 0
-        let repeat = number
+        repeat = number
         if (repeat > 0) {
             // Calculate position
             const pX = snake[0].x * gridSize + gridSize / 2;
@@ -818,8 +818,11 @@ HaHaNoCollision(100);
             // Decrease size for the next iteration
             repeat--;
             // Schedule the next execution after a delay
-            setTimeout(shootWithDelay, timeInteger * 100);
-            // Increment timeInteger for the next iteration
+
+            setTimeout(() => {
+            shootWithDelay(repeat);
+        }, timeInteger * 100);
+                     // Increment timeInteger for the next iteration
             timeInteger++;
         }
     }
