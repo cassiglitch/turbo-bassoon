@@ -147,26 +147,26 @@ const GravityWell = (function() {
         }
     }
 
-    function applyGravity(snake) {
-        for (const well of wells) {
-            // Calculate the difference between the snake's head position and the gravity well
-            const dx = well.x - snake[0].x;
-            const dy = well.y - snake[0].y;
+function applyGravity(snake) {
+    for (const well of wells) {
+        // Calculate the distance between the snake's head position and the gravity well
+        const dx = well.x - snake[0].x;
+        const dy = well.y - snake[0].y;
 
-            // Check if the snake is within the range of the gravity well
-            if (Math.abs(dx) <= well.range * gridSize && Math.abs(dy) <= well.range * gridSize) {
-                // Invert the snake's movement direction
-    // Determine the direction to move based on the larger absolute difference
-    if (Math.abs(dx) > Math.abs(dy)) {
-        // Move horizontally
-        direction = dx < 0 ? "right" : "left";
-    } else {
-        // Move vertically
-        direction = dy < 0 ? "down" : "up";
-    }
+        // Check if the snake is within the range of the gravity well
+        if (Math.abs(dx) <= well.range * gridSize && Math.abs(dy) <= well.range * gridSize) {
+            // Invert the snake's movement direction
+            // Determine the direction to move based on the larger absolute difference
+            if (Math.abs(dx) > Math.abs(dy)) {
+                // Move horizontally
+                direction = dx < 0 ? "right" : "left";
+            } else {
+                // Move vertically
+                direction = dy < 0 ? "down" : "up";
             }
         }
     }
+}
 
     // Return public methods
     return {
