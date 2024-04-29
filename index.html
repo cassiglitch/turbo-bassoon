@@ -803,19 +803,20 @@ HaHaNoCollision(100);
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100)
                 }else if (food.type === 'slow'){
-    let size = 30; // Initial size
+    let repeat = 30; // Initial size
     let timeInteger = 1;
     // Define a function for shooting projectiles with a delay
-    function shootWithDelay() {
+    function shootWithDelay(number) {
         // Check if size is greater than 0
-        if (size > 0) {
+        repeat = number
+        if (repeat > 0) {
             // Calculate position
             const pX = snake[0].x * gridSize + gridSize / 2;
             const pY = snake[0].y * gridSize + gridSize / 2;
             // Shoot projectiles
-            shootWaveOfProjectiles(pX, pY, 1, 1, 30, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 30, size, true, 3, false, 20);
+            shootWaveOfProjectiles(pX, pY, 1, 1, 30, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20);
             // Decrease size for the next iteration
-            size--;
+            repeat--;
             // Schedule the next execution after a delay
             setTimeout(shootWithDelay, timeInteger * 100);
             // Increment timeInteger for the next iteration
@@ -823,7 +824,7 @@ HaHaNoCollision(100);
         }
     }
     // Start shooting projectiles with a delay
-    shootWithDelay();
+    shootWithDelay(5);
 }
                 
                 else{
