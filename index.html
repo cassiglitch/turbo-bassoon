@@ -166,7 +166,7 @@ function applyGravity(snake) {
                 direction = dy < 0 ? "down" : "up";
             }
             // Since the snake's direction is modified, exit the loop
-            break;
+            return;
         }
     }
 
