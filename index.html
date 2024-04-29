@@ -145,9 +145,9 @@ const GravityWell = (function() {
             context.fill();
             context.closePath();
         }
-    }
-function applyGravity(snake) {
+    }function applyGravity(snake) {
     // Initialize direction to the current direction of the snake
+    let isAffectedByGravity = false;
 
     for (const well of wells) {
         // Calculate the distance between the snake's head position and the gravity well
@@ -158,21 +158,29 @@ function applyGravity(snake) {
         if (Math.abs(dx) <= well.range * gridSize && Math.abs(dy) <= well.range * gridSize) {
             // Invert the snake's movement direction
             // Determine the direction to move based on the larger absolute difference
+            let newDirection;
             if (Math.abs(dx) > Math.abs(dy)) {
                 // Move horizontally
-                direction = dx < 0 ? "right" : "left";
+                newDirection = dx < 0 ? "right" : "left";
             } else {
                 // Move vertically
-                direction = dy < 0 ? "down" : "up";
+                newDirection = dy < 0 ? "down" : "up";
             }
+            // Update the snake's direction
+            direction = newDirection;
+            // Set the flag to indicate that the snake is affected by gravity
+            isAffectedByGravity = true;
             // Since the snake's direction is modified, exit the loop
-            return;
+            break;
         }
     }
 
-    // Now that we've determined the final direction, update the snake's direction
-    direction = direction;
+    // If the snake is not affected by any gravitational well, keep its direction unchanged
+    if (!isAffectedByGravity) {
+        direction = direction;
+    }
 }
+
 
 
     // Return public methods
