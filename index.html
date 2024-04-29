@@ -108,12 +108,11 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-// Gravity Well Module with Pathfinding
-// Gravity Well Module
+// Gravity Well Module with Pathfinding// Gravity Well Module
 const GravityWell = (function() {
     // Private variables
     let wells = []; // Array to store multiple gravity wells
-    let gridSize = 20; // Grid size (replace with your global variable)
+    let gridSize = startingGridSize * antiZoomFactor; // Grid size (replace with your global variable)
 
     // Public methods
     function spawn(x, y, range) {
@@ -126,7 +125,17 @@ const GravityWell = (function() {
 
     function render(context) {
         for (const well of wells) {
-            // Render flashing red transparent square around the well
+            // Render pulsating circle representing the gravity well
+            const pulsation = Math.sin(Date.now() * 0.005) * 0.5 + 0.5; // Adjust pulsation speed
+            const radius = gridSize * pulsation;
+
+            context.beginPath();
+            context.arc(well.x, well.y, radius, 0, Math.PI * 2);
+            context.fillStyle = "rgba(0, 0, 255, 0.5)"; // Blue color with transparency
+            context.fill();
+            context.closePath();
+
+            // Render flashing red transparent square around the well as a boundary warning
             const alpha = Math.abs(Math.sin(Date.now() * 0.005)) * 0.5 + 0.1; // Adjust transparency
             const size = well.range * gridSize;
 
@@ -147,13 +156,14 @@ const GravityWell = (function() {
             // Check if the snake is within the range of the gravity well
             if (Math.abs(dx) <= well.range * gridSize && Math.abs(dy) <= well.range * gridSize) {
                 // Invert the snake's movement direction
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    // Move horizontally
-                    snake[0].x -= Math.sign(dx) * gridSize;
-                } else {
-                    // Move vertically
-                    snake[0].y -= Math.sign(dy) * gridSize;
-                }
+    // Determine the direction to move based on the larger absolute difference
+    if (Math.abs(dx) > Math.abs(dy)) {
+        // Move horizontally
+        direction = dx < 0 ? "right" : "left";
+    } else {
+        // Move vertically
+        direction = dy < 0 ? "down" : "up";
+    }
             }
         }
     }
