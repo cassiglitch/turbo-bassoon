@@ -803,20 +803,29 @@ HaHaNoCollision(100);
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100)
                 }else if (food.type === 'slow'){
-                let size = 30; // Initial size
-let timeInteger = 1
-// Function to decrease size by one until it reaches 0
-while (size > 0) {
-setTimeout(function(){
-    pX = snake[0].x * gridSize + gridSize / 2;
-                pY = snake[0].y * gridSize + gridSize / 2;
-                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 30, size, true, 3, false, 20)
-                setTimeout(function() {shootWaveOfProjectiles(pX, pY, 1, 1, 30, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 30, size, true, 3, false, 20)}, 100)
-    // Decrease the size by one for the next iteration
-size --;
-timeInteger ++;
-}, timeInteger * 100)
-                }
+                else if (food.type === 'breath') {
+    let size = 30; // Initial size
+    let timeInteger = 1;
+    // Define a function for shooting projectiles with a delay
+    function shootWithDelay() {
+        // Check if size is greater than 0
+        if (size > 0) {
+            // Calculate position
+            const pX = snake[0].x * gridSize + gridSize / 2;
+            const pY = snake[0].y * gridSize + gridSize / 2;
+            // Shoot projectiles
+            shootWaveOfProjectiles(pX, pY, 1, 1, 30, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 30, size, true, 3, false, 20);
+            // Decrease size for the next iteration
+            size--;
+            // Schedule the next execution after a delay
+            setTimeout(shootWithDelay, timeInteger * 100);
+            // Increment timeInteger for the next iteration
+            timeInteger++;
+        }
+    }
+    // Start shooting projectiles with a delay
+    shootWithDelay();
+}
                 }
                 else{
                     gamefoods.push('normal')
