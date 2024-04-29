@@ -803,7 +803,6 @@ HaHaNoCollision(100);
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100)
                 }else if (food.type === 'slow'){
-                else if (food.type === 'breath') {
     let size = 30; // Initial size
     let timeInteger = 1;
     // Define a function for shooting projectiles with a delay
@@ -826,7 +825,7 @@ HaHaNoCollision(100);
     // Start shooting projectiles with a delay
     shootWithDelay();
 }
-                }
+                
                 else{
                     gamefoods.push('normal')
                     score += 1;
