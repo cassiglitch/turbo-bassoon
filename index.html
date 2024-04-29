@@ -107,7 +107,22 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 
+function applyGravity(snake) {
+    // Calculate the difference between the snake's head position and the gravity well
+    if (score > (maxscore/2){
+    const dx = 0 - snake[0].x;
+    const dy = 0 - snake[0].y;
 
+    // Determine the direction to move based on the larger absolute difference
+    if (Math.abs(dx) > Math.abs(dy)) {
+        // Move horizontally
+        direction = dx > 0 ? "right" : "left";
+    } else {
+        // Move vertically
+        direction = dy > 0 ? "down" : "up";
+    }
+}
+}
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -389,7 +404,7 @@ function handleTapEnd(event) {
 
 canvas.addEventListener('touchstart', handleTapStart);
 canvas.addEventListener('touchend', handleTapEnd);
-
+applyGravity(snake)
 
 // Drawing function to draw the laser with fade effect
 function drawLaser() {
