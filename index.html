@@ -159,9 +159,24 @@ function updateGravityWells(snake) {
     well.updateDirection(snake);
   }
 }
+        function updateSnakeDirection(snake) {
+  let closestDirection = null;
+  let closestDistance = Number.MAX_VALUE;
+  for (let well of gravityWells) {
+    let distance = Math.sqrt(Math.pow(well.x - snake[0].x, 2) + Math.pow(well.y - snake[0].y, 2));
+    if (distance <= well.range && distance < closestDistance) {
+      closestDistance = distance;
+      closestDirection = well.calculateDirection(snake);
+    }
+  }
+  if (closestDirection) {
+    direction = closestDirection;
+  }
+}
 
 createGravityWell(20, 20, gridSize); // Example gravity well
 updateGravityWells(snake);
+updateSnakeDirection(snake)
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
