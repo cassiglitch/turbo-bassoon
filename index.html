@@ -111,24 +111,29 @@ let projectiles = []; // Array to store projectiles
 let range = 5
 let well = { x: 0, y: 0};
 
-function isSnakeFiveUnitsAwayFromPoint(snake, pointX, pointY, gridSize, range) {
+unction isSnakeInsideFiveByFiveGridAroundPoint(snake, pointX, pointY, gridSize) {
     if (snake.length === 0) {
-        // Snake is empty, so it can't be away from any point
+        // Snake is empty, so it can't be inside or on the boundary of any square
         return false;
     }
+
+    // Calculate the coordinates of the top-left corner of the 5x5 grid
+    const topLeftX = pointX - (2.5 * gridSize);
+    const topLeftY = pointY - (2.5 * gridSize);
 
     // Extract the coordinates of the snake's head
     const snakeHeadX = snake[0].x;
     const snakeHeadY = snake[0].y;
 
-    // Calculate the distance between the snake's head and the specified point
-    const distance = Math.sqrt(Math.pow(snakeHeadX - pointX, 2) + Math.pow(snakeHeadY - pointY, 2));
-if(distance >= 5 * gridSize){
-    return true;
-}else{
-    return false
+    // Check if the snake's head is inside or on the boundary of the 5x5 grid
+    if (snakeHeadX >= topLeftX && snakeHeadX <= (topLeftX + 5 * gridSize) &&
+        snakeHeadY >= topLeftY && snakeHeadY <= (topLeftY + 5 * gridSize)) {
+        return true;
+    } else {
+        return false;
+    }
 }
-}
+
 // Define pulse variables
 var pulseRadius = gridSize;
 var pulseMaxRadius = (gridSize + (gridSize/2));
