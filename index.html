@@ -697,7 +697,7 @@ eatenSegments.forEach((segment, index) => {
 
 originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 }
-
+gravitywell = true;
 
 function getFoodColor(foodType) {
 
@@ -1138,11 +1138,18 @@ function animateExplosion() {
             update();
             draw();
             if (gravitywell === true){
-            if (snake[0].y === well.y){
-            gravityx();
+            if (snake[0].x > well.x) {
+            direction = 'right';
+        } else if (snake[0].x < well.x) {
+            direction = 'left';
         }
             }
             if (gravitywell === true){
+        if (snake[0].x > well.x) {
+            direction = 'right';
+        } else if (snake[0].x < well.x) {
+            direction = 'left';
+        }
         if (snake[0].x === well.x){
             graviY();
         }
