@@ -150,7 +150,9 @@ function drawPulsatingCircle() {
 drawPulsatingCircle();
 
         direction = determineDirection(snake, well);
-        direction = determineDirection(snake, well);
+        setTimeout(function() {
+    direction = determineDirection(snake, well);;
+}, 50);           
         direction = determineDirection(snake, well);
 
 function determineDirection(snake, targetPoint) {
