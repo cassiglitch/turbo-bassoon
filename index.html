@@ -1148,6 +1148,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
+             direction = determineDirection(snake, well);
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
