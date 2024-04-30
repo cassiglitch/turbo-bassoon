@@ -108,30 +108,70 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let well = {x: 20, y: 20 }
 
-    function gravityx() {
+let well = { x: 20, y: 20, range: 1 };
+
+// Define pulse variables
+var pulseRadius = gridSize;
+var pulseMaxRadius = (gridSize + (gridSize/2));
+var pulseMinRadius = (gridSize / 2);
+var pulseSpeed = 0.1;
+var increasing = true;
+
+// Function to draw pulsating circle
+function drawPulsatingCircle() {
+
+
+    // Draw pulsating circle
+    ctx.beginPath();
+    ctx.arc(well.x, well.y, pulseRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+    ctx.fill();
+    ctx.closePath();
+
+    // Update pulse radius
+    if (increasing) {
+        pulseRadius += pulseSpeed;
+        if (pulseRadius >= pulseMaxRadius) {
+            increasing = false;
+        }
+    } else {
+        pulseRadius -= pulseSpeed;
+        if (pulseRadius <= pulseMinRadius) {
+            increasing = true;
+        }
+    }
+
+    // Request animation frame
+    requestAnimationFrame(drawPulsatingCircle);
+}
+
+// Call drawPulsatingCircle function to start animation
+drawPulsatingCircle();
+
+
+function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
-    if (distanceX < (1 * gridSize)) {
+    if (distanceX < (well.range * gridSize)) {
         if (snake[0].x > well.x) {
             direction = 'right';
         } else if (snake[0].x < well.x) {
             direction = 'left';
-        }else if (snake[0].x = well.x){
-         gravitY()   
+        } else {
+            gravitY();
         }
     }
 }
 
 function gravitY() {
     var distanceY = Math.abs(snake[0].y - well.y);
-    if (distanceY < (10 * gridSize)) {
+    if (distanceY < (well.range * gridSize)) {
         if (snake[0].y > well.y) {
             direction = 'down';
         } else if (snake[0].y < well.y) {
             direction = 'up';
-        }else if (snake[0].y = well.y){
-         gravityx()   
+        } else {
+            gravityx();
         }
     }
 }
