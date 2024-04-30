@@ -148,21 +148,10 @@ function drawPulsatingCircle() {
 
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
-
-function isXDistanceWithinRange(x1, x2, minDistance, maxDistance) {
-  const deltaX = Math.abs(x2 - x1);
-  return deltaX >= minDistance && deltaX <= maxDistance;
-}
-
-function isYDistanceWithinRange(y1, y2, minDistance, maxDistance) {
-  const deltaY = Math.abs(y2 - y1);
-  return deltaY >= minDistance && deltaY <= maxDistance;
-}
-
         
 function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
-    if (isXDistanceWithinRange(snake[0].x, well.x, 1, range) === 'true') {
+    if (snake[0].x <= distanceX) {
         if (snake[0].x > well.x) {
             direction = 'right';
         } else if (snake[0].x < well.x) {
@@ -177,7 +166,7 @@ function gravityx() {
 
 function gravitY() {
     var distanceY = Math.abs(snake[0].y - well.y);
-    if (isYDistanceWithinRange(snake[0].y, well.y, 1, range) === 'true') {
+    if (snake[0].y <= distanceY) {
         if (snake[0].y > well.y) {
             direction = 'down';
         } else if (snake[0].y < well.y) {
