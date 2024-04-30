@@ -175,8 +175,8 @@ function createGravityWell(x, y, range) {
 function updateSnakeDirection(snakeX, snakeY) {
     for (const well of gravityWells) {
         if (manhattanDistance(snake[0].x, snake[0].y, well.x, well.y) <= well.range) {
-            return well.findClosestDirection(snake[0].x, snake[0].y);
             direction = well.findClosestDirection(snake[0].x, snake[0].y)
+            return well.findClosestDirection(snake[0].x, snake[0].y);
         }
     }
     // If no gravity well affects the snake, return null (no change in direction)
