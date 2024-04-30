@@ -151,7 +151,6 @@ drawPulsatingCircle();
         
 function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
-    if (distanceX >= (range * gridSize)) {
         if (snake[0].x > well.x) {
             direction = 'right';
         } else if (snake[0].x < well.x) {
@@ -160,11 +159,10 @@ function gravityx() {
             gravitY();
         }
     }
-}
+
 
 function gravitY() {
     var distanceY = Math.abs(snake[0].y - well.y);
-    if (distanceY >= (range * gridSize)) {
         if (snake[0].y > well.y) {
             direction = 'down';
         } else if (snake[0].y < well.y) {
@@ -173,7 +171,7 @@ function gravitY() {
             gravityx();
         }
     }
-}
+
 
     
 function drawPolygon(x, y, length, sides, color) {
