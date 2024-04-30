@@ -109,6 +109,96 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 
+// Function to calculate Manhattan distance between two points
+function manhattanDistance(x1, y1, x2, y2) {
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+}
+
+// Define the GravityWell class
+class GravityWell {
+    constructor(x, y, range) {
+        this.x = x;
+        this.y = y;
+        this.range = range;
+    }
+
+    // Function to render the gravity well and its range
+    render(ctx) {
+        // Render range as a transparent red rectangle
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+        ctx.fillRect((this.x - this.range) * gridSize, (this.y - this.range) * gridSize, this.range * 2 * gridSize, this.range * 2 * gridSize);
+
+        // Render gravity well as a pulsating circle
+        const radius = Math.sin(Date.now() / 500) * gridSize + gridSize; // Pulsating radius
+        ctx.beginPath();
+        ctx.arc(this.x * gridSize, this.y * gridSize, radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'blue';
+        ctx.fill();
+    }
+
+    // Function to find the direction that brings point a closest to point b
+    findClosestDirection(snakeX, snakeY) {
+        const directions = [
+            { dx: 0, dy: -1, name: 'up' },
+            { dx: 0, dy: 1, name: 'down' },
+            { dx: -1, dy: 0, name: 'left' },
+            { dx: 1, dy: 0, name: 'right' }
+        ];
+
+        let minDistance = Infinity;
+        let closestDirection = null;
+
+        for (const dir of directions) {
+            const newX = snakeX + dir.dx;
+            const newY = snakeY + dir.dy;
+            const distance = manhattanDistance(newX, newY, this.x, this.y);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestDirection = dir.name;
+            }
+        }
+
+        return closestDirection;
+    }
+}
+
+// Array to store multiple gravity wells
+let gravityWells = [];
+
+// Function to create a new gravity well and add it to the array
+function createGravityWell(x, y, range) {
+    const well = new GravityWell(x, y, range);
+    gravityWells.push(well);
+}
+
+// Function to update the snake's direction based on gravity wells
+function updateSnakeDirection(snakeX, snakeY) {
+    for (const well of gravityWells) {
+        if (manhattanDistance(snake[0].x, snake[0].y, well.x, well.y) <= well.range) {
+            return well.findClosestDirection(snake[0].x, snake[0].y);
+        }
+    }
+    // If no gravity well affects the snake, return null (no change in direction)
+    return null;
+}
+// Creating a gravity well at position (50, 50) with range 40
+createGravityWell(40, 40, 40);
+
+// Rendering loop
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Render gravity wells
+    for (const well of gravityWells) {
+        well.render(ctx);
+    }
+
+    requestAnimationFrame(render);
+}
+
+// Start rendering loop
+render();
+
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
