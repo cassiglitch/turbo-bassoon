@@ -109,19 +109,26 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 let well = {x: 20, y: 20 }
-function gravityx(){
-if (snake[0].x > well.x){
-    direction = 'right'
-} else if (snake[0].x < well.x){
-    direction = 'left'
+function gravityx() {
+    var distanceX = Math.abs(snake[0].x - well.x);
+    if (distanceX < 7) {
+        if (snake[0].x > well.x) {
+            direction = 'right';
+        } else if (snake[0].x < well.x) {
+            direction = 'left';
+        }
+    }
 }
-}
-function gravitY(){
-if (snake[0].y > well.y){
-    direction = 'down'
-} else if (snake[0].y < well.y){
-    direction = 'up'
-}
+
+function gravitY() {
+    var distanceY = Math.abs(snake[0].y - well.y);
+    if (distanceY < 7) {
+        if (snake[0].y > well.y) {
+            direction = 'down';
+        } else if (snake[0].y < well.y) {
+            direction = 'up';
+        }
+    }
 }
 
 function drawPolygon(x, y, length, sides, color) {
@@ -578,7 +585,8 @@ setTimeout(() => {
     dynamicObstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize * 2, gridSize * 2);
     });
-
+    ctx.fillStyle = 'salmon';
+    well.forEach(well => ctx.fillRect(well.x * gridSize, well.y * gridSize, gridSize, gridSize));
     // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
