@@ -155,7 +155,7 @@ function gravityx() {
             direction = 'right';
         } else if (snake[0].x < well.x) {
             direction = 'left';
-        } else {
+        } else if (snake[0].x === well.x){
             gravitY();
         }
     }
@@ -167,7 +167,7 @@ function gravitY() {
             direction = 'down';
         } else if (snake[0].y < well.y) {
             direction = 'up';
-        } else {
+        } else if (snake[0].y === well.y){
             gravityx();
         }
     }
