@@ -184,7 +184,7 @@ function determineDirection(snake, targetPoint) {
     }
 }
 
-
+    gravitywell = true
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -910,8 +910,7 @@ HaHaNoCollision(100);
                       changeInterval(150)   
                 setTimeout(function() {
     changeInterval(100);
-}, 500);
-    gravitywell = true;           
+}, 500);           
                 }else{
                     gamefoods.push('normal')
                     score += 1;
