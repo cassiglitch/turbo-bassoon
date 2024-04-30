@@ -153,24 +153,17 @@ function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
         if (snake[0].x > well.x) {
             direction = 'right';
-        } else if (snake[0].x < well.x) {
+        } else{
             direction = 'left';
         } else if (snake[0].x === well.x){
-                var distanceY = Math.abs(snake[0].y - well.y);
-    if (snake[0].y > well.y) {
+                var distanceY = Math.abs(snake[0].y - well.y)
+                if (snake[0].y > well.y) {
             direction = 'down';
-        } else if (snake[0].y < well.y) {
+        } else{
             direction = 'up';
-        } else if (snake[0].y === well.y){
-            if (snake[0].x > well.x) {
-            direction = 'right';
-        } else if (snake[0].x < well.x) {
-            direction = 'left';
-        }
+        } 
     }
-
         }
-    }
 
 function adjustDirection(snake, targetPoint, range) {
     // Calculate the distance between the snake's head (snake[0]) and the target point
