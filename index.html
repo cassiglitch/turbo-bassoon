@@ -111,7 +111,7 @@ let projectiles = []; // Array to store projectiles
 let well = {x: 20, y: 20 }
 function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
-    if (distanceX < 7) {
+    if (distanceX < 10) {
         if (snake[0].x > well.x) {
             direction = 'right';
         } else if (snake[0].x < well.x) {
@@ -122,7 +122,7 @@ function gravityx() {
 
 function gravitY() {
     var distanceY = Math.abs(snake[0].y - well.y);
-    if (distanceY < 7) {
+    if (distanceY < 10) {
         if (snake[0].y > well.y) {
             direction = 'down';
         } else if (snake[0].y < well.y) {
@@ -585,9 +585,7 @@ setTimeout(() => {
     dynamicObstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize * 2, gridSize * 2);
     });
-    ctx.fillStyle = 'green';
-   ctx.fillRect(well.x * gridSize, well.y * gridSize, gridSize, gridSize));
-    // Draw Score
+        // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
@@ -1096,7 +1094,7 @@ function animateExplosion() {
             update();
             draw();
             gravityx();
-
+gravitY();
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
