@@ -149,11 +149,6 @@ function drawPulsatingCircle() {
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
 
-        direction = determineDirection(snake, well);
-        setTimeout(function() {
-    direction = determineDirection(snake, well);;
-}, 300);           
-        direction = determineDirection(snake, well);
 
 function determineDirection(snake, targetPoint) {
     const head = snake[0];
@@ -1148,7 +1143,9 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-             direction = determineDirection(snake, well);
+             if (gravitywell === true){
+                 direction = determineDirection(snake, well);
+             }
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
