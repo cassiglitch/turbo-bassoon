@@ -111,7 +111,7 @@ let projectiles = []; // Array to store projectiles
 let range = 5
 let well = { x: 0, y: 0};
 
-unction isSnakeInsideFiveByFiveGridAroundPoint(snake, pointX, pointY, gridSize) {
+function isSnakeInsideFiveByFiveGridAroundPoint(snake, pointX, pointY, gridSize) {
     if (snake.length === 0) {
         // Snake is empty, so it can't be inside or on the boundary of any square
         return false;
