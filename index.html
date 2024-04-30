@@ -112,7 +112,7 @@ let well = {x: 20, y: 20 }
 
     function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
-    if (distanceX < (10 * gridSize)) {
+    if (distanceX < (1 * gridSize)) {
         if (snake[0].x > well.x) {
             direction = 'right';
         } else if (snake[0].x < well.x) {
