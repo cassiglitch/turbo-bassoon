@@ -148,44 +148,40 @@ function drawPulsatingCircle() {
 
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
-        
-function gravityx() {
-    var distanceX = Math.abs(snake[0].x - well.x);
-        if (snake[0].x > well.x) {
-            direction = 'right';
-        } else{
-            direction = 'left';
-        } else if (snake[0].x === well.x){
-                var distanceY = Math.abs(snake[0].y - well.y)
-                if (snake[0].y > well.y) {
-            direction = 'down';
-        } else{
-            direction = 'up';
-        } 
-    }
-        }
 
-function adjustDirection(snake, targetPoint, range) {
-    // Calculate the distance between the snake's head (snake[0]) and the target point
-    const distance = Math.sqrt(Math.pow(snake[0].x - targetPoint.x, 2) + Math.pow(snake[0].y - targetPoint.y, 2));
+direction = determineDirection(snake, well)
+function determineDirection(snake, targetPoint) {
+    const head = snake[0];
     
-    // If the snake is within the specified range of the target point
-    if (distance <= range) {
-        // Determine which direction to move in order to approach the target point
-        const deltaX = targetPoint.x - snake[0].x;
-        const deltaY = targetPoint.y - snake[0].y;
-        
-        // Adjust the direction variable based on the relative positions of the snake's head and the target point
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Move horizontally
-            direction = (deltaX > 0) ? 'right' : 'left';
+    // Calculate the horizontal and vertical distances between the head and the target point
+    const dx = targetPoint.x - head.x;
+    const dy = targetPoint.y - head.y;
+    
+    // Determine the absolute differences
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    
+    // Choose the direction that reduces the distance the most
+    if (absDx > absDy) {
+        // If the absolute horizontal distance is greater than the absolute vertical distance
+        if (dx > 0) {
+            // If the target is to the right of the head, move right
+            return 'right';
         } else {
-            // Move vertically
-            direction = (deltaY > 0) ? 'down' : 'up';
+            // Otherwise, move left
+            return 'left';
+        }
+    } else {
+        // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
+        if (dy > 0) {
+            // If the target is below the head, move down
+            return 'down';
+        } else {
+            // Otherwise, move up
+            return 'up';
         }
     }
 }
-
 
 
 function drawPolygon(x, y, length, sides, color) {
