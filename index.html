@@ -109,6 +109,7 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 let well = {x: 20, y: 20 }
+function gravity(){
 if (snake[0].x > well.x){
     direction = 'right'
 } else if (snake[0].x < well.x){
@@ -118,7 +119,7 @@ if (snake[0].x > well.x){
 } else if (snake[0].y < well.y){
     direction = 'up'
 }
-
+}
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
@@ -1083,6 +1084,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
+            gravity();
 
             // Handle eating animation
             if (isEating) {
