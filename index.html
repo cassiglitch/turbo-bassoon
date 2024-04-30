@@ -585,8 +585,8 @@ setTimeout(() => {
     dynamicObstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize * 2, gridSize * 2);
     });
-    ctx.fillStyle = 'salmon';
-    well.forEach(well => ctx.fillRect(well.x * gridSize, well.y * gridSize, gridSize, gridSize));
+    ctx.fillStyle = 'green';
+   ctx.fillRect(well.x * gridSize, well.y * gridSize, gridSize, gridSize));
     // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
