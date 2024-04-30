@@ -154,11 +154,11 @@ class GravityWell {
             const distance = manhattanDistance(newX, newY, this.x, this.y);
             if (distance < minDistance) {
                 minDistance = distance;
-                closestDirection = dir.name;
+                direction = dir.name;
             }
         }
 
-        return closestDirection;
+        return;
     }
 }
 
