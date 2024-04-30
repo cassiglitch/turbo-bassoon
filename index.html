@@ -125,7 +125,7 @@ function isSnakeFiveUnitsAwayFromPoint(snake, pointX, pointY, gridSize, range) {
     const distance = Math.sqrt(Math.pow(snakeHeadX - pointX, 2) + Math.pow(snakeHeadY - pointY, 2));
 
     // Check if the distance is exactly 5 times the gridSize
-    return distance === range * gridSize;
+    return distance === 5 * gridSize;
 }
 // Define pulse variables
 var pulseRadius = gridSize;
