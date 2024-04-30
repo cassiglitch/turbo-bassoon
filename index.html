@@ -148,9 +148,9 @@ function drawPulsatingCircle() {
 
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
-if (gravitywell === true){
-direction = determineDirection(snake, well)
-}
+if (gravitywell === true) {
+        direction = determineDirection(snake, well);
+    }
 function determineDirection(snake, targetPoint) {
     const head = snake[0];
     
@@ -165,7 +165,7 @@ function determineDirection(snake, targetPoint) {
     // Choose the direction that reduces the distance the most
     if (absDx > absDy) {
         // If the absolute horizontal distance is greater than the absolute vertical distance
-        if (dx > 0) {
+        if (dx > head.x) {
             // If the target is to the right of the head, move right
             return 'right';
         } else {
@@ -174,7 +174,7 @@ function determineDirection(snake, targetPoint) {
         }
     } else {
         // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
-        if (dy > 0) {
+        if (dy > head.y) {
             // If the target is below the head, move down
             return 'down';
         } else {
