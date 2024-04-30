@@ -108,94 +108,7 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-// Gravity Well Module with Pathfinding// Gravity Well Module
-const GravityWell = (function() {
-    // Private variables
-    let wells = []; // Array to store multiple gravity wells
-    let gridSize = startingGridSize * antiZoomFactor; // Grid size (replace with your global variable)
 
-    // Public methods
-    function spawn(x, y, range) {
-        wells.push({ x, y, range });
-    }
-
-    function destroyAll() {
-        wells = [];
-    }
-
-    function render(context) {
-        for (const well of wells) {
-            // Render pulsating circle representing the gravity well
-            const pulsation = Math.sin(Date.now() * 0.005) * 0.5 + 0.5; // Adjust pulsation speed
-            const radius = gridSize * pulsation;
-
-            context.beginPath();
-            context.arc(well.x, well.y, radius, 0, Math.PI * 2);
-            context.fillStyle = "rgba(0, 0, 255, 0.5)"; // Blue color with transparency
-            context.fill();
-            context.closePath();
-
-            // Render flashing red transparent square around the well as a boundary warning
-            const alpha = Math.abs(Math.sin(Date.now() * 0.005)) * 0.5 + 0.1; // Adjust transparency
-            const size = well.range * gridSize;
-
-            context.beginPath();
-            context.rect(well.x - size / 2, well.y - size / 2, size, size);
-            context.fillStyle = `rgba(255, 0, 0, ${alpha})`; // Red color with transparency
-            context.fill();
-            context.closePath();
-        }
-    }function applyGravity(snake) {
-    // Initialize direction to the current direction of the snake
-    let isAffectedByGravity = false;
-
-    for (const well of wells) {
-        // Calculate the distance between the snake's head position and the gravity well
-        const dx = well.x - snake[0].x;
-        const dy = well.y - snake[0].y;
-
-        // Check if the snake is within the range of the gravity well
-        if (Math.abs(dx) <= well.range * gridSize && Math.abs(dy) <= well.range * gridSize) {
-            // Invert the snake's movement direction
-            // Determine the direction to move based on the larger absolute difference
-            let newDirection;
-            if (Math.abs(dx) > Math.abs(dy)) {
-                // Move horizontally
-                newDirection = dx < 0 ? "right" : "left";
-            } else {
-                // Move vertically
-                newDirection = dy < 0 ? "down" : "up";
-            }
-            // Update the snake's direction
-            direction = newDirection;
-            // Set the flag to indicate that the snake is affected by gravity
-            isAffectedByGravity = true;
-            // Since the snake's direction is modified, exit the loop
-            break;
-        } else{
-        isAffectedByGravity = false
-        }
-    }
-
-    // If the snake is not affected by any gravitational well, keep its direction unchanged
-    if (!isAffectedByGravity) {
-        direction = direction;
-    }
-}
-
-
-
-    // Return public methods
-    return {
-        spawn,
-        destroyAll,
-        render,
-        applyGravity
-    };
-})();
-
-GravityWell.spawn(100, 105, 20);
-        
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
@@ -656,7 +569,6 @@ setTimeout(() => {
     const scoreDisplay = document.getElementById('scoreDisplay');
     scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
-    GravityWell.render(ctx);
 }
 
 function drawInvincibilityAura(colorName) {
@@ -1162,7 +1074,6 @@ function animateExplosion() {
             update();
             draw();
 
-            GravityWell.applyGravity(snake);
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
