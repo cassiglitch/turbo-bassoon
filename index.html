@@ -109,13 +109,16 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 let well = {x: 20, y: 20 }
-function gravityx() {
+
+    function gravityx() {
     var distanceX = Math.abs(snake[0].x - well.x);
     if (distanceX < 10) {
         if (snake[0].x > well.x) {
             direction = 'right';
         } else if (snake[0].x < well.x) {
             direction = 'left';
+        }else if (snake[0].x = well.x){
+         gravitY()   
         }
     }
 }
@@ -127,6 +130,8 @@ function gravitY() {
             direction = 'down';
         } else if (snake[0].y < well.y) {
             direction = 'up';
+        }else if (snake[0].y = well.y){
+         gravityx()   
         }
     }
 }
