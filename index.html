@@ -148,9 +148,11 @@ function drawPulsatingCircle() {
 
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
-if (gravitywell === true) {
+
         direction = determineDirection(snake, well);
-    }
+        direction = determineDirection(snake, well);
+        direction = determineDirection(snake, well);
+
 function determineDirection(snake, targetPoint) {
     const head = snake[0];
     
