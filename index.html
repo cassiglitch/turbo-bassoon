@@ -182,11 +182,10 @@ function updateSnakeDirection(snakeX, snakeY) {
     return null;
 }
 // Creating a gravity well at position (50, 50) with range 40
-createGravityWell(40, 40, 40);
+createGravityWell(40, 40, 10);
 
 // Rendering loop
 function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Render gravity wells
     for (const well of gravityWells) {
