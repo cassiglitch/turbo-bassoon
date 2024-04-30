@@ -108,75 +108,17 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-
-// Function to calculate Manhattan distance between two points
-let gravityWells = [];
-
-// Define the gravity well class
-class GravityWell {
-  constructor(x, y, range) {
-    this.x = x;
-    this.y = y;
-    this.range = range;
-  }
-
-  // Method to check if the snake is within range of the gravity well
-  isInRange(snake) {
-    let distance = Math.sqrt(Math.pow(this.x - snake[0].x, 2) + Math.pow(this.y - snake[0].y, 2));
-    return distance <= this.range;
-  }
-
-  // Method to update the direction based on the snake's position
-  updateDirection(snake) {
-    if (this.isInRange(snake)) {
-      if (this.y < snake[0].y) {
-        // Snake is below the gravity well
-        direction = "down";
-      } else if (this.y > snake[0].y) {
-        // Snake is above the gravity well
-        direction = "up";
-      }
-      if (this.x < snake[0].x) {
-        // Snake is to the right of the gravity well
-        direction = "right";
-      } else if (this.x > snake[0].x) {
-        // Snake is to the left of the gravity well
-        direction = "left";
-      }
-    }
-  }
+let well = {x: 20, y: 20 }
+if (snake[0].x > well.x){
+    direction = 'right'
+} else if (snake[0].x < well.x){
+    direction = 'left'
+}else if (snake[0].y > well.y){
+    direction = 'down'
+} else if (snake[0].y < well.y){
+    direction = 'up'
 }
 
-// Function to create a new gravity well
-function createGravityWell(x, y, range) {
-  let gravityWell = new GravityWell(x, y, range);
-  gravityWells.push(gravityWell);
-}
-
-// Function to update all gravity wells
-function updateGravityWells(snake) {
-  for (let well of gravityWells) {
-    well.updateDirection(snake);
-  }
-}
-        function updateSnakeDirection(snake) {
-  let closestDirection = null;
-  let closestDistance = Number.MAX_VALUE;
-  for (let well of gravityWells) {
-    let distance = Math.sqrt(Math.pow(well.x - snake[0].x, 2) + Math.pow(well.y - snake[0].y, 2));
-    if (distance <= well.range && distance < closestDistance) {
-      closestDistance = distance;
-      closestDirection = well.calculateDirection(snake);
-    }
-  }
-  if (closestDirection) {
-    direction = closestDirection;
-  }
-}
-
-createGravityWell(20, 20, gridSize); // Example gravity well
-updateGravityWells(snake);
-updateSnakeDirection(snake)
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
