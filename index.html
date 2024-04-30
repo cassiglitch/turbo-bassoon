@@ -118,8 +118,8 @@ function isSnakeInsideFiveByFiveGridAroundPoint(snake, pointX, pointY, gridSize)
     }
 
     // Calculate the coordinates of the top-left corner of the 5x5 grid
-    const topLeftX = pointX - (2.5 * gridSize);
-    const topLeftY = pointY - (2.5 * gridSize);
+    const topLeftX = pointX - (5 * gridSize);
+    const topLeftY = pointY - (5 * gridSize);
 
     // Extract the coordinates of the snake's head
     const snakeHeadX = snake[0].x;
