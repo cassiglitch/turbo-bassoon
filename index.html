@@ -1158,12 +1158,8 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-            let isAway = isSnakeFiveUnitsAwayFromPoint(snake, well.x, well.y, gridSize, 5);
-            if (isAway === true){
-                gravitywell = true;
-            } else if (isAway === false){
-                gravitywell = false
-            }
+           gravitywell = isSnakeFiveUnitsAwayFromPoint(snake,well.x, well.y, gridSize, 5);
+
             
              if (gravitywell === true){
                  direction = determineDirection(snake, well);
