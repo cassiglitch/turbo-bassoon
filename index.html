@@ -148,8 +148,9 @@ function drawPulsatingCircle() {
 
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
-
+if (gravitywell === true){
 direction = determineDirection(snake, well)
+}
 function determineDirection(snake, targetPoint) {
     const head = snake[0];
     
@@ -706,7 +707,6 @@ eatenSegments.forEach((segment, index) => {
 
 originalSnakeColor = '#00FF00'; // Reset snake color after eating animation
 }
-gravitywell = true;
 
 function getFoodColor(foodType) {
 
@@ -911,8 +911,7 @@ HaHaNoCollision(100);
                 setTimeout(function() {
     changeInterval(100);
 }, 500);
-                   
-                
+    gravitywell = true;           
                 }else{
                     gamefoods.push('normal')
                     score += 1;
