@@ -108,7 +108,7 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let range = 100
+let range = 10
 let well = { x: 0, y: 0};
 
 function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
@@ -179,19 +179,19 @@ function determineDirection(snake, targetPoint) {
         // If the absolute horizontal distance is greater than the absolute vertical distance
         if (dx > head.x) {
             // If the target is to the right of the head, move right
-            return 'right';
+            return 'snake[0].well.direction';
         } else {
             // Otherwise, move left
-            return 'left';
+            return 'snake[0].well.direction';
         }
     } else {
         // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
         if (dy > head.y) {
             // If the target is below the head, move down
-            return 'down';
+            return 'snake[0].well.direction';
         } else {
             // Otherwise, move up
-            return 'up';
+            return 'snake[0].well.direction';
         }
     }
 }
@@ -1158,7 +1158,7 @@ function animateExplosion() {
             draw();
                 
          if (gravitywell === true){
-                 direction = determineDirection(snake, well);
+                 direction = determineDirection(snake);
              }
             // Handle eating animation
             if (isEating) {
