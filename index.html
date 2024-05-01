@@ -109,7 +109,7 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 let range = 10
-let well = { x: 0, y: 0};
+let well = [];
 
 function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
     // Calculate the distance between the snake's head and the point
@@ -163,21 +163,37 @@ function drawPulsatingCircle() {
 drawPulsatingCircle();
 
 
-function determineDirection(snake) {
- if (snake[0].x < wellxx) {
-    direction = 'right'r;
-} else if (snake.x > well.x) {
-    direction = 'left;;
-} else {
-    direction = "at the same x-coordinate as the well";
-}
-
-if (snake[0].y < well.y) {
-    direction = ''down;
-} else if (snake[0].y > well.y) {
-    direction =  'up';
-} else {
-    direction += " and at the same y-coordinate as the well";
+function determineDirection(snake, targetPoint) {
+    const head = snake[0];
+    
+    // Calculate the horizontal and vertical distances between the head and the target point
+    const dx = targetPoint.x - head.x;
+    const dy = targetPoint.y - head.y;
+    
+    // Determine the absolute differences
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    
+    // Choose the direction that reduces the distance the most
+    if (absDx > absDy) {
+        // If the absolute horizontal distance is greater than the absolute vertical distance
+        if (dx > head.x) {
+            // If the target is to the right of the head, move right
+            return 'right';
+        } else {
+            // Otherwise, move left
+            return 'left';
+        }
+    } else {
+        // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
+        if (dy > head.y) {
+            // If the target is below the head, move down
+            return 'down';
+        } else {
+            // Otherwise, move up
+            return 'up';
+        }
+    }
 }
 
 function drawPolygon(x, y, length, sides, color) {
