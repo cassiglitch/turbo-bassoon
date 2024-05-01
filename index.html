@@ -937,7 +937,7 @@ HaHaNoCollision(100);
                 }
             }
 
-   gravitywell = true
+   gravitywell = isSnakeHeadNearPoint(well.x, well.y, gridSize)
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
