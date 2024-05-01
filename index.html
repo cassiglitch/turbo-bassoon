@@ -135,16 +135,7 @@ function applyGravityWellForce(snake, gravityWell) {
         const gridY = Math.floor(snake[0].y / gridSize);
         snake[0].x += forceX * strength * gridSize;
         snake[0].y += forceY * strength * gridSize;
-
-        // Update the rest of the snake's body to follow the head
-        for (let i = 1; i < snake.length; i++) {
-            const tempX = snake[i].x;
-            const tempY = snake[i].y;
-            snake[i].x = gridX * gridSize; // Move to the nearest grid cell
-            snake[i].y = gridY * gridSize;
-            gridX = Math.floor(tempX / gridSize); // Update grid position
-            gridY = Math.floor(tempY / gridSize);
-        }
+            
     }
 }
 
