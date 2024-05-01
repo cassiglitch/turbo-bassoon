@@ -109,9 +109,8 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 let range = 10;
-let gridSize = 20; // Example grid size
 
-let wells = [{ x: 0, y: 0 }]; // Array to store multiple wells
+let wells = [{ x: 40, y: 40 }]; // Array to store multiple wells
 
 function isSnakeHeadNearPoint(pointX, pointY, gridSize, well) {
     // Calculate the distance between the snake's head and the point
@@ -129,7 +128,7 @@ function isSnakeHeadNearPoint(pointX, pointY, gridSize, well) {
 
 // Define pulse variables
 var pulseRadius = gridSize;
-var pulseMaxRadius = (gridSize + (gridSize/2));
+var pulseMaxRadius = range;
 var pulseMinRadius = (gridSize / 2);
 var pulseSpeed = 0.1;
 var increasing = true;
