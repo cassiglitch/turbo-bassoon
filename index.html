@@ -128,7 +128,7 @@ function isSnakeHeadNearPoint(pointX, pointY, gridSize, well) {
 
 // Define pulse variables
 var pulseRadius = gridSize;
-var pulseMaxRadius = range;
+var pulseMaxRadius = (gridSize + (gridSize / 2));
 var pulseMinRadius = (gridSize / 2);
 var pulseSpeed = 0.1;
 var increasing = true;
