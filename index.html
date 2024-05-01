@@ -115,7 +115,7 @@ class GravityWell {
         this.strength = strength;
     }
 
-    applyGravity(snake) {
+    applyGravity(snake, gridSize) {
         // Calculate distance between snake's head and well
         const dx = this.x - snake[0].x;
         const dy = this.y - snake[0].y;
@@ -125,15 +125,15 @@ class GravityWell {
         const forceX = (dx / distance) * this.strength;
         const forceY = (dy / distance) * this.strength;
 
-        // Update snake's head position
-        snake[0].x += forceX;
-        snake[0].y += forceY;
+        // Move snake's head based on grid size
+        snake[0].x += Math.sign(forceX) * gridSize;
+        snake[0].y += Math.sign(forceY) * gridSize;
     }
 }
 
 const gravityWell = new GravityWell(100, 100, 0.5);
 
-gravityWell.applyGravity(snake);
+gravityWell.applyGravity(snake, gridSize);
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
