@@ -108,10 +108,48 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let timeControlZones = [
-        { x: 100, y: 100, width: 50, height: 50, interval: 200 }, // Example time control zone
-    ];
-        
+// Constants
+const gridSize = 20; // Size of each grid cell
+const gravityRange = 100; // Range of the gravity well
+
+// Gravity well object constructor
+function GravityWell(x, y, strength) {
+    this.x = x;
+    this.y = y;
+    this.strength = strength; // Strength of the gravity well
+}
+
+// Function to calculate the force of gravity from the well on the snake
+function applyGravityWellForce(snake, gravityWell) {
+    // Calculate distance between snake's head and gravity well
+    const distanceX = gravityWell.x - snake[0].x;
+    const distanceY = gravityWell.y - snake[0].y;
+    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+    // Apply force if within range
+    if (distance <= gravityRange) {
+        // Determine direction of force
+        const forceX = (gravityWell.x - snake[0].x) / distance;
+        const forceY = (gravityWell.y - snake[0].y) / distance;
+
+        // Move the snake towards the gravity well in grids
+        const gridX = Math.floor(snake[0].x / gridSize);
+        const gridY = Math.floor(snake[0].y / gridSize);
+        snake[0].x += forceX * strength * gridSize;
+        snake[0].y += forceY * strength * gridSize;
+
+        // Update the rest of the snake's body to follow the head
+        for (let i = 1; i < snake.length; i++) {
+            const tempX = snake[i].x;
+            const tempY = snake[i].y;
+            snake[i].x = gridX * gridSize; // Move to the nearest grid cell
+            snake[i].y = gridY * gridSize;
+            gridX = Math.floor(tempX / gridSize); // Update grid position
+            gridY = Math.floor(tempY / gridSize);
+        }
+    }
+}
+
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
@@ -538,12 +576,6 @@ setTimeout(() => {
             },freezetimer * 1000);
 
 }
-
-ctx.fillStyle = 'rgba(0, 255, 0, 0.3)'; // Transparent green
-        timeControlZones.forEach(zone => {
-            ctx.fillRect(zone.x, zone.y, zone.width, zone.height);
-        });
-    
     // Layer 2: Draw Snake Body
     snake.forEach((segment, index) => {
         ctx.fillStyle = segment.color;
@@ -675,21 +707,6 @@ function getFoodColor(foodType) {
             return timeslow;
     }
 }
-
-setInterval(() => {
-        snake.forEach(segment => {
-            timeControlZones.forEach(zone => {
-                if (
-                    segment.x >= zone.x && 
-                    segment.x <= zone.x + zone.width && 
-                    segment.y >= zone.y && 
-                    segment.y <= zone.y + zone.height
-                ) {
-                    changeInterval(zone.interval);
-                }
-            });
-        });
-    }, 100);
 
 // Function to trigger invincibility
 function HaHaNoCollision(duration) {
@@ -863,8 +880,7 @@ HaHaNoCollision(100);
                     gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
-                    activateMagneticAttraction()
-                }
+                  }
                 isEating = true;
                 eatingAnimationFrames = 8; // Set the number of frames for the eating animation
                 spawnFood();
