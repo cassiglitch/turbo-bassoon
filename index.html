@@ -111,10 +111,16 @@ let projectiles = []; // Array to store projectiles
 let range = 10
 let well = { x: 20, y: 20};
 
-function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
+function isSnakeHeadNearPoint(wellX, wellY, gridSize) {
     // Calculate the distance between the snake's head and the point
     let snakex = snake[0].x * gridSize + gridSize / 2;
     let snakey = snake[0].y * gridSize + gridSize / 2;
+    
+    // Adjust the snake's head position based on the well point
+    snakex -= wellX;
+    snakey -= wellY;
+    
+    // Calculate the distance
     var distance = Math.hypot(pointX - snakex, pointY - snakey);
     
     // Check if the distance is less than or equal to 5 times the grid size
@@ -124,6 +130,7 @@ function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
         return false;
     }
 }
+
 // Define pulse variables
 var pulseRadius = gridSize;
 var pulseMaxRadius = (gridSize + (gridSize/2));
