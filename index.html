@@ -108,93 +108,6 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let range = 10
-let well = { x: 0, y: 0};
-
-function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
-    // Calculate the distance between the snake's head and the point
-    let snakex = snake[0].x * gridSize + gridSize / 2;
-    let snakey = snake[0].y * gridSize + gridSize / 2;
-    var distance = Math.hypot(pointX - snakex, pointY - snakey);
-    
-    // Check if the distance is less than or equal to 5 times the grid size
-    if (distance <= range * gridSize) {
-        return true;
-    } else {
-        return false;
-    }
-}
-// Define pulse variables
-var pulseRadius = gridSize;
-var pulseMaxRadius = (gridSize + (gridSize/2));
-var pulseMinRadius = (gridSize / 2);
-var pulseSpeed = 0.1;
-var increasing = true;
-
-// Function to draw pulsating circle
-function drawPulsatingCircle() {
-
-
-    // Draw pulsating circle
-    ctx.beginPath();
-    ctx.arc(well.x, well.y, pulseRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fill();
-    ctx.closePath();
-
-    // Update pulse radius
-    if (increasing) {
-        pulseRadius += pulseSpeed;
-        if (pulseRadius >= pulseMaxRadius) {
-            increasing = false;
-        }
-    } else {
-        pulseRadius -= pulseSpeed;
-        if (pulseRadius <= pulseMinRadius) {
-            increasing = true;
-        }
-    }
-
-    // Request animation frame
-    requestAnimationFrame(drawPulsatingCircle);
-}
-
-// Call drawPulsatingCircle function to start animation
-drawPulsatingCircle();
-
-
-function determineDirection(snake, targetPoint) {
-    const head = snake[0];
-    
-    // Calculate the horizontal and vertical distances between the head and the target point
-    const dx = targetPoint.x - head.x;
-    const dy = targetPoint.y - head.y;
-    
-    // Determine the absolute differences
-    const absDx = Math.abs(dx);
-    const absDy = Math.abs(dy);
-    
-    // Choose the direction that reduces the distance the most
-    if (absDx > absDy) {
-        // If the absolute horizontal distance is greater than the absolute vertical distance
-        if (dx > head.x) {
-            // If the target is to the right of the head, move right
-            return 'right';
-        } else {
-            // Otherwise, move left
-            return 'left';
-        }
-    } else {
-        // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
-        if (dy > head.y) {
-            // If the target is below the head, move down
-            return 'down';
-        } else {
-            // Otherwise, move up
-            return 'up';
-        }
-    }
-}
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
@@ -753,6 +666,33 @@ function getFoodColor(foodType) {
     }
 }
 
+function isFoodNearby() {
+    // Define the distance threshold for attraction
+    const attractionDistance = 5;
+    
+    // Calculate the distance between the snake's head and the food
+    const distanceX = Math.abs(snake[0].x - food.x);
+    const distanceY = Math.abs(snake[0].y - food.y);
+    const totalDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    
+    // Check if the food is within the attraction distance
+    return totalDistance <= attractionDistance;
+}
+
+// Define a function to handle the magnetic attraction power-up
+function activateMagneticAttraction() {
+    // Check if the food is nearby
+    if (isFoodNearby()) {
+        // Calculate the direction towards the food
+        const directionX = food.x - snake[0].x;
+        const directionY = food.y - snake[0].y;
+        
+        // Move the food towards the snake's head
+        food.x -= Math.sign(directionX);
+        food.y -= Math.sign(directionY);
+        
+            }
+}
 
 // Function to trigger invincibility
 function HaHaNoCollision(duration) {
@@ -926,6 +866,7 @@ HaHaNoCollision(100);
                     gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    activateMagneticAttraction()
                 }
                 isEating = true;
                 eatingAnimationFrames = 8; // Set the number of frames for the eating animation
@@ -937,7 +878,6 @@ HaHaNoCollision(100);
                 }
             }
 
-   gravitywell = isSnakeHeadNearPoint(well.x, well.y, gridSize)
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
@@ -1157,9 +1097,6 @@ function animateExplosion() {
             update();
             draw();
                 
-         if (gravitywell === true){
-                 direction = determineDirection(snake);
-             }
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
