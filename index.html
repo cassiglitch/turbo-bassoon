@@ -179,19 +179,19 @@ function determineDirection(snake, targetPoint) {
         // If the absolute horizontal distance is greater than the absolute vertical distance
         if (dx > head.x) {
             // If the target is to the right of the head, move right
-            return 'right';
+            return 'left';
         } else {
             // Otherwise, move left
-            return 'left';
+            return 'right';
         }
     } else {
         // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
         if (dy > head.y) {
             // If the target is below the head, move down
-            return 'down';
+            return 'up';
         } else {
             // Otherwise, move up
-            return 'up';
+            return 'down';
         }
     }
 }
