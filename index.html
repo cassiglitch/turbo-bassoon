@@ -108,38 +108,33 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-const gravityRange = 100; // Range of the gravity well
-
-// Gravity well object constructor
-function GravityWell(x, y, strength) {
-    this.x = x;
-    this.y = y;
-    this.strength = strength; // Strength of the gravity well
-}
-
-// Function to calculate the force of gravity from the well on the snake
-function applyGravityWellForce(snake, gravityWell) {
-    // Calculate distance between snake's head and gravity well
-    const distanceX = gravityWell.x - snake[0].x;
-    const distanceY = gravityWell.y - snake[0].y;
-    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-    // Apply force if within range
-    if (distance <= gravityRange) {
-        // Determine direction of force
-        const forceX = (gravityWell.x - snake[0].x) / distance;
-        const forceY = (gravityWell.y - snake[0].y) / distance;
-
-        // Move the snake towards the gravity well in grids
-        const gridX = Math.floor(snake[0].x / gridSize);
-        const gridY = Math.floor(snake[0].y / gridSize);
-        snake[0].x += forceX * strength * gridSize;
-        snake[0].y += forceY * strength * gridSize;
-            
+class GravityWell {
+    constructor(x, y, strength, range) {
+        this.x = x;
+        this.y = y;
+        this.strength = strength; // Strength of the gravity well
+        this.range = range; // Range within which the gravity affects the snake
     }
-}
+    
+    // Method to apply gravity well force to the snake's head
+    applyForce(snake) {
+        // Calculate distance between gravity well and snake's head
+        const distance = Math.sqrt(Math.pow(snake[0].x - this.x, 2) + Math.pow(snake[0].y - this.y, 2));
 
+        // Check if snake's head is within range of the gravity well
+        if (distance <= this.range) {
+            // Calculate force direction
+            const dx = this.x - snake[0].x;
+            const dy = this.y - snake[0].y;
+            const angle = Math.atan2(dy, dx);
+            
+            // Move the snake's head in grid units (gridSize)
+              snake[0].x += Math.round(Math.cos(angle)) * gridSize;
+            snake[0].y += Math.round(Math.sin(angle)) * gridSize;
+        }
+    }
 
+let gravityWell = new GravityWell(200, 200, 5, 100); 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -1098,7 +1093,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-                
+            gravityWell.applyForce(snake);
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
