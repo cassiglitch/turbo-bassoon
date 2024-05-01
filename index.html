@@ -107,7 +107,38 @@ const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
 const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
+        class TimeControlZone {
+            constructor(x, y, width, height) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+            }
 
+            draw() {
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Semi-transparent red
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }
+
+        // Define time control zones array
+        const timeControlZones = [];
+
+        // Function to spawn a time control zone
+        function spawnTimeControlZone() {
+            const zoneWidth = Math.random() * 50 + 50; // Random width between 50 and 100
+            const zoneHeight = Math.random() * 50 + 50; // Random height between 50 and 100
+            const zoneX = Math.random() * (canvas.width - zoneWidth);
+            const zoneY = Math.random() * (canvas.height - zoneHeight);
+
+            const zone = new TimeControlZone(zoneX, zoneY, zoneWidth, zoneHeight);
+            timeControlZones.push(zone);
+        }
+
+        // Function to render time control zones
+        function renderTimeControlZones() {
+            timeControlZones.forEach(zone => zone.draw());
+        }
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
