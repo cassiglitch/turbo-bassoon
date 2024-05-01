@@ -108,41 +108,39 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let range = 10;
+let range = 10
+let well = { x: 40, y: 40};
 
-let wells = [{ x: 0, y: 0 }]; // Array to store multiple wells
-
-function isSnakeHeadNearPoint(pointX, pointY, gridSize, well) {
+function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
     // Calculate the distance between the snake's head and the point
     let snakex = snake[0].x * gridSize + gridSize / 2;
     let snakey = snake[0].y * gridSize + gridSize / 2;
     var distance = Math.hypot(pointX - snakex, pointY - snakey);
     
-    // Check if the distance is less than or equal to the range times the grid size
+    // Check if the distance is less than or equal to 5 times the grid size
     if (distance <= range * gridSize) {
         return true;
     } else {
         return false;
     }
 }
-
 // Define pulse variables
 var pulseRadius = gridSize;
-var pulseMaxRadius = (gridSize + (gridSize / 2));
+var pulseMaxRadius = (gridSize + (gridSize/2));
 var pulseMinRadius = (gridSize / 2);
 var pulseSpeed = 0.1;
 var increasing = true;
 
 // Function to draw pulsating circle
-function drawPulsatingCircle(well) {
-    // Draw pulsating circle for each well
-    wells.forEach((well) => {
-        ctx.beginPath();
-        ctx.arc(well.x, well.y, pulseRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-        ctx.fill();
-        ctx.closePath();
-    });
+function drawPulsatingCircle() {
+
+
+    // Draw pulsating circle
+    ctx.beginPath();
+    ctx.arc(well.x, well.y, pulseRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+    ctx.fill();
+    ctx.closePath();
 
     // Update pulse radius
     if (increasing) {
@@ -163,6 +161,7 @@ function drawPulsatingCircle(well) {
 
 // Call drawPulsatingCircle function to start animation
 drawPulsatingCircle();
+
 
 function determineDirection(snake, targetPoint) {
     const head = snake[0];
@@ -196,7 +195,6 @@ function determineDirection(snake, targetPoint) {
         }
     }
 }
-
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
@@ -329,7 +327,6 @@ if (increase === true) {
         }
     }, updatespeed * currentInterval); // Update every 20 milliseconds
 }  
-
 
     function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
     // Draw the explosion shockwave
@@ -939,11 +936,8 @@ HaHaNoCollision(100);
                     spawnObstacle();
                 }
             }
-wells.forEach((well) => {
-    if (isSnakeHeadNearPoint(well.x, well.y, gridSize, well) === true) {
-        direction = determineDirection(snake);
-                    }
-});
+
+   gravitywell = isSnakeHeadNearPoint(well.x, well.y, gridSize)
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
@@ -1163,7 +1157,9 @@ function animateExplosion() {
             update();
             draw();
                 
-         
+         if (gravitywell === true){
+                 direction = determineDirection(snake, well);
+             }
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
