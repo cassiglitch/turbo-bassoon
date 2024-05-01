@@ -109,32 +109,31 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 class GravityWell {
-    constructor(x, y, strength, range) {
+    constructor(x, y, strength) {
         this.x = x;
         this.y = y;
-        this.strength = strength; // Strength of the gravity well
-        this.range = range; // Range within which the gravity affects the snake
-    }
-    
-    // Method to apply gravity well force to the snake's head
-    applyForce(snake) {
-        // Calculate distance between gravity well and snake's head
-        const distance = Math.sqrt(Math.pow(snake[0].x - this.x, 2) + Math.pow(snake[0].y - this.y, 2));
-
-        // Check if snake's head is within range of the gravity well
-        if (distance <= this.range) {
-            // Calculate force direction
-            const dx = this.x - snake[0].x;
-            const dy = this.y - snake[0].y;
-            const angle = Math.atan2(dy, dx);
-            
-            // Move the snake's head in grid units (gridSize)
-              snake[0].x += Math.round(Math.cos(angle)) * gridSize;
-            snake[0].y += Math.round(Math.sin(angle)) * gridSize;
-        }
+        this.strength = strength;
     }
 
-let gravityWell = new GravityWell(200, 200, 5, 100); 
+    applyGravity(snake) {
+        // Calculate distance between snake's head and well
+        const dx = this.x - snake[0].x;
+        const dy = this.y - snake[0].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Apply gravitational force
+        const forceX = (dx / distance) * this.strength;
+        const forceY = (dy / distance) * this.strength;
+
+        // Update snake's head position
+        snake[0].x += forceX;
+        snake[0].y += forceY;
+    }
+}
+
+const gravityWell = new GravityWell(100, 100, 0.5);
+
+gravityWell.applyGravity(snake);
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -874,7 +873,7 @@ HaHaNoCollision(100);
                     spawnObstacle();
                 }
             }
-applyGravityWellForce(snake, gravityWell)
+
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
@@ -1093,7 +1092,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-            gravityWell.applyForce(snake);
+                
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
