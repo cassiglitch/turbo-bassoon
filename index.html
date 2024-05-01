@@ -108,16 +108,14 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let range = 10
+let range = 100
 let well = { x: 0, y: 20};
 
-function isSnakeHeadNearPoint(wellX, wellY, gridSize) {
+function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
     // Calculate the distance between the snake's head and the point
     let snakex = snake[0].x * gridSize + gridSize / 2;
     let snakey = snake[0].y * gridSize + gridSize / 2;
-     
-    // Calculate the distance
-    var distance = Math.hypot(wellX - snakex, wellY - snakey);
+    var distance = Math.hypot(pointX - snakex, pointY - snakey);
     
     // Check if the distance is less than or equal to 5 times the grid size
     if (distance <= range * gridSize) {
@@ -126,7 +124,6 @@ function isSnakeHeadNearPoint(wellX, wellY, gridSize) {
         return false;
     }
 }
-
 // Define pulse variables
 var pulseRadius = gridSize;
 var pulseMaxRadius = (gridSize + (gridSize/2));
@@ -170,8 +167,8 @@ function determineDirection(snake, targetPoint) {
     const head = snake[0];
     
     // Calculate the horizontal and vertical distances between the head and the target point
-    const dx = well.x - head.x;
-    const dy = well.y - head.y;
+    const dx = targetPoint.x - head.x;
+    const dy = targetPoint.y - head.y;
     
     // Determine the absolute differences
     const absDx = Math.abs(dx);
