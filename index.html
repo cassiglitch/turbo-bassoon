@@ -110,7 +110,7 @@ let projectiles = []; // Array to store projectiles
 
 let gravityWells = []; // Array to hold information about each gravity well
 // Function to create a new gravity well
-function createGravityWell(x, y, range) {
+function createGravityWell(x, y) {
     gravityWells.push({
         x: x,
         y: y,
@@ -118,8 +118,7 @@ function createGravityWell(x, y, range) {
         pulseMaxRadius: (gridSize + (gridSize / 2)),
         pulseMinRadius: (gridSize / 2),
         pulseSpeed: 0.1,
-        increasing: true,
-        range: range * 2
+        increasing: true
     });
 }
 
@@ -206,8 +205,7 @@ function determineDirection(snake) {
         return null;
     }
 }
-createGravityWell(60, 60, 10); // Create another gravity well at position (50, 50)
-
+createGravityWell(60, 60); // Create another gravity well at position (50, 50)
 drawPulsatingCircles()
 
 function drawPolygon(x, y, length, sides, color) {
