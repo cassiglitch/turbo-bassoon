@@ -109,7 +109,7 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
 let range = 10
-let well = [];
+let well = {x:0, y:100};
 
 function isSnakeHeadNearPoint(pointX, pointY, gridSize) {
     // Calculate the distance between the snake's head and the point
@@ -937,7 +937,7 @@ HaHaNoCollision(100);
                 }
             }
 
-   gravitywell = isSnakeHeadNearPoint(well.x, well.y, gridSize)
+   gravitywell = true
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
