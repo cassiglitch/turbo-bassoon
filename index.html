@@ -157,7 +157,7 @@ function drawPulsatingCircle(well) {
 function determineDirection(snake) {
     const head = snake[0];
     let closestWell = null;
-    let minDistance = Number.MAX_SAFE_INTEGER;
+    let minDistance = 1;
 
     // Find the closest gravity well to the snake's head
     gravityWells.forEach((well) => {
@@ -207,12 +207,8 @@ function determineDirection(snake) {
     }
 }
 
-// Example usage:
-createGravityWell(20, 20, 10); // Create a gravity well at position (20, 20)
-createGravityWell(50, 50, 10); // Create another gravity well at position (50, 50)
+drawPulsatingCircles()
 
-// Call drawPulsatingCircles function to start animation
-drawPulsatingCircles();
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -344,6 +340,7 @@ if (increase === true) {
         }
     }, updatespeed * currentInterval); // Update every 20 milliseconds
 }  
+
 
     function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
     // Draw the explosion shockwave
