@@ -108,105 +108,96 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-let gravityWells = []; // Array to hold information about each gravity well
-// Function to create a new gravity well
-function createGravityWell(x, y) {
-    gravityWells.push({
-        x: x,
-        y: y,
-        pulseRadius: gridSize,
-        pulseMaxRadius: (gridSize + (gridSize / 2)),
-        pulseMinRadius: (gridSize / 2),
-        pulseSpeed: 0.1,
-        increasing: true
-    });
+let range = 10;
+let gridSize = 20; // Example grid size
+
+let wells = [{ x: 0, y: 0 }]; // Array to store multiple wells
+
+function isSnakeHeadNearPoint(pointX, pointY, gridSize, well) {
+    // Calculate the distance between the snake's head and the point
+    let snakex = snake[0].x * gridSize + gridSize / 2;
+    let snakey = snake[0].y * gridSize + gridSize / 2;
+    var distance = Math.hypot(pointX - snakex, pointY - snakey);
+    
+    // Check if the distance is less than or equal to the range times the grid size
+    if (distance <= range * gridSize) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-// Function to draw pulsating circles for all gravity wells
-function drawPulsatingCircles() {
-    gravityWells.forEach((well) => {
-        drawPulsatingCircle(well);
-    });
-    requestAnimationFrame(drawPulsatingCircles);
-}
+// Define pulse variables
+var pulseRadius = gridSize;
+var pulseMaxRadius = (gridSize + (gridSize/2));
+var pulseMinRadius = (gridSize / 2);
+var pulseSpeed = 0.1;
+var increasing = true;
 
-// Function to draw a pulsating circle for a specific gravity well
+// Function to draw pulsating circle
 function drawPulsatingCircle(well) {
-    ctx.beginPath();
-    ctx.arc(well.x, well.y, well.pulseRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fill();
-    ctx.closePath();
+    // Draw pulsating circle for each well
+    wells.forEach((well) => {
+        ctx.beginPath();
+        ctx.arc(well.x, well.y, pulseRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+        ctx.fill();
+        ctx.closePath();
+    });
 
     // Update pulse radius
-    if (well.increasing) {
-        well.pulseRadius += well.pulseSpeed;
-        if (well.pulseRadius >= well.pulseMaxRadius) {
-            well.increasing = false;
+    if (increasing) {
+        pulseRadius += pulseSpeed;
+        if (pulseRadius >= pulseMaxRadius) {
+            increasing = false;
         }
     } else {
-        well.pulseRadius -= well.pulseSpeed;
-        if (well.pulseRadius <= well.pulseMinRadius) {
-            well.increasing = true;
+        pulseRadius -= pulseSpeed;
+        if (pulseRadius <= pulseMinRadius) {
+            increasing = true;
         }
     }
+
+    // Request animation frame
+    requestAnimationFrame(drawPulsatingCircle);
 }
 
-// Function to determine direction based on gravity wells
-function determineDirection(snake) {
+// Call drawPulsatingCircle function to start animation
+drawPulsatingCircle();
+
+function determineDirection(snake, targetPoint) {
     const head = snake[0];
-    let closestWell = null;
-    let minDistance = 1;
-
-    // Find the closest gravity well to the snake's head
-    gravityWells.forEach((well) => {
-        const distance = Math.hypot(head.x - well.x, head.y - well.y);
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestWell = well;
-        }
-    });
-
-    // If no gravity well exists, return null direction
-    if (!closestWell) return null;
-
-    // Check if the closest well is within range
-    if (minDistance <= (well.range * gridSize)) {
-        // Calculate the horizontal and vertical distances between the head and the closest well
-        const dx = closestWell.x - head.x;
-        const dy = closestWell.y - head.y;
-
-        // Determine the absolute differences
-        const absDx = Math.abs(dx);
-        const absDy = Math.abs(dy);
-
-        // Choose the direction that reduces the distance the most
-        if (absDx > absDy) {
-            // If the absolute horizontal distance is greater than the absolute vertical distance
-            if (dx > 0) {
-                // If the closest well is to the right of the head, move right
-                return 'right';
-            } else {
-                // Otherwise, move left
-                return 'left';
-            }
+    
+    // Calculate the horizontal and vertical distances between the head and the target point
+    const dx = targetPoint.x - head.x;
+    const dy = targetPoint.y - head.y;
+    
+    // Determine the absolute differences
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    
+    // Choose the direction that reduces the distance the most
+    if (absDx > absDy) {
+        // If the absolute horizontal distance is greater than the absolute vertical distance
+        if (dx > head.x) {
+            // If the target is to the right of the head, move right
+            return 'right';
         } else {
-            // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
-            if (dy > 0) {
-                // If the closest well is below the head, move down
-                return 'down';
-            } else {
-                // Otherwise, move up
-                return 'up';
-            }
+            // Otherwise, move left
+            return 'left';
         }
     } else {
-        // If the closest well is not within range, return null direction
-        return null;
+        // If the absolute vertical distance is greater than or equal to the absolute horizontal distance
+        if (dy > head.y) {
+            // If the target is below the head, move down
+            return 'down';
+        } else {
+            // Otherwise, move up
+            return 'up';
+        }
     }
 }
-createGravityWell(60, 60); // Create another gravity well at position (50, 50)
-drawPulsatingCircles()
+
 
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
@@ -949,8 +940,8 @@ HaHaNoCollision(100);
                     spawnObstacle();
                 }
             }
-gravityWells.forEach((gravityWell) => {
-    if (isSnakeHeadNearPoint(gravityWell.x, gravityWell.y, gridSize) === true) {
+wells.forEach((well) => {
+    if (isSnakeHeadNearPoint(well.x, well.y, gridSize, well) === true) {
         direction = determineDirection(snake);
                     }
 });
