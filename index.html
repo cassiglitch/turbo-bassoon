@@ -107,7 +107,7 @@ const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
 const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
-let well = [{x:20, y: 20}]
+let well = {x:20, y: 20}
 
 function gravity(){
 if (snake[0].x > well.x && (snake[0].x - well.x) <= ((5 * gridSize) * -1)){
