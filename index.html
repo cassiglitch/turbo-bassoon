@@ -107,32 +107,31 @@ const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
 const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
-let well = {x:20, y: 20}
+let well = {x:200, y: 200}
 
 function gravity() {
     // Calculate the distance between the snake's head and the well in both x and y directions
     const dx = snake[0].x - well.x;
     const dy = snake[0].y - well.y;
-
+if (snake[0].y === well.y){
     // Check if the absolute distance in either direction is within 5 units
     if (Math.abs(dx) <= (5 * gridSize)) {
         // If the snake is within 5 units horizontally, adjust direction accordingly
-        if (dx > 0) {
+        if (dx > well.x) {
             direction = 'right';
-        } else if (dx < 0) {
+        } else if (dx < well.x) {
             direction = 'left';
         }
-    }
-
+    } else if (snake[0].x === well.x){
     if (Math.abs(dy) <= (5 * gridSize)) {
         // If the snake is within 5 units vertically, adjust direction accordingly
-        if (dy > 0) {
+        if (dy > well.y) {
             direction = 'down';
-        } else if (dy < 0) {
+        } else if (dy < well.y) {
             direction = 'up';
         }
     }
-}
+}}}
 
 
 function drawPolygon(x, y, length, sides, color) {
