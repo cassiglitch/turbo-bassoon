@@ -729,8 +729,26 @@ switch (direction) {
             restartGame(); // End the game if segments (lives) run out
             return;
         }              
-            }
+            } 
+if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
+    // If the head collides with a mirror and the player is not invincible
+    // Reverse the direction of movement
+    switch (direction) {
+        case 'right':
+            direction = 'left';
+            break;
+        case 'left':
+            direction = 'right';
+            break;
+        case 'up':
+            direction = 'down';
+            break;
+        case 'down':
+            direction = 'up';
+            break;
 
+    }
+}
             // Check if Snake eats Food
             if (head.x === food.x && head.y === food.y){
                 if (food.type === 'superfood') {
