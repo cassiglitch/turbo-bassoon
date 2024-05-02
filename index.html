@@ -735,20 +735,28 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
     // Reverse the direction of movement
     switch (direction) {
         case 'right':
-            direction = 'left';
+            if (!mirrors.some(obstacle => obstacle.x === head.x + 1 && obstacle.y === head.y)) {
+                direction = 'left';
+            }
             break;
         case 'left':
-            direction = 'right';
+            if (!mirrors.some(obstacle => obstacle.x === head.x - 1 && obstacle.y === head.y)) {
+                direction = 'right';
+            }
             break;
         case 'up':
-            direction = 'down';
+            if (!mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y - 1)) {
+                direction = 'down';
+            }
             break;
         case 'down':
-            direction = 'up';
+            if (!mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y + 1)) {
+                direction = 'up';
+            }
             break;
-
     }
 }
+
             // Check if Snake eats Food
             if (head.x === food.x && head.y === food.y){
                 if (food.type === 'superfood') {
