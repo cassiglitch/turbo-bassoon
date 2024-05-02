@@ -108,32 +108,238 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 
-class GravityWell {
-    constructor(x, y, strength) {
+// Modular enemy types
+class Enemy {
+    constructor(x, y, color) {
         this.x = x;
         this.y = y;
-        this.strength = strength;
-    }
-
-    applyGravity(snake, gridSize) {
-        // Calculate distance between snake's head and well
-        const dx = this.x - snake[0].x;
-        const dy = this.y - snake[0].y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        // Apply gravitational force
-        const forceX = (dx / distance) * this.strength;
-        const forceY = (dy / distance) * this.strength;
-
-        // Move snake's head based on grid size
-        snake[0].x += Math.sign(forceX) * gridSize;
-        snake[0].y += Math.sign(forceY) * gridSize;
+        this.color = color;
     }
 }
 
-const gravityWell = new GravityWell(100, 100, 0.5);
+class Mine extends Enemy {
+    constructor(x, y, color) {
+        super(x, y, color);
+        this.exploded = false;
+        this.explosionRadius = 20; // Radius of explosion effect
+        this.explosionDuration = 10; // Duration of explosion animation frames
+        this.explosionTimer = 0; // Timer to control explosion animation
+    }
 
-gravityWell.applyGravity(snake, gridSize);
+    explode() {
+        this.exploded = true;
+        // Render explosion effect (enlarging mine temporarily)
+        this.width += this.explosionRadius;
+        this.height += this.explosionRadius;
+        this.explosionTimer = this.explosionDuration;
+        // Remove mine from array after explosion animation
+    }
+
+    update() {
+        if (this.explosionTimer > 0) {
+            this.explosionTimer--;
+            if (this.explosionTimer === 0) {
+                // Remove mine from array after explosion animation
+                let index = enemies.indexOf(this);
+                if (index !== -1) {
+                    enemies.splice(index, 1);
+                }
+            }
+        }
+    }
+}
+
+class Hunter extends Enemy {
+    constructor(x, y, color) {
+        super(x, y, color);
+    }
+
+    moveTowardsSnake(snake) {
+        // Code to calculate and update hunter's movement towards the snake's head (snake[0])
+        if (snake.length === 0) return; // No snake segments
+        let head = snake[0];
+        // Calculate direction towards snake's head
+        let dx = head.x - this.x;
+        let dy = head.y - this.y;
+        // Move towards snake's head
+        if (Math.abs(dx) > Math.abs(dy)) {
+            this.x += Math.sign(dx) * gridSize;
+        } else {
+            this.y += Math.sign(dy) * gridSize;
+        }
+    }
+}
+
+class Blocker extends Enemy {
+    constructor(x, y, width, height, color) {
+        super(x, y, color);
+        this.width = width;
+        this.height = height;
+    }
+}
+
+class PoisonProjectile {
+    constructor(x, y, color, targetX, targetY) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.speed = 2; // Adjust projectile speed as needed
+    }
+
+    update() {
+        // Move projectile towards target (snake's head)
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let vx = (dx / distance) * this.speed;
+        let vy = (dy / distance) * this.speed;
+        this.x += vx;
+        this.y += vy;
+    }
+
+    render() {
+        // Render projectile
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, 5, 5); // Adjust size as needed
+    }
+}
+
+class PoisonSpitter extends Enemy {
+    constructor(x, y, color) {
+        super(x, y, color);
+        this.cooldown = 100; // Initial cooldown before first shot
+        this.shootInterval = 200; // Interval between shots
+        this.projectiles = []; // Array to store active projectiles
+    }
+
+    shootProjectile(targetX, targetY) {
+        if (this.cooldown <= 0) {
+            let projectile = new PoisonProjectile(this.x, this.y, 'purple', targetX, targetY);
+            this.projectiles.push(projectile);
+            this.cooldown = this.shootInterval;
+        } else {
+            this.cooldown--;
+        }
+    }
+
+    update(targetX, targetY) {
+        if (this.cooldown > 0) {
+            this.cooldown--;
+        }
+        for (let projectile of this.projectiles) {
+            projectile.update();
+        }
+    }
+
+    render() {
+        for (let projectile of this.projectiles) {
+            projectile.render();
+        }
+    }
+}
+
+class TeleportingPhantom extends Enemy {
+    constructor(x, y, color) {
+        super(x, y, color);
+    }
+
+    teleport() {
+        // Code to teleport the phantom to a random location
+        this.x = Math.floor(Math.random() * canvas.width);
+        this.y = Math.floor(Math.random() * canvas.height);
+        // Render teleport effect
+    }
+}
+
+// Array to store all enemies
+let enemies = [];
+
+// Function to create enemies and add them to the array
+function createEnemies() {
+    // Create and add mine
+    let mine = new Mine(100, 100, 'blue');
+    enemies.push(mine);
+
+    // Create and add hunter
+    let hunter = new Hunter(200, 200, 'green');
+    enemies.push(hunter);
+
+    // Create and add blocker
+    let blocker = new Blocker(300, 300, 20, 20, 'black');
+    enemies.push(blocker);
+
+    // Create and add poison spitter
+    let poisonSpitter = new PoisonSpitter(400, 400, 'grey');
+    enemies.push(poisonSpitter);
+
+    // Create and add teleporting phantom
+    let teleportingPhantom = new TeleportingPhantom(500, 500, 'red');
+    enemies.push(teleportingPhantom);
+}
+
+// Function to render all enemies
+function renderEnemies() {
+    for (let enemy of enemies) {
+        ctx.fillStyle = enemy.color;
+        ctx.fillRect(enemy.x, enemy.y, gridSize, gridSize);
+    }
+}
+
+// Function to update all moving enemies
+function updateMovingEnemies(snake) {
+    for (let enemy of enemies) {
+        if (enemy instanceof Hunter) {
+            enemy.moveTowardsSnake(snake);
+        } else if (enemy instanceof PoisonSpitter) {
+            enemy.shootProjectile();
+        }
+    }
+}
+
+// Collision detection
+function checkCollisionWithEnemies(snake) {
+    for (let enemy of enemies) {
+        if (enemy instanceof Mine) {
+            if (collideWithMine(snake, enemy)) {
+                enemy.explode();
+            }
+        } else if (enemy instanceof Hunter || enemy instanceof Blocker) {
+            const numSegmentsToRemove = Math.ceil(snake.length * lives);
+            if (snake.length > numSegmentsToRemove) {
+                snake.splice(0, numSegmentsToRemove);
+                lives = (lives * 2);
+                livecount = livecount - 1;
+                HaHaNoCollision(10);
+            } else {
+                livecount = livecount - 1;
+                restartGame(); // End the game if segments (lives) run out
+                return;
+            }
+        }
+    }
+}
+
+// Function to check collision with mine
+function collideWithMine(snake, mine) {
+    for (let segment of snake) {
+        if (segment.x === mine.x && segment.y === mine.y) {
+            return true; // Collision detected
+        }
+    }
+    return false;
+}
+
+// Example usage:
+createEnemies();
+
+// Inside your game loop:
+updateMovingEnemies(snake);
+checkCollisionWithEnemies(snake);
+renderEnemies();
+
+
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -144,6 +350,17 @@ function drawPolygon(x, y, length, sides, color) {
         ctx.fillStyle = color;
         ctx.fill();
     }
+
+function updateGame() {
+    updateMovingEnemies(snake);
+    checkCollisionWithEnemies(snake);
+    updateProjectiles(snake); // Update projectiles
+}
+
+function renderGame() {
+    renderEnemies();
+    renderProjectiles(); // Render projectiles
+}
 
  function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed) {
     // Get the canvas context
@@ -1092,7 +1309,14 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-                
+
+            updateMovingEnemies(snake);
+checkCollisionWithEnemies(snake);
+renderEnemies();
+
+updateGame();
+    renderGame();
+    requestAnimationFrame(gameLoop);
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
