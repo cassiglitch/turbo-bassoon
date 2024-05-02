@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let gravitywell = false;
+        let mirrors = [{ x:2, y: 2 }]
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -559,6 +559,10 @@ setTimeout(() => {
     // Layer 5: Draw Obstacles
     ctx.fillStyle = 'black';
     obstacles.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+
+
+    ctx.fillStyle = 'darkgrey';
+    mirrors.forEach(obstacle => ctx.fillRect(mirror.x * gridSize, mirror.y * gridSize, gridSize, gridSize));
 
     // Draw Dynamic Obstacles
     ctx.fillStyle = 'grey';
