@@ -100,7 +100,7 @@
             var zoomFactor = deviceWidth / window.innerWidth;
             var antiZoomFactor = 1 / zoomFactor;
        let currentInterval = 1;
-let thwomps = [{x:10, y:0, state: 1}]
+let thwomps = []
 let pX = 0;
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
@@ -602,7 +602,7 @@ setTimeout(() => {
     ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
-ctx.fillStyle = 'green';
+ctx.fillStyle = 'black';
     thwomps.forEach(obstacle => {
         ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize * 2, gridSize * 2);
     });
