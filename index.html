@@ -1013,7 +1013,8 @@ function spawnObstacle() {
     // Check if the coordinates are already occupied by something else
     const occupied = obstacles.some(obstacle => obstacle.x === x && obstacle.y === y) ||
                      mirrors.some(mirror => mirror.x === x && mirror.y === y) ||
-                     dynamicObstacles.some(dynamic => dynamic.x === x && dynamic.y === y);
+                     dynamicObstacles.some(dynamic => dynamic.x === x && dynamic.y === y)||
+                    (food.x === x && food.y === y)
 
     if (!occupied) {
         if (Math.random() < 0.5) {
