@@ -971,10 +971,9 @@ if (!freeze) {
                 // Up and down movement
                 obstacle.y += 1;
            
-   if(obstacle.y + 1 > canvas.height / gridSize){
+   if(obstacle.y > canvas.height / gridSize){
        obstacle.state = 2
-   }
-            if(obstacle.y === 0){
+   }else if(obstacle.y === 0){
        obstacle.state = 1
    }
                    
