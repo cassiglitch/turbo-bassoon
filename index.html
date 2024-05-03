@@ -968,7 +968,7 @@ if (!freeze) {
                 // Left to right movement
                 obstacle.y -= 0.25;
                 if (obstacle.y + 1 < canvas.height / gridSize) {
-                    obstacle.y = 1; // Reset to the top if it goes beyond the canvas boundary
+                    obstacle.state = 1; // Reset to the top if it goes beyond the canvas boundary
                 }
                 }else if (obstacle.state === 1) {
                 // Up and down movement
