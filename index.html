@@ -92,6 +92,7 @@
         let neoncolor = '#39ff14';
         let sunset = '#00FFFF'
         let timeslow = '#00ff8c'
+        let timespeed = '#ff0073'
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
@@ -99,7 +100,7 @@
             var zoomFactor = deviceWidth / window.innerWidth;
             var antiZoomFactor = 1 / zoomFactor;
        let currentInterval = 1;
-            
+let thwomps = [{x:10, y:0}]
 let pX = 0;
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
@@ -601,6 +602,10 @@ setTimeout(() => {
     ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+ctx.fillStyle = 'green';
+    thwomps.forEach(obstacle => {
+        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize * 2, gridSize * 2);
+    });
 
     // Draw Dynamic Obstacles
     ctx.fillStyle = 'grey';
@@ -707,6 +712,8 @@ function getFoodColor(foodType) {
             return sunset;
         case 'slow':
             return timeslow;
+        case 'fast':
+            return timespeed
     }
 }
 
@@ -879,7 +886,7 @@ HaHaNoCollision(100);
                 }else if (food.type === 'morph'){
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 10)
+                shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2)
                 }else if (food.type === 'breath'){
     let repeat = 30; // Initial size
     let timeInteger = 1;
@@ -911,7 +918,13 @@ HaHaNoCollision(100);
                       changeInterval(150)   
                 setTimeout(function() {
     changeInterval(100);
-}, 500);           
+}, 60000);           
+                }else if(food.type === 'fast'){
+changeInterval(50)   
+                setTimeout(function() {
+    changeInterval(100);
+}, 3000);           
+                    
                 }else{
                     gamefoods.push('normal')
                     score += 1;
@@ -950,7 +963,28 @@ if (!freeze) {
             }
         });
 }
-    }
+        thwomps.forEach(obstacle => {
+            if (obstacle.state === 2) {
+                // Left to right movement
+                obstacle.y += 0.25;
+                }else if (obstacle.state === 1) {
+                // Up and down movement
+                obstacle.y += 0.25;
+                if (obstacle.y + 1 > canvas.height / gridSize) {
+                    obstacle.y = 0; // Reset to the top if it goes beyond the canvas boundary
+                }
+   if(obstacle.y === canvas.height / gridSize){
+       obstacle.state = 2
+   }
+            if(obstacle.y === 0){
+       obstacle.state = 1
+   }
+                   
+            }
+        });
+}
+
+
 
             // Check for victory
             if (score >= maxscore) {
@@ -1000,7 +1034,7 @@ const rare = ['invincibility']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
             } else{
-                const common = ['normal', 'superfood', 'ultrafood']; // Possible directions
+                const common = ['normal', 'superfood', 'ultrafood', 'fast']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * common.length);
     return common[randomIndex2];
             }
@@ -1021,6 +1055,8 @@ function spawnObstacle() {
             obstacles.push({ x: x, y: y });
         } else if (Math.random() < 0.6) { 
             mirrors.push({ x: x, y: y });
+        }else if (Math.random() < 0.9){
+            thwomps.push({ x: x, y: 0, state: 1 });
         } else {
             // Randomly assign an ID to the dynamic obstacle
             const id = Math.random() < 0.5 ? 1 : 2;
@@ -1225,6 +1261,14 @@ function resizeCanvas() {
     food.x += 1;
     food.y += 1;
 }
+obstacles.forEach((obstacle, obstacleIndex) => {
+  mirrors.forEach((mirror, mirrorIndex) => {
+    if (mirror.x === obstacle.x && mirror.y === obstacle.y) {
+      obstacle.x += 1;
+      obstacle.y += 1;
+    }
+  });
+});
 }
 
 
