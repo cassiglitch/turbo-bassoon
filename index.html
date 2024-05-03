@@ -964,16 +964,16 @@ if (!freeze) {
         });
 }
         thwomps.forEach(obstacle => {
-            if (obstacle.state === 2) {
+            if (obstacle.state === 2 && obstacle.y !=== 0) {
                 // Left to right movement
                 obstacle.y -= 0.25;
-                }else if (obstacle.state === 1) {
+                }else if (obstacle.state === 1 || obstacle.y == 0) {
                 // Up and down movement
                 obstacle.y += 1;
            
-   if(obstacle.y > canvas.height / gridSize){
+   if(obstacle.y > canvas.height){
        obstacle.state = 2
-   }else if(obstacle.y === 0){
+   }else if(obstacle.y == 0){
        obstacle.state = 1
    }
                    
