@@ -967,18 +967,19 @@ if (!freeze) {
             if (obstacle.state === 2) {
                 // Left to right movement
                 obstacle.y -= 0.25;
-                }else if (obstacle.state === 1 || obstacle.y === 0) {
+                if (obstacle.y + 1 < canvas.height / gridSize) {
+                    obstacle.y = 1; // Reset to the top if it goes beyond the canvas boundary
+                }
+                }else if (obstacle.state === 1) {
                 // Up and down movement
                 obstacle.y += 1;
-           
-   if(obstacle.y > canvas.height){
-       obstacle.state = 2
-   }else if(obstacle.y === 0){
-       obstacle.state = 1
-   }
+                if (obstacle.y + 1 > canvas.height / gridSize) {
+                    obstacle.state = 2; // Reset to the top if it goes beyond the canvas boundary
+                }
+            }           
                    
             }
-        });
+        );
 }
 
 
