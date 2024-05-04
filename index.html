@@ -63,7 +63,7 @@
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
-        let maxscore = 100;
+        let maxscore = 50;
         let psize = 20;
         let startingGridSize = 20;
         let gridSize = 20;
@@ -261,6 +261,20 @@ if (increase === true) {
                 }
             });
 
+            thwomps.forEach((thwomp, dynamicObstacleIndex) => {
+                if (projectile.x >= thwomp.x * gridSize && projectile.x <= (thwomp.x + 2) * gridSize &&
+                    projectile.y >= thwomp.y * gridSize && projectile.y <= (thwomp.y + 2) * gridSize) {
+                    // Remove the dynamic obstacle from the array
+                    thwomp.splice(dynamicObstacleIndex, 1);
+
+                    // Create an explosion shockwave
+                    createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+
+                    // Remove the projectile from the array
+                    projectiles.splice(index, 1);
+                }
+            });
+
             // Check if the projectile is out of bounds
             if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
                 // Remove the projectile from the array
@@ -314,9 +328,20 @@ if (increase === true) {
         if (distance <= explode) {
             dynamicObstacles.splice(dynamicObstacleIndex, 1);
         }
+        
     });
-}
-
+        thwomps.forEach((thwomp, dynamicObstacleIndex) => {
+        const thwompx = (thwomp.x + 1) * gridSize;
+        const thwompy = (thwomp.y + 1) * gridSize;
+        
+        const distance = Math.sqrt((thwompx - x) ** 2 + (thwompy - y) ** 2);
+        
+        // If the dynamic obstacle is within the explosion radius, destroy it
+        if (distance <= explode) {
+            thwomp.splice(dynamicObstacleIndex, 1);
+        }
+})
+                        }
 
 function shockwaveAnimation(x, y) {
     // Get the canvas element
@@ -1029,11 +1054,11 @@ const rare = ['invincibility']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * rare.length);
     return rare[randomIndex2];
             } else if (random <= 0.4) {
-    const Special = ['teleport', 'earth', 'ice', 'fire', 'air', 'poison', 'morph', 'slow', 'breath']; // Possible directions
+    const Special = ['teleport', 'earth', 'ice', 'fire', 'air', 'poison', 'morph', 'slow', 'breath', 'fast']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * Special.length);
     return Special[randomIndex2];
             } else{
-                const common = ['normal', 'superfood', 'ultrafood', 'fast']; // Possible directions
+                const common = ['normal', 'superfood', 'ultrafood']; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * common.length);
     return common[randomIndex2];
             }
@@ -1071,6 +1096,7 @@ function spawnObstacle() {
             animateExplosion();
             pauseGame();
             gotextralife = false;
+            thwomps = []
             snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
             obstacles = [];
             gamefoods = [];
