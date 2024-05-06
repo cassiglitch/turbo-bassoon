@@ -1430,8 +1430,9 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
+if (esnake.length !== 0) {
             enemyAI(esnake, canvas, gridSize) 
-
+}
             
             // Handle eating animation
             if (isEating) {
