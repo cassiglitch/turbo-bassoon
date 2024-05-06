@@ -454,8 +454,10 @@ esnake.forEach((esnake, obstacleIndex) => {
             // Remove the obstacle from the array
             // Create an explosion shockwave
             createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+            
             projectiles.splice(index, 1);
-            esnake = []
+            
+            esnake.splice(0, esnake.length);
         }
     });
 
@@ -988,7 +990,7 @@ switch (direction) {
             lives = (lives * 2);
             livecount = livecount - 1;
             HaHaNoCollision(10)
-            esnake = []
+            
         } else {
             livecount = livecount - 1;
             restartGame(); // End the game if segments (lives) run out
