@@ -135,9 +135,9 @@ let foodCounts = {
 const probability = calculateGameProbability
 
 // Define the enemy AI function with A* pathfinding
+// Define the enemy AI function with A* pathfinding
 function enemyAI(esnake, canvas, gridSize) {
     // A* pathfinding
-    let prevHeadPos = { x: ehead.x, y: ehead.y };
     // Start node is the head of the enemy snake
     let startNode = { x: esnake[0].x, y: esnake[0].y };
     // End node is the head of the player snake (snake[0])
@@ -165,16 +165,13 @@ function enemyAI(esnake, canvas, gridSize) {
             esnake[0].y = (esnake[0].y + 1) % (canvas.height / gridSize);
         }
     }
-for (let i = 1; i < esnake.length; i++) {
-        let tempX = esnake[i].x;
-        let tempY = esnake[i].y;
-        esnake[i].x = prevHeadPos.x;
-        esnake[i].y = prevHeadPos.y;
-        prevHeadPos.x = tempX;
-        prevHeadPos.y = tempY;
+
+    // Move the body of the enemy snake to follow the head
+    for (let i = esnake.length - 1; i > 0; i--) {
+        esnake[i].x = esnake[i - 1].x;
+        esnake[i].y = esnake[i - 1].y;
     }
 }
-        
 
 // A* pathfinding algorithm
 function aStarPathfinding(startNode, endNode, canvas, gridSize) {
@@ -270,6 +267,7 @@ function reconstructPath(goalNode) {
     }
     return path;
 }
+
 
 function isCollidingWithBody(x, y) {
     // Loop through each segment of the snake's body
