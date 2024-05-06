@@ -434,6 +434,31 @@ if (increase === true) {
                 }
             });
 
+esnake.forEach((esnake, obstacleIndex) => {
+        if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
+            projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
+            // Remove the obstacle from the array
+            // Create an explosion shockwave
+            createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+            
+            projectiles.splice(index, 1);
+            
+            esnake.splice(0, esnake.length);
+            esnake = []
+        }
+    });
+esnake.some((esnake, obstacleIndex) => {
+        if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
+            projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
+                        createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+            
+            projectiles.splice(index, 1);
+            
+            esnake.splice(0, esnake.length);
+            esnake = []
+
+        }
+
            setTimeout(function() {
     snake.forEach((snake, obstacleIndex) => {
         if (projectile.x >= snake.x * gridSize && projectile.x <= (snake.x + 1) * gridSize &&
@@ -448,18 +473,6 @@ if (increase === true) {
     });
 }, snakeprojectilecollisiontime);
 
-esnake.forEach((esnake, obstacleIndex) => {
-        if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
-            projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
-            // Remove the obstacle from the array
-            // Create an explosion shockwave
-            createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
-            
-            projectiles.splice(index, 1);
-            
-            esnake.splice(0, esnake.length);
-        }
-    });
 
             // Check if the projectile is out of bounds
             if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
