@@ -1037,8 +1037,11 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
                     score += 2;
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
-                                        esnake.unshift({ ...esnake[0], color: timeslow });
+
+                    if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
+                    esnake.unshift({ ...esnake[0], color: timeslow });
+                    }
 
                 } else if (food.type === 'poison') {
                     gamefoods.push('poison')
@@ -1101,10 +1104,11 @@ HaHaNoCollision(100);
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
-                                        esnake.unshift({ ...esnake[0], color: timeslow });
+                if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
                     esnake.unshift({ ...esnake[0], color: timeslow });
-
+                    esnake.unshift({ ...esnake[0], color: timeslow });
+                }
                     
                 } else if (food.type === 'air'){
                 let pcolourr = 'lightgrey'
@@ -1157,7 +1161,9 @@ changeInterval(50)
                     gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
+}
                   }
                 isEating = true;
                 eatingAnimationFrames = 8; // Set the number of frames for the eating animation
@@ -1309,6 +1315,7 @@ function spawnObstacle() {
             gamefoods = [];
             dynamicObstacles = [];
             score = 0;
+            esnake = [{x:1, y:1}]        
             isEating = false;
             isInvincible = false;
             eatingAnimationFrames = 0;
