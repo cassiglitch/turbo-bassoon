@@ -795,11 +795,9 @@ setTimeout(() => {
     ctx.fillRect(head.x * gridSize, head.y * gridSize, gridSize, gridSize);
     
       // Layer 2: Draw Snake Body
-    esnake.forEach((esegment, index) => {
-        ctx.fillStyle = timespeed;
-        ctx.fillRect(esegment.x * gridSize, esegment.y * gridSize, gridSize, gridSize);
-    });
-
+            ctx.fillStyle = timespeed;
+        esnake.forEach(esnake => ctx.fillRect(esnake.x * gridSize, esnake.y * gridSize, gridSize, gridSize));
+ 
     const ehead = esnake[0];
     ctx.fillStyle = 'red'; // Head color
     ctx.fillRect(ehead.x * gridSize, ehead.y * gridSize, gridSize, gridSize);
