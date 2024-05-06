@@ -794,14 +794,15 @@ setTimeout(() => {
     ctx.fillStyle = 'lightgreen'; // Head color
     ctx.fillRect(head.x * gridSize, head.y * gridSize, gridSize, gridSize);
     
-      // Layer 2: Draw Snake Body
+    if (esnake.length !== 0) {
+    // Layer 2: Draw Snake Body
             ctx.fillStyle = timespeed;
         esnake.forEach(esnake => ctx.fillRect(esnake.x * gridSize, esnake.y * gridSize, gridSize, gridSize));
  
-    const ehead = esnake[0];
+        const ehead = esnake[0];
     ctx.fillStyle = 'red'; // Head color
     ctx.fillRect(ehead.x * gridSize, ehead.y * gridSize, gridSize, gridSize);
-
+    }
 
     // Draw Food
             ctx.fillStyle = getFoodColor(food.type);
