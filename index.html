@@ -137,7 +137,6 @@ const probability = calculateGameProbability
 // Define the enemy AI function with A* pathfinding
 // Define the enemy AI function with A* pathfinding
 function enemyAI(esnake, canvas, gridSize) {
-    if !(esnake.length === 0){
     // A* pathfinding
     // Start node is the head of the enemy snake
     let startNode = { x: esnake[0].x, y: esnake[0].y };
@@ -172,9 +171,6 @@ function enemyAI(esnake, canvas, gridSize) {
         esnake[i].x = esnake[i - 1].x;
         esnake[i].y = esnake[i - 1].y;
     }
-}
-}else{
-    return
 }
 
 // A* pathfinding algorithm
