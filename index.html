@@ -456,7 +456,7 @@ esnake.forEach((esnake, obstacleIndex) => {
             // Create an explosion shockwave
             createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
             projectiles.splice(index, 1);
-       esnake = []
+            esnake.length = 0;        
         }
     });
 
