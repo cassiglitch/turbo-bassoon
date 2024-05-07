@@ -1248,7 +1248,7 @@ if (esnake.length !== 0) {
                     spawnObstacle();
                 }
             }
-            if (symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y)))){
+            if ((symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y))))=== true){
 if (symbiote.type === 'magnet'){
     let startNode = { x: food.x, y: food.y };
     // End node is the head of the player snake (snake[0])
