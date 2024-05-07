@@ -1051,7 +1051,7 @@ projectiles.forEach((projectile, index) => { esnake.forEach((esnake, obstacleInd
                                            })
                     
             // Check if Snake eats Food
-            if ((head.x === food.x && head.y === food.y )|| projectiles.forEach((projectile, index) => { projectile.x === food.x && projectile.y === food.y})){
+            if ((head.x === food.x && head.y === food.y) || projectiles.some((projectile, index) => { return projectile.x === food.x && projectile.y === food.y })){
                 if (food.type === 'superfood') {
                     gamefoods.push('superfood')
                     score += 2;
