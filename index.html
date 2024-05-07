@@ -1248,11 +1248,7 @@ if (esnake.length !== 0) {
                     spawnObstacle();
                 }
             }
-            if (symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y)))){
-if (symbiote.type === 'magnet'){
-changeInterval(120)
-}
-            }
+            
 
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
@@ -1516,7 +1512,12 @@ if (esnake.length !== 0) {
             enemyAI(esnake, canvas, gridSize) 
 }
 symbioteAi(symbiote, canvas, gridSize)
-            
+
+            if (symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y)))){
+if (symbiote.type === 'magnet'){
+changeInterval(120)
+}
+            }
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
