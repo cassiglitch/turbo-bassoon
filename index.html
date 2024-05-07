@@ -1269,7 +1269,7 @@ if (!freeze) {
             let newFood;
             do {
                 newFood = {
-                    x: 2,
+                    x: Math.floor(Math.random() * (canvas.height / gridSize)),
                     y: Math.floor(Math.random() * (canvas.height / gridSize)),
                     type: generateFoodType()
                 };
