@@ -1250,34 +1250,8 @@ if (esnake.length !== 0) {
             }
             if ((symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y))))=== true){
 if (symbiote.type === 'magnet'){
-    let startNode2 = { x: food.x, y: food.y };
-    // End node is the head of the player snake (snake[0])
-    let endNode2 = { x: snake[0].x, y: snake[0].y };
-
-    // Implement A* algorithm to find the shortest path from startNode to endNode
-    let path2 = aStarPathfinding(startNode2, endNode2, canvas, gridSize);
-
-    // Move the enemy snake towards the next node in the path
-    if (path2.length > 1) {
-        // Next node in the path
-        let nextNode2 = path2[1];
-        // Move towards the next node
-        if (nextNode2.x < food.x) {
-            // Move left
-            food.x = (food.x - enemymovementspeed);
-        } else if (nextNode2.x > food.x) {
-            // Move right
-            food.x = (food.x + enemymovementspeed);
-        } else if (nextNode2.y < food.y) {
-            // Move up
-            food.y = (food.y - enemymovementspeed);
-        } else if (nextNode2.y > food.y) {
-            // Move down
-            food.y = (food.y + enemymovementspeed);
-        }
-    }
-}
-            }
+            mirrors.push({ x: snake[0].x, y: snake[0].y })
+}}
 
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
@@ -1543,35 +1517,6 @@ if (esnake.length !== 0) {
 symbioteAi(symbiote, canvas, gridSize)
 
 
-                     if (symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y)))){
-if (symbiote.type === 'magnet'){
-    let startNode = { x: food.x, y: food.y };
-    // End node is the head of the player snake (snake[0])
-    let endNode = { x: snake[0].x, y: snake[0].y };
-
-    // Implement A* algorithm to find the shortest path from startNode to endNode
-    let path = aStarPathfinding(startNode, endNode, canvas, gridSize);
-
-    // Move the enemy snake towards the next node in the path
-    if (path.length > 1) {
-        // Next node in the path
-        let nextNode = path[1];
-        // Move towards the next node
-        if (nextNode.x < food.x) {
-            // Move left
-            food.x = (food.x - enemymovementspeed);
-        } else if (nextNode.x > food.x) {
-            // Move right
-            food.x = (food.x + enemymovementspeed);
-        } else if (nextNode.y < food.y) {
-            // Move up
-            food.y = (food.y - enemymovementspeed);
-        } else if (nextNode.y > food.y) {
-            // Move down
-            food.y = (food.y + enemymovementspeed);
-        }
-    }
-}
             }
             // Handle eating animation
             if (isEating) {
