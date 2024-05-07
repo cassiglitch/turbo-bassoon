@@ -1248,13 +1248,17 @@ if (esnake.length !== 0) {
                     spawnObstacle();
                 }
             }
-            if (symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y)))){
-if (symbiote.type === 'magnet'){
-pX = snake[0].x * gridSize + gridSize / 2;
-                pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
-}
-            }
+            // Assuming symbiote is an array of objects with x, y, and type properties
+symbiote.forEach((symbiote, index) => {
+    if (symbiote.x === snake[1].x && symbiote.y === snake[1].y) {
+        if (symbiote.type === 'magnet') {
+            const pX = snake[0].x * gridSize + gridSize / 2;
+            const pY = snake[0].y * gridSize + gridSize / 2;
+            shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1);
+        }
+    }
+});
+
 
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
