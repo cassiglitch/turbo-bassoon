@@ -1513,7 +1513,7 @@ if (esnake.length !== 0) {
 }
 symbioteAi(symbiote, canvas, gridSize)
 
-            if (symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y)))){
+            if (symbiote.some(symbiote => (symbiote.x === (snake[1].x)) && (symbiote.y === (snake[1].y)))){
 if (symbiote.type === 'magnet'){
 changeInterval(120)
 }
