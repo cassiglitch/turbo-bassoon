@@ -1248,10 +1248,11 @@ if (esnake.length !== 0) {
                     spawnObstacle();
                 }
             }
-            if ((symbiote.some(symbiote => (symbiote.x === (snake[1].x) && symbiote.y === (snake[1].y))))=== true){
-if (symbiote.type === 'magnet'){
-            mirrors.push({ x: snake[0].x, y: snake[0].y })
-}}
+if (symbiote.some(symbiote => symbiote.x === snake[1].x && symbiote.y === snake[1].y)) {
+    if (symbiote.type === 'magnet') {
+        changeInterval(120);
+    }
+}
 
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
