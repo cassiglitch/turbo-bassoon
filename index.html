@@ -119,47 +119,30 @@ function venomreset(){
 function Dieenemy(){
 esnake = []
 }
-function generatePolygonCoordinates(x, y, length, sides, coordinates) {
-    // Calculate the angle between each side
-    const angleBetweenSides = (2 * Math.PI) / sides;
+function generateRegularPolygonCoordinates(x, y, length, sides, coordArray) {
+    // Calculate the angle between each vertex
+    const angleIncrement = (2 * Math.PI) / sides;
 
-    // Iterate over each side
+    // Iterate through each vertex
     for (let i = 0; i < sides; i++) {
-        // Calculate the angle of the current side
-        const angle = i * angleBetweenSides;
-        const nextAngle = ((i + 1) % sides) * angleBetweenSides;
+        // Calculate the angle for the current vertex
+        const angle = i * angleIncrement;
 
-        // Calculate the coordinates of the current and next vertices
-        const currentX = Math.round(x + length * Math.cos(angle));
-        const currentY = Math.round(y + length * Math.sin(angle));
-        const nextX = Math.round(x + length * Math.cos(nextAngle));
-        const nextY = Math.round(y + length * Math.sin(nextAngle));
+        // Calculate the coordinates of the current vertex
+        const vertexX = x + length * Math.cos(angle);
+        const vertexY = y + length * Math.sin(angle);
 
-        // Generate straight line between current and next vertices
-        generateStraightLineCoordinates(currentX, currentY, nextX, nextY, coordinates);
-
-        // Update initial coordinates for the next iteration
-        x = nextX;
-        y = nextY;
+        // Add the coordinates to the coordinate array
+        coordArray.push({ x: vertexX, y: vertexY });
     }
 }
 
-function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates) {
-    // Calculate the distance between the start and end points
-    const dx = endX - startX;
-    const dy = endY - startY;
-    const steps = Math.max(Math.abs(dx), Math.abs(dy));
-
-    // Generate coordinates along the line using linear interpolation
-    for (let i = 0; i <= steps; i++) {
-        const x = Math.round(startX + dx * (i / steps));
-        const y = Math.round(startY + dy * (i / steps));
-        coordinates.push({ x, y });
-    }
-}
+// Example usage:
+const coordinates = []; // Array to store coordinates
 
 
-generatePolygonCoordinates(20,20, 10, 4, mirrors)
+generateRegularPolygonCoordinates(10, 10, 5, 4, mirrors);
+
 
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
