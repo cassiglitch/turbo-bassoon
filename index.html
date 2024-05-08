@@ -137,6 +137,10 @@ function generatePolygonCoordinates(x, y, length, sides, coordinates) {
 
         // Generate straight line between current and next vertices
         generateStraightLineCoordinates(currentX, currentY, nextX, nextY, coordinates);
+
+        // Update initial coordinates for the next iteration
+        x = nextX;
+        y = nextY;
     }
 }
 
