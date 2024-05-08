@@ -120,13 +120,31 @@ function Dieenemy(){
 esnake = []
 }
 function generatePolygonCoordinates(x, y, length, sides, coordinates) {
+    // Calculate the angle between each side
+    const angleBetweenSides = (2 * Math.PI) / sides;
+    
+    // Iterate over each side
     for (let i = 0; i < sides; i++) {
-        const angle = (i * 2 * Math.PI) / sides;
+        // Calculate the angle of the current side
+        const angle = i * angleBetweenSides;
+
+        // Calculate the coordinates of the endpoint of the current side
         const newX = x + length * Math.cos(angle);
         const newY = y + length * Math.sin(angle);
+
+        // Push the coordinates of the endpoint into the array
         coordinates.push({ x: newX, y: newY });
+
+        // Calculate the coordinates of the midpoint between the current and next vertex
+        const nextAngle = (i + 1) * angleBetweenSides;
+        const midX = x + length * Math.cos((angle + nextAngle) / 2);
+        const midY = y + length * Math.sin((angle + nextAngle) / 2);
+
+        // Push the coordinates of the midpoint into the array
+        coordinates.push({ x: midX, y: midY });
     }
 }
+
 
 generatePolygonCoordinates(20,20, 10, 4, mirrors)
 
