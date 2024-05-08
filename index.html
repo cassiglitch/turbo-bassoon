@@ -129,21 +129,29 @@ function generatePolygonCoordinates(x, y, length, sides, coordinates) {
         const angle = i * angleBetweenSides;
 
         // Calculate the coordinates of the endpoint of the current side
-        const newX = x + length * Math.cos(angle);
-        const newY = y + length * Math.sin(angle);
+        const newX = Math.round(x + length * Math.cos(angle));
+        const newY = Math.round(y + length * Math.sin(angle));
 
         // Push the coordinates of the endpoint into the array
         coordinates.push({ x: newX, y: newY });
 
-        // Calculate the coordinates of the midpoint between the current and next vertex
+        // Calculate the coordinates of the next vertex
         const nextAngle = (i + 1) * angleBetweenSides;
-        const midX = x + length * Math.cos((angle + nextAngle) / 2);
-        const midY = y + length * Math.sin((angle + nextAngle) / 2);
+        const nextX = Math.round(x + length * Math.cos(nextAngle));
+        const nextY = Math.round(y + length * Math.sin(nextAngle));
 
-        // Push the coordinates of the midpoint into the array
-        coordinates.push({ x: midX, y: midY });
+        // Determine the number of steps to interpolate between current and next vertices
+        const steps = Math.max(Math.abs(newX - nextX), Math.abs(newY - nextY));
+
+        // Interpolate between current and next vertices
+        for (let j = 1; j < steps; j++) {
+            const interpX = Math.round(newX + (nextX - newX) * (j / steps));
+            const interpY = Math.round(newY + (nextY - newY) * (j / steps));
+            coordinates.push({ x: interpX, y: interpY });
+        }
     }
 }
+
 
 
 generatePolygonCoordinates(20,20, 10, 4, mirrors)
