@@ -967,8 +967,6 @@ function getVenomColor(symbioteType){
             return 'grey';
         case 'wave':
             return 'orange'
-        case 'reverse':
-            return 'lightgrey'
     }
 }
 
@@ -1307,9 +1305,8 @@ symbiote.forEach((symbiote, index) => {
             pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
-            }else if (symbiote.type === 'reverse'){
-    shootWithDelay(10);
-        }
+            }
+    }
     });
             }
 
@@ -1357,7 +1354,7 @@ if (!freeze) {
 }
 
     // Randomize the direction
-    const types = ['magnet', 'wave', 'reverse']; // Possible directions
+    const types = ['magnet', 'wave']; // Possible directions
     const randomIndex = Math.floor(Math.random() * types.length);
     type = types[randomIndex];
 
