@@ -1273,6 +1273,7 @@ if (esnake.length !== 0) {
                 }
             }
             // Assuming symbiote is an array of objects with x, y, and type properties
+            thwomps.forEach(obstacle => {
             if (symbiote.length !== 0){
 symbiote.forEach((symbiote, index) => {
     if (symbiote.x === snake[1].x && symbiote.y === snake[1].y) {
@@ -1311,9 +1312,8 @@ symbiote.forEach((symbiote, index) => {
             pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 300, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
-            symbiote.forEach(singleSymbiote => {
-        thwomps.forEach(obstacle => {
-            if (singleSymbiote.x === obstacle.x && singleSymbiote.y === obstacle.y) {
+            
+            if (symbiote.x === obstacle.x && symbiote.y === obstacle.y) {
                 if (obstacle.state === 1) {
                     obstacle.state = 2;
                 } else if (obstacle.state === 2) {
@@ -1324,9 +1324,10 @@ symbiote.forEach((symbiote, index) => {
     });
 }
             }
+    })
     }
-    });
-            }
+            });
+
 
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
