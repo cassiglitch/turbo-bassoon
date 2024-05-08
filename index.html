@@ -127,17 +127,15 @@ function generatePolygonCoordinates(x, y, length, sides, coordinates) {
     for (let i = 0; i < sides; i++) {
         // Calculate the angle of the current side
         const angle = i * angleBetweenSides;
-        const nextAngle = (i + 1) * angleBetweenSides;
+        const nextAngle = ((i + 1) % sides) * angleBetweenSides;
 
-        // Calculate the coordinates of the current vertex
+        // Calculate the coordinates of the current and next vertices
         const currentX = Math.round(x + length * Math.cos(angle));
         const currentY = Math.round(y + length * Math.sin(angle));
-
-        // Calculate the coordinates of the next vertex
         const nextX = Math.round(x + length * Math.cos(nextAngle));
         const nextY = Math.round(y + length * Math.sin(nextAngle));
 
-        // Generate straight line between current and next vertex
+        // Generate straight line between current and next vertices
         generateStraightLineCoordinates(currentX, currentY, nextX, nextY, coordinates);
     }
 }
@@ -155,6 +153,7 @@ function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates
         coordinates.push({ x, y });
     }
 }
+
 
 generatePolygonCoordinates(20,20, 10, 4, mirrors)
 
