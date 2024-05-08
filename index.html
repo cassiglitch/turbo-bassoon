@@ -1310,7 +1310,19 @@ symbiote.forEach((symbiote, index) => {
             }else if(symbiote.type === 'reverse'){
             pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 1000, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
+                shootWaveOfProjectiles(pX, pY, 300, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
+            symbiote.forEach(singleSymbiote => {
+        thwomps.forEach(obstacle => {
+            if (singleSymbiote.x === obstacle.x && singleSymbiote.y === obstacle.y) {
+                if (obstacle.state === 1) {
+                    obstacle.state = 2;
+                } else if (obstacle.state === 2) {
+                    obstacle.state = 1;
+                }
+            }
+        });
+    });
+}
             }
     }
     });
