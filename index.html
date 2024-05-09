@@ -133,7 +133,7 @@ function generateRegularPolygonCoordinates(x, y, length, sides, coordArray) {
         const vertexY = y + length * Math.sin(angle);
 
         // Add the coordinates to the coordinate array
-        coordArray.push({ x: vertexX, y: vertexY });
+        coordArray.push({ x: math.round(vertexX), y: math.round(vertexY)});
     }
 }
 
