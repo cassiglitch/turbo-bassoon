@@ -113,6 +113,8 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
+        const coordinatesArray = [];
+
 function venomreset(){
     symbiote = []
 }
@@ -167,46 +169,47 @@ function formShape(x, y, length, sides, coordinates){
     fill += 1
     }
     }
-
-function createShape(coordinates, numSides, isFilled, sideLength, centerX, centerY) {
-    if (numSides < 3) {
-        console.error("Number of sides must be at least 3.");
-        return;
-    }
-
-    if (sideLength <= 0) {
-        console.error("Side length must be greater than 0.");
-        return;
-    }
-
-    if (coordinates.length !== 0) {
-        console.error("Coordinate array must be empty.");
-        return;
-    }
-
-    const angleIncrement = (2 * Math.PI) / numSides;
-    let currentAngle = 0;
-
-    for (let i = 0; i < numSides; i++) {
-        const x = centerX + sideLength * Math.cos(currentAngle);
-        const y = centerY + sideLength * Math.sin(currentAngle);
-        coordinates.push({ x, y });
-        currentAngle += angleIncrement;
-    }
-
-    if (isFilled) {
-        coordinates.push({ x: centerX, y: centerY }); // Close the shape
-    }
+function createshape(x, y, length, sides){
+    drawPolygon(x, y, length, sides, 'black')
+    mirrors.push(extractCoordinatesFromDrawing())
 }
+        
 
-// Example usage:
-const numSides = 5;
-const isFilled = true;
-const sideLength = 20;
-const centerX = 10;
-const centerY = 10;
 
-createShape(mirrors, numSides, isFilled, sideLength, centerX, centerY);
+
+function extractCoordinatesFromDrawing() {
+    const exemptArrays = [snake, esnake, obstacle, mirror, thwomp, dynamicObstacle, symbiote];
+
+    if (canvas.getContext) {
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        function isExempted(x, y) {
+            for (const array of exemptArrays) {
+                for (const { x: ex, y: ey } of array) {
+                    if (x === ex && y === ey) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        for (let i = 0; i < data.length; i += 4) {
+            const x = Math.round((i / 4) % canvas.width);
+            const y = Math.round(Math.floor(i / 4 / canvas.width));
+
+            if (data[i + 3] !== 0 && !isExempted(x, y)) {
+                coordinatesArray.push({ x: x, y: y });
+            }
+        }
+    } else {
+        console.error('Canvas is not supported!');
+    }
+
+    return coordinatesArray;
+}
 
         
 function spawnvenom(type){
