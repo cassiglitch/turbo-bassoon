@@ -135,7 +135,13 @@ function generateRegularPolygonCoordinates(x, y, length, sides, coordArray) {
         // Add the coordinates to the coordinate array
         coordArray.push({ x: Math.round(vertexX), y: Math.round(vertexY)});
     }
+
+    // Connect the last vertex back to the first one to fill in the shape
+    const firstVertexX = x + length * Math.cos(0);
+    const firstVertexY = y + length * Math.sin(0);
+    coordArray.push({ x: Math.round(firstVertexX), y: Math.round(firstVertexY)});
 }
+
 
 
 // Example usage:
