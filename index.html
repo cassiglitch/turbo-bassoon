@@ -120,8 +120,7 @@ function Dieenemy(){
 esnake = []
 }
 
-    const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
-    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+    function spawnshape(){
    const sides = [3, 4, 5, 6, 7, 8]; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * sides.length);
         const length = [3, 4, 5, 6, 7, 8, 9, 10, 11]; // Possible directions
@@ -130,8 +129,8 @@ esnake = []
     const coordinates = [mirrors, obstacles]; // Possible directions
     const randomIndex3 = Math.floor(Math.random() * coordinates.length);
     let coords = coordinates[randomIndex3]
-            formShape(randomX, randomY, 5, sides2, coords)
-        
+            formShape(20, 20, 5, sides2, coords)
+    }
         
 function generatePolygonCoordinates(x, y, length, sides, coordinates) {
     // Calculate the angle between each side
@@ -1509,14 +1508,7 @@ function spawnObstacle() {
         }else if (Math.random() < 0.9){
             thwomps.push({ x: x, y: 0, state: 1 });
         } else if (Math.random() <= 1.7){
-            
-   const sides = [3, 4, 5, 6, 7, 8]; // Possible directions
-    const randomIndex2 = Math.floor(Math.random() * sides.length);
-    let sides2 = sides[randomIndex2]
-    const coordinates = [mirrors, obstacles]; // Possible directions
-    const randomIndex3 = Math.floor(Math.random() * coordinates.length);
-    let coords = coordinates[randomIndex3]
-            formShape(x, y, 5, sides2, coords)
+   spawnshape()
         } else {
             // Randomly assign an ID to the dynamic obstacle
             const id = Math.random() < 0.5 ? 1 : 2;
