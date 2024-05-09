@@ -119,7 +119,7 @@ function venomreset(){
 function Dieenemy(){
 esnake = []
 }
-function generatePolygonCoordinates(x, y, radius, sides, coordinates) {
+function generatePolygonCoordinates(x, y, length, sides, coordinates) {
     // Calculate the angle between each side
     const angleBetweenSides = (2 * Math.PI) / sides;
 
@@ -127,13 +127,22 @@ function generatePolygonCoordinates(x, y, radius, sides, coordinates) {
     for (let i = 0; i < sides; i++) {
         // Calculate the angle of the current side
         const angle = i * angleBetweenSides;
+        const nextAngle = (i + 1) * angleBetweenSides;
 
-        // Calculate the coordinates of the current vertex
-        const vertexX = x + radius * Math.cos(angle);
-        const vertexY = y + radius * Math.sin(angle);
+        // Calculate the coordinates of the current vertex without rounding
+        const currentX = x + length * Math.cos(angle);
+        const currentY = y + length * Math.sin(angle);
 
-        // Push the coordinates of the vertex
-        coordinates.push({ x: Math.round(vertexX), y: Math.round(vertexY) });
+        // Calculate the coordinates of the next vertex without rounding
+        const nextX = x + length * Math.cos(nextAngle);
+        const nextY = y + length * Math.sin(nextAngle);
+
+        // Generate straight line between current and next vertex with rounded coordinates
+        generateStraightLineCoordinates(
+            Math.round(currentX), Math.round(currentY),
+            Math.round(nextX), Math.round(nextY),
+            coordinates
+        );
     }
 }
 
@@ -163,8 +172,8 @@ function formShape(x, y, length, sides, coordinates){
     fill += 1
     }
     }
-        formShape(10, 10, 5, 3, mirrors)
-     function spawnvenom(type){
+        formShape(20, 20, 5, 10, mirrors)
+function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
 
