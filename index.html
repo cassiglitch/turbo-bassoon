@@ -119,14 +119,17 @@ function venomreset(){
 function Dieenemy(){
 esnake = []
 }
-
+    let x = Math.floor(Math.random() * (canvas.width / gridSize));
+   let y = Math.floor(Math.random() * (canvas.height / gridSize));
    const sides = [3, 4, 5, 6, 7, 8]; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * sides.length);
+        const length = [3, 4, 5, 6, 7, 8, 9, 10, 11]; // Possible directions
+    const randomIndex2 = Math.floor(Math.random() * length.length);
     let sides2 = sides[randomIndex2]
     const coordinates = [mirrors, obstacles]; // Possible directions
     const randomIndex3 = Math.floor(Math.random() * coordinates.length);
     let coords = coordinates[randomIndex3]
-            formShape(10, 10, 5, sides2, coords)
+            formShape(x, x, 5, sides2, coords)
         
         
 function generatePolygonCoordinates(x, y, length, sides, coordinates) {
