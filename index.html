@@ -119,17 +119,6 @@ function venomreset(){
 function Dieenemy(){
 esnake = []
 }
-
-   const sides = [3, 4, 5, 6, 7, 8]; // Possible directions
-    const randomIndex2 = Math.floor(Math.random() * sides.length);
-        const length = [3, 4, 5, 6, 7, 8, 9, 10, 11]; // Possible directions
-    const randomIndex2 = Math.floor(Math.random() * length.length);
-    let sides2 = sides[randomIndex2]
-    const coordinates = [mirrors, obstacles]; // Possible directions
-    const randomIndex3 = Math.floor(Math.random() * coordinates.length);
-    let coords = coordinates[randomIndex3]
-            formShape(20, 20, 5, sides2, coords)
-        
 function generatePolygonCoordinates(x, y, length, sides, coordinates) {
     // Calculate the angle between each side
     const angleBetweenSides = (2 * Math.PI) / sides;
@@ -140,23 +129,18 @@ function generatePolygonCoordinates(x, y, length, sides, coordinates) {
         const angle = i * angleBetweenSides;
         const nextAngle = (i + 1) * angleBetweenSides;
 
-        // Calculate the coordinates of the current vertex without rounding
-        const currentX = x + length * Math.cos(angle);
-        const currentY = y + length * Math.sin(angle);
+        // Calculate the coordinates of the current vertex
+        const currentX = Math.round(x + length * Math.cos(angle));
+        const currentY = Math.round(y + length * Math.sin(angle));
 
-        // Calculate the coordinates of the next vertex without rounding
-        const nextX = x + length * Math.cos(nextAngle);
-        const nextY = y + length * Math.sin(nextAngle);
+        // Calculate the coordinates of the next vertex
+        const nextX = Math.round(x + length * Math.cos(nextAngle));
+        const nextY = Math.round(y + length * Math.sin(nextAngle));
 
-        // Generate straight line between current and next vertex with rounded coordinates
-        generateStraightLineCoordinates(
-            Math.round(currentX), Math.round(currentY),
-            Math.round(nextX), Math.round(nextY),
-            coordinates
-        );
+        // Generate straight line between current and next vertex
+        generateStraightLineCoordinates(currentX, currentY, nextX, nextY, coordinates);
     }
 }
-
 
 function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates) {
     // Calculate the distance between the start and end points
@@ -183,7 +167,7 @@ function formShape(x, y, length, sides, coordinates){
     fill += 1
     }
     }
-
+        formShape(20, 20, 5,100, mirrors)
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
@@ -201,14 +185,60 @@ function calculateGameProbability(score, foodCounts) {
     return gameProbability;
 }
 
-// Example usage:
-
 let foodCounts = {
     rare: 1, // Example count of rare foods
     special: 10, // Example count of special foods
     common: 3 // Example count of common foods
 };
 const probability = calculateGameProbability
+
+function generateRandomFilledShape(coordinates) {
+    // Possible sides for the polygon
+    const sides = [3, 4, 5, 6, 7, 8];
+    // Possible lengths for the sides
+    const lengths = [3, 4, 5, 6, 7, 8, 9, 10, 11];
+    
+    // Randomly select number of sides and length
+    const randomSides = sides[Math.floor(Math.random() * sides.length)];
+    const randomLength = lengths[Math.floor(Math.random() * lengths.length)];
+    
+    // Starting coordinates for the shape (assuming center)
+    const x = Math.floor(Math.random() * 100); // Random x position (adjust as needed)
+    const y = Math.floor(Math.random() * 100); // Random y position (adjust as needed)
+    
+    // Calculate the angle between each side
+    const angleBetweenSides = (2 * Math.PI) / randomSides;
+
+    // Iterate over each side
+    for (let i = 0; i < randomSides; i++) {
+        // Calculate the angle of the current side
+        const angle = i * angleBetweenSides;
+        const nextAngle = (i + 1) * angleBetweenSides;
+
+        // Calculate the coordinates of the current vertex
+        const currentX = Math.round(x + randomLength * Math.cos(angle));
+        const currentY = Math.round(y + randomLength * Math.sin(angle));
+
+        // Calculate the coordinates of the next vertex
+        const nextX = Math.round(x + randomLength * Math.cos(nextAngle));
+        const nextY = Math.round(y + randomLength * Math.sin(nextAngle));
+
+        // Calculate the distance between the start and end points
+        const dx = nextX - currentX;
+        const dy = nextY - currentY;
+        const steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+        // Generate coordinates along the line using linear interpolation
+        for (let j = 0; j <= steps; j++) {
+            const px = Math.round(currentX + dx * (j / steps));
+            const py = Math.round(currentY + dy * (j / steps));
+            coordinates.push({ x: px, y: py });
+        }
+    }
+}
+
+generateRandomFilledShape(mirrors); // Generate random filled shape for mirrors
+
 
 function symbioteAi(symbiotes, canvas, gridSize){
       let startNode = { x: symbiote[0].x, y: symbiote[0].y };
@@ -1443,6 +1473,7 @@ if (score >= maxscore / 2) {
         });
     }
         }
+
         function calculateObstacleSpawnProbability() {
             // Obstacle spawn probability increases with score
             return Math.min(0.1 + score / 100, 1); // Adjust the maximum spawn probability as needed
