@@ -208,42 +208,9 @@ function generateRandomFilledShape(coordinates, canvasWidth, canvasHeight) {
     
     // Starting coordinates for the shape (randomized within canvas)
     const x = Math.floor(Math.random() * maxX); // Random x position
-    const y = Math.floor(Math.random() * maxY); // Random y position
-    
-    // Calculate the angle between each side
-    const angleBetweenSides = (2 * Math.PI) / randomSides;
-
-    // Iterate over each side
-    for (let i = 0; i < randomSides; i++) {
-        // Calculate the angle of the current side
-        const angle = i * angleBetweenSides;
-        const nextAngle = (i + 1) * angleBetweenSides;
-
-        // Calculate the coordinates of the current vertex
-        const currentX = Math.round(x + randomLength * Math.cos(angle));
-        const currentY = Math.round(y + randomLength * Math.sin(angle));
-
-        // Calculate the coordinates of the next vertex
-        const nextX = Math.round(x + randomLength * Math.cos(nextAngle));
-        const nextY = Math.round(y + randomLength * Math.sin(nextAngle));
-
-        // Calculate the distance between the start and end points
-        const dx = nextX - currentX;
-        const dy = nextY - currentY;
-        const steps = Math.max(Math.abs(dx), Math.abs(dy));
-
-        // Generate coordinates along the line using linear interpolation
-        for (let j = 0; j <= steps; j++) {
-            const px = Math.round(currentX + dx * (j / steps));
-            const py = Math.round(currentY + dy * (j / steps));
-            
-            // Check if the point is within canvas bounds
-            if (px >= 0 && px < canvasWidth && py >= 0 && py < canvasHeight) {
-                coordinates.push({ x: px, y: py });
-            }
+    const y = Math.floor(Math.random() * maxY * canvas.height/gridSize); // Random y position
+    formshape(x, y, randomSides, randomLength, coordinates)
         }
-    }
-}
 generateRandomFilledShape(mirrors, canvas.width, canvas.height); // Generate random filled shape for mirrors
 
 
