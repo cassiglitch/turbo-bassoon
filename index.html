@@ -192,7 +192,7 @@ let foodCounts = {
 };
 const probability = calculateGameProbability
 
-function generateRandomFilledShape(coordinates) {
+function generateRandomFilledShape(coordinates, canvasWidth, canvasHeight) {
     // Possible sides for the polygon
     const sides = [3, 4, 5, 6, 7, 8];
     // Possible lengths for the sides
@@ -202,9 +202,13 @@ function generateRandomFilledShape(coordinates) {
     const randomSides = sides[Math.floor(Math.random() * sides.length)];
     const randomLength = lengths[Math.floor(Math.random() * lengths.length)];
     
-    // Starting coordinates for the shape (assuming center)
-    const x = Math.floor(Math.random() * 100); // Random x position (adjust as needed)
-    const y = Math.floor(Math.random() * 100); // Random y position (adjust as needed)
+    // Adjust maximum x and y positions based on canvas size and shape size
+    const maxX = canvasWidth - randomLength;
+    const maxY = canvasHeight - randomLength;
+    
+    // Starting coordinates for the shape (randomized within canvas)
+    const x = Math.floor(Math.random() * maxX); // Random x position
+    const y = Math.floor(Math.random() * maxY); // Random y position
     
     // Calculate the angle between each side
     const angleBetweenSides = (2 * Math.PI) / randomSides;
@@ -232,12 +236,15 @@ function generateRandomFilledShape(coordinates) {
         for (let j = 0; j <= steps; j++) {
             const px = Math.round(currentX + dx * (j / steps));
             const py = Math.round(currentY + dy * (j / steps));
-            coordinates.push({ x: px, y: py });
+            
+            // Check if the point is within canvas bounds
+            if (px >= 0 && px < canvasWidth && py >= 0 && py < canvasHeight) {
+                coordinates.push({ x: px, y: py });
+            }
         }
     }
 }
-
-generateRandomFilledShape(mirrors); // Generate random filled shape for mirrors
+generateRandomFilledShape(mirrors, canvas.width, canvas.height); // Generate random filled shape for mirrors
 
 
 function symbioteAi(symbiotes, canvas, gridSize){
