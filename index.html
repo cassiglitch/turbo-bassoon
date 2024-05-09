@@ -119,8 +119,9 @@ function venomreset(){
 function Dieenemy(){
 esnake = []
 }
-function generateRegularPolygonCoordinates(x, y, length, sides, coordArray) {
-    // Calculate the angle between each vertex
+function generateRegularPolygonOutline(x, y, radius, sides, coordArray) {
+ 
+    // Calculate the angle increment between each vertex
     const angleIncrement = (2 * Math.PI) / sides;
 
     // Iterate through each vertex
@@ -129,19 +130,18 @@ function generateRegularPolygonCoordinates(x, y, length, sides, coordArray) {
         const angle = i * angleIncrement;
 
         // Calculate the coordinates of the current vertex
-        const vertexX = x + length * Math.cos(angle);
-        const vertexY = y + length * Math.sin(angle);
+        const vertexX = x + radius * Math.cos(angle);
+        const vertexY = y + radius * Math.sin(angle);
 
         // Add the coordinates to the coordinate array
         coordArray.push({ x: Math.round(vertexX), y: Math.round(vertexY)});
     }
 
-    // Connect the last vertex back to the first one to fill in the shape
-    coordArray.push({ x: Math.round(coordArray[0].x), y: Math.round(coordArray[0].y)});
+    return coordArray;
 }
 
 
-generateRegularPolygonCoordinates(10, 10, 5,3, mirrors);
+generateRegularPolygonOutline(10, 10, 5,3, mirrors);
 
 
 function spawnvenom(type){
