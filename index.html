@@ -198,8 +198,8 @@ function generateRegularPolygonPoints(sides, length, centerX, centerY) {
     }
     
     // Find the minimum and maximum x-coordinates
-    let minX = Infinity;
-    let maxX = -Infinity;
+    let minX = 0;
+    let maxX = canvas.width / gridSize;
     points.forEach(point => {
         minX = Math.min(minX, point.x);
         maxX = Math.max(maxX, point.x);
@@ -207,8 +207,8 @@ function generateRegularPolygonPoints(sides, length, centerX, centerY) {
     
     // Fill in the interior points
     for (let x = minX; x <= maxX; x++) {
-        let minY = Infinity;
-        let maxY = -Infinity;
+        let minY = 0;
+        let maxY = canvas.height / gridSize;
         let intersections = 0;
         
         // Count intersections with polygon edges
