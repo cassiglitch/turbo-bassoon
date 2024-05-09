@@ -114,6 +114,7 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
         const coordinatesArray = [];
+        let points = []
 
 function venomreset(){
     symbiote = []
@@ -169,48 +170,88 @@ function formShape(x, y, length, sides, coordinates){
     fill += 1
     }
     }
-function createshape(x, y, length, sides){
-    drawPolygon(x, y, length, sides, 'black')
-coordinatesArray.forEach((coord) => {
-    mirrors.push({ x: coord.x, y: coord.y });
-});
-
-}
+function generateRegularPolygonPoints(sides, length, centerX, centerY) {
+    points = [];
+    const angleIncrement = (2 * Math.PI) / sides;
+    
+    // Generate points along each edge and store them in an array
+    for (let i = 0; i < sides; i++) {
+        const angle = i * angleIncrement;
+        const nextAngle = (i + 1) * angleIncrement;
+        const startX = centerX + length * Math.cos(angle);
+        const startY = centerY + length * Math.sin(angle);
+        const endX = centerX + length * Math.cos(nextAngle);
+        const endY = centerY + length * Math.sin(nextAngle);
         
-createshape(10, 10, 100, 4)
-function extractCoordinatesFromDrawing() {
-    const exemptArrays = [snake, esnake, obstacle, mirror, thwomp, dynamicObstacle, symbiote];
-
-    if (canvas.getContext) {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-
-        function isExempted(x, y) {
-            for (const array of exemptArrays) {
-                for (const { x: ex, y: ey } of array) {
-                    if (x === ex && y === ey) {
-                        return true;
-                    }
+        // Calculate the number of points needed along the edge
+        const edgeLength = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
+        const numPoints = Math.round(edgeLength);
+        const dx = (endX - startX) / numPoints;
+        const dy = (endY - startY) / numPoints;
+        
+        // Generate and store points along the edge
+        for (let j = 0; j <= numPoints; j++) {
+            const x = startX + j * dx;
+            const y = startY + j * dy;
+            points.push({ x: Math.round(x), y: Math.round(y) });
+        }
+    }
+    
+    // Find the minimum and maximum x-coordinates
+    let minX = Infinity;
+    let maxX = -Infinity;
+    points.forEach(point => {
+        minX = Math.min(minX, point.x);
+        maxX = Math.max(maxX, point.x);
+    });
+    
+    // Fill in the interior points
+    for (let x = minX; x <= maxX; x++) {
+        let minY = Infinity;
+        let maxY = -Infinity;
+        let intersections = 0;
+        
+        // Count intersections with polygon edges
+        for (let i = 0; i < points.length; i++) {
+            const p1 = points[i];
+            const p2 = points[(i + 1) % points.length];
+            
+            if ((p1.y > centerY) !== (p2.y > centerY)) {
+                const edgeX = (p2.x - p1.x) * (centerY - p1.y) / (p2.y - p1.y) + p1.x;
+                
+                if (x <= edgeX) {
+                    intersections++;
                 }
             }
-            return false;
+            
+            minY = Math.min(minY, p1.y, p2.y);
+            maxY = Math.max(maxY, p1.y, p2.y);
         }
-
-        for (let i = 0; i < data.length; i += 4) {
-            const x = Math.round((i / 4) % canvas.width);
-            const y = Math.round(Math.floor(i / 4 / canvas.width));
-
-            if (data[i + 3] !== 0 && !isExempted(x, y)) {
-                coordinatesArray.push({ x: x, y: y });
+        
+        // Toggle fill for odd number of intersections
+        if (intersections % 2 !== 0 && x !== maxX) {
+            for (let y = minY; y <= maxY; y++) {
+                points.push({ x: x, y: y });
             }
         }
-    } else {
-        console.error('Canvas is not supported!');
     }
-
-    return coordinatesArray;
+    
+    return points;
 }
 
+// Example usage:
+const sides = 6; // number of sides
+const length = 50; // length of each side
+const centerX = 0; // x-coordinate of the center
+const centerY = 0; // y-coordinate of the center
+function makeshape(sides, length, centerX, centerY) {
+    generateRegularPolygonPoints(sides, length, centerX, centerY);
+    points.forEach(point => {
+        mirrors.push({ x: point.x, y: point.y });
+    });
+}
+
+makeshape(sides, length, centerX, centerY)
         
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
