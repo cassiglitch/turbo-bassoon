@@ -168,7 +168,36 @@ function formShape(x, y, length, sides, coordinates){
     }
     }
 
-        function spawnvenom(type){
+function createShape(coordinates, sides, isFilled, sideLength, x, y) {
+    // Calculate the angle for each side
+    const angle = (2 * Math.PI) / sides;
+
+    // Initialize variables for center and starting angle
+    const centerX = x;
+    const centerY = y;
+    let currentAngle = -Math.PI / 2; // Starting angle at the top
+
+    // Loop through each side to calculate coordinates
+    for (let i = 0; i < sides; i++) {
+        // Calculate the endpoint of the side
+        const endX = centerX + Math.cos(currentAngle) * sideLength;
+        const endY = centerY + Math.sin(currentAngle) * sideLength;
+
+        // Push the coordinates of the side
+        coordinates.push(centerX, centerY, endX, endY);
+
+        // Move to the next angle
+        currentAngle += angle;
+    }
+
+    // If the shape should be filled, push the center coordinates again to close the shape
+    if (isFilled) {
+        coordinates.push(centerX, centerY);
+    }
+}        
+createShape(mirrors, 4, true, 10, 10, 10)
+        
+function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
 
@@ -185,34 +214,14 @@ function calculateGameProbability(score, foodCounts) {
     return gameProbability;
 }
 
+// Example usage:
+
 let foodCounts = {
     rare: 1, // Example count of rare foods
     special: 10, // Example count of special foods
     common: 3 // Example count of common foods
 };
 const probability = calculateGameProbability
-
-function generateRandomFilledShape(coordinates, canvasWidth, canvasHeight) {
-    // Possible sides for the polygon
-    const sides = [3, 4, 5, 6, 7, 8];
-    // Possible lengths for the sides
-    const lengths = [3, 4, 5, 6, 7, 8, 9, 10, 11];
-    
-    // Randomly select number of sides and length
-    const randomSides = sides[Math.floor(Math.random() * sides.length)];
-    const randomLength = lengths[Math.floor(Math.random() * lengths.length)];
-    
-    // Adjust maximum x and y positions based on canvas size and shape size
-    const maxX = canvasWidth - randomLength;
-    const maxY = canvasHeight - randomLength;
-    
-    // Starting coordinates for the shape (randomized within canvas)
-    const x = Math.floor(Math.random() * maxX); // Random x position
-    const y = Math.floor(Math.random() * maxY * canvas.height/gridSize); // Random y position
-    formshape(x, y, randomSides, randomLength, coordinates)
-        }
-generateRandomFilledShape(mirrors, canvas.width, canvas.height); // Generate random filled shape for mirrors
-
 
 function symbioteAi(symbiotes, canvas, gridSize){
       let startNode = { x: symbiote[0].x, y: symbiote[0].y };
