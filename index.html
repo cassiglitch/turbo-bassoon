@@ -257,18 +257,19 @@ function symbioteAi(symbiotes, canvas, gridSize){
     }
 }
 
-function gravity(snake, canvas, gridSize){
-      let startNode = { x: snake[0].x, y: snake[0].y };
-    // End node is the head of the player snake (snake[0])
+function gravity(snake, canvas, gridSize, gravitywell, enemymovementspeed, aStarPathfinding) {
+    // Start node is the head of the enemy snake
+    let startNode = { x: snake[0].x, y: snake[0].y };
+    // End node is the target point (e.g., gravity well)
     let endNode = { x: gravitywell[0].x, y: gravitywell[0].y };
 
     // Implement A* algorithm to find the shortest path from startNode to endNode
     let path = aStarPathfinding(startNode, endNode, canvas, gridSize);
 
     // Move the enemy snake towards the next node in the path
-    if (path.length > 1) {
+    if (path.length > 0) {
         // Next node in the path
-        let nextNode = path[1];
+        let nextNode = path[0];
         // Move towards the next node
         if (nextNode.x < snake[0].x) {
             // Move left
@@ -292,6 +293,7 @@ function gravity(snake, canvas, gridSize){
     }
 }
 
+        
 // Define the enemy AI function with A* pathfinding
 function enemyAI(esnake, canvas, gridSize) {
     // A* pathfinding
