@@ -189,7 +189,7 @@ function calculateDistance(point1, point2) {
 // Function to check if snake is close to any gravitywell
 function isCloseToGravityWell(snake, gravitywell) {
     for (let i = 0; i < gravitywell.length; i++) {
-        const distance = calculateDistance(snake, gravitywell[i]);
+        const distance = calculateDistance(snake[0], gravitywell[i]);
         if (distance <= 5) {
             return true; // Snake is close to a gravitywell
         }
