@@ -59,7 +59,6 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let gravitywell = [{x:2, y: 2}]
         let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
@@ -106,7 +105,6 @@
        let currentInterval = 1;
         let track = []
 let thwomps = []
-        let transparentblack = '#CC000000'
 let pX = 0;
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
@@ -180,22 +178,7 @@ function formrandomshape(length){
     array = arrays[arrayIndex];
     formshape(x2, y2, length, sides, array)
 }
-function calculateDistance(point1, point2) {
-    const dx = point2[0] - point1[0];
-    const dy = point2[1] - point1[1];
-    return Math.sqrt(dx * dx + dy * dy);
-}
 
-// Function to check if snake is close to any gravitywell
-function isCloseToGravityWell(snake, gravitywell) {
-    for (let i = 0; i < gravitywell.length; i++) {
-        const distance = calculateDistance(snake[0], gravitywell[i]);
-        if (distance <= 5) {
-            return true; // Snake is close to a gravitywell
-        }
-    }
-    return false; // Snake is not close to any gravitywell
-}
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
@@ -257,43 +240,6 @@ function symbioteAi(symbiotes, canvas, gridSize){
     }
 }
 
-function gravity(snake, canvas, gridSize, gravitywell, enemymovementspeed, aStarPathfinding) {
-    // Start node is the head of the enemy snake
-    let startNode = { x: snake[0].x, y: snake[0].y };
-    // End node is the target point (e.g., gravity well)
-    let endNode = { x: gravitywell[0].x, y: gravitywell[0].y };
-
-    // Implement A* algorithm to find the shortest path from startNode to endNode
-    let path = aStarPathfinding(startNode, endNode, canvas, gridSize);
-
-    // Move the enemy snake towards the next node in the path
-    if (path.length > 0) {
-        // Next node in the path
-        let nextNode = path[0];
-        // Move towards the next node
-        if (nextNode.x < snake[0].x) {
-            // Move left
-            snake[0].x = (snake[0].x - enemymovementspeed + canvas.width / gridSize) % (canvas.width / gridSize);
-        } else if (nextNode.x > snake[0].x) {
-            // Move right
-            snake[0].x = (snake[0].x + enemymovementspeed) % (canvas.width / gridSize);
-        } else if (nextNode.y < snake[0].y) {
-            // Move up
-            snake[0].y = (snake[0].y - enemymovementspeed + canvas.height / gridSize) % (canvas.height / gridSize);
-        } else if (nextNode.y > snake[0].y) {
-            // Move down
-            snake[0].y = (snake[0].y + enemymovementspeed) % (canvas.height / gridSize);
-        }
-    }
-
-    // Move the body of the enemy snake to follow the head
-    for (let i = snake.length - 1; i > 0; i--) {
-        snake[i].x = snake[i - 1].x;
-        snake[i].y = snake[i - 1].y;
-    }
-}
-
-        
 // Define the enemy AI function with A* pathfinding
 function enemyAI(esnake, canvas, gridSize) {
     // A* pathfinding
@@ -991,9 +937,6 @@ if (symbiote.length !== 0) {
     ctx.fillStyle = 'black';
     obstacles.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
-
-   ctx.fillStyle = 'lightgreen';
-    gravitywell.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
     ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
@@ -1707,10 +1650,7 @@ if (esnake.length !== 0) {
             if (isPaused === false){
 symbioteAi(symbiote, canvas, gridSize)
             }}
-
-            if (isCloseToGravityWell(snake, gravitywell)) {
-        gravity(snake, canvas, gridSize)
-            }            
+            
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
