@@ -104,7 +104,7 @@
             var antiZoomFactor = 1 / zoomFactor;
        let currentInterval = 1;
         let track = []
-let thwomps = [{x: 1, y: 0}]
+let thwomps = []
 let pX = 0;
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
@@ -1725,18 +1725,6 @@ obstacles.forEach((obstacle, obstacleIndex) => {
       obstacle.y += 1;
     }
   });
-});
-dynamicObstacles.forEach((obstacle, obstacleIndex) => {
-    if (typeof obstacle.id === 'undefined'){
-        const id = Math.random() < 0.5 ? 1 : 2;
-        obstacle.id = id;
-    }
-});
-
-thwomp.forEach((obstacle, obstacleIndex) => {
-    if (typeof obstacle.state === 'undefined'){
-        obstacle.state = 1;
-    }
 });
 }
 
