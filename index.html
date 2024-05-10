@@ -1382,7 +1382,6 @@ if (!isInvincible && timezone.some(obstacle => obstacle.x === head.x && obstacle
     pickrandomeffect()
   if (timezone.type === 'superfood') {
                     gamefoods.push('superfood')
-                    score += 2;
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
 
@@ -1405,7 +1404,6 @@ if (!isInvincible && timezone.some(obstacle => obstacle.x === head.x && obstacle
                     esnake.pop();
                     esnake.pop();
                     }
-                    score = Math.max(0, Math.ceil(score / 2)); // Reduce score by 50% rounded up
                 } else if (timezone.type === 'teleport') {
                     gamefoods.push('teleport')
     // Teleport the snake to a random location
@@ -1453,7 +1451,6 @@ HaHaNoCollision(100);
                 shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
                 }else if (timezone.type === 'ultrafood'){
                     gamefoods.push('ultrafood')
-                    score += 3;
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
@@ -1512,7 +1509,6 @@ changeInterval(50)
                     
                 }else if (timezone.type === 'normal'){
                     gamefoods.push('normal')
-                    score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
 if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
