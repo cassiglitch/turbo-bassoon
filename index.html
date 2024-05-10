@@ -1373,6 +1373,12 @@ symbiote.forEach((symbiote, index) => {
     });
             }
 
+if (!isInvincible && timezone.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
+   const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+    head.x = randomX;
+    head.y = randomY;    
+}
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
