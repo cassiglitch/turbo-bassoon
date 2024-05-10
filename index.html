@@ -133,45 +133,22 @@ function generatePolygonCoordinates(x, y, length, sides, coordinates) {
         const angle = i * angleBetweenSides;
 
         // Calculate the coordinates of the current vertex
-        const currentX = x + length * Math.cos(angle);
-        const currentY = y + length * Math.sin(angle);
+        const currentX = Math.round(x + length * Math.cos(angle));
+        const currentY = Math.round(y + length * Math.sin(angle));
 
         // Add the vertex to the polygonVertices array
         polygonVertices.push({ x: currentX, y: currentY });
-
-        // Calculate the coordinates of the next vertex
-        const nextAngle = (i + 1) * angleBetweenSides;
-        const nextX = x + length * Math.cos(nextAngle);
-        const nextY = y + length * Math.sin(nextAngle);
-
-        // Generate straight line between current and next vertex
-        generateStraightLineCoordinates(currentX, currentY, nextX, nextY, coordinates);
     }
 
     // Iterate over the bounding box of the polygon
     const [minX, minY, maxX, maxY] = getBoundingBox(polygonVertices);
-    for (let px = Math.round(minX); px <= Math.round(maxX); px++) {
-        for (let py = Math.round(minY); py <= Math.round(maxY); py++) {
+    for (let px = minX; px <= maxX; px++) {
+        for (let py = minY; py <= maxY; py++) {
             // Check if the point is inside the polygon
             if (!isPointInsidePolygon(px, py, polygonVertices)) {
                 coordinates.push({ x: px, y: py });
             }
         }
-    }
-}
-
-// Function to generate coordinates for a straight line between two points
-function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates) {
-    // Calculate the distance between the start and end points
-    const dx = endX - startX;
-    const dy = endY - startY;
-    const steps = Math.max(Math.abs(dx), Math.abs(dy));
-
-    // Generate coordinates along the line using linear interpolation
-    for (let i = 0; i <= steps; i++) {
-        const x = startX + dx * (i / steps);
-        const y = startY + dy * (i / steps);
-        coordinates.push({ x, y });
     }
 }
 
@@ -197,12 +174,13 @@ function isPointInsidePolygon(x, y, vertices) {
         const xi = vertices[i].x, yi = vertices[i].y;
         const xj = vertices[j].x, yj = vertices[j].y;
 
-        const intersect = ((yi > y) !== (yj > y)) &&
+        const intersect = ((yi > y) != (yj > y)) &&
             (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi);
         if (intersect) inside = !inside;
     }
     return inside;
 }
+
 
 function formshape(x, y, length, sides, coordinates){
     let fill = 1 
