@@ -96,6 +96,13 @@
         let timespeed = '#ff0073'
         let esnake = [];
         let symbiote = []
+        let phasingWall = [{
+    x: 20,
+    y: 15,
+    isVisible: true,
+    interval: 2000, // Time in milliseconds for the wall to phase in and out
+    lastToggle: 0 // Timestamp of the last toggle
+}];
             var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
@@ -937,6 +944,9 @@ if (symbiote.length !== 0) {
     ctx.fillStyle = 'black';
     obstacles.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+    ctx.fillStyle = 'black';
+    phasingWall.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+
 
     ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
@@ -1368,6 +1378,18 @@ symbiote.forEach((symbiote, index) => {
     }
     });
             }
+
+        if (snake[0].x === phasingWall.x && snake[0].y === phasingWall.y && phasingWall.isVisible) {
+        // Apply temporary change to snake's position
+        snake[0].x += 0.1;
+        snake[0].y += 0.1;
+        phasingWall.isVisible = false
+    } else if (snake[0].x === phasingWall.x && snake[0].y === phasingWall.y && !phasingWall.isVisible){
+        // Revert temporary change if no collision with phasing wall
+        snake[0].x -= 0.1;
+        snake[0].y -= 0.1;
+        phasingWall.isVisible = true
+    }
 
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
