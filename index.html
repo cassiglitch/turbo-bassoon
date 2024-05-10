@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let timezone = [{x: 10, y: 10, type: 1}]
+        let timezone = []
         let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
@@ -1647,9 +1647,12 @@ function spawnObstacle() {
         }
         if (Math.random() < 0.5) {
             obstacles.push({ x: x, y: y });
-        }else if (Math.random() < 0.7){
+        }else if (Math.random() < 0.3){
         formrandomshape(5)            
-        }else if (Math.random() < 0.6) { 
+        }else if (Math.random() < 0.4){
+            timezone.push({x:x, y:y, type: 0})
+        }
+        else if (Math.random() < 0.6) { 
             mirrors.push({ x: x, y: y });
         }else if (Math.random() < 0.9){
             thwomps.push({ x: x, y: 0, state: 1 });
