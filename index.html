@@ -96,11 +96,11 @@
         let timespeed = '#ff0073'
         let esnake = [];
         let symbiote = []
-let magneticField = {
+let magneticField = [{
     x: 15,
     y: 5,
     polarity: 'attract' // 'attract' or 'repel'
-};            var deviceWidth, landscape = Math.abs(window.orientation) == 90
+}];            var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
             else deviceWidth = window.screen[landscape ? "height" : "width"]
@@ -1375,7 +1375,8 @@ symbiote.forEach((symbiote, index) => {
     }
     });
             }
-     if (snake[0].x === magneticField.x && snake[0].y === magneticField.y) {
+magneticField.forEach(obstacle => {
+    if (snake[0].x === magneticField.x && snake[0].y === magneticField.y) {
         // Apply magnetic force
         if (magneticField.polarity === 'attract') {
             // Code for attracting the snake towards the magnetic field
@@ -1403,6 +1404,7 @@ symbiote.forEach((symbiote, index) => {
             }
         }
     }
+})
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
