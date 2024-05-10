@@ -1727,17 +1727,17 @@ obstacles.forEach((obstacle, obstacleIndex) => {
   });
 });
 dynamicObstacles.forEach((obstacle, obstacleIndex) => {
-if (obstacle.id === 'undefined'){
-    const id = Math.random() < 0.5 ? 1 : 2;
-    obstacle.id = id
-}
-})
-thwomp.forEach((obstacle, obstacleIndex) => {
-if (obstacle.state === 'undefined'){
-    obstacle.state = 1
-}
-})
+    if (typeof obstacle.id === 'undefined'){
+        const id = Math.random() < 0.5 ? 1 : 2;
+        obstacle.id = id;
+    }
+});
 
+thwomp.forEach((obstacle, obstacleIndex) => {
+    if (typeof obstacle.state === 'undefined'){
+        obstacle.state = 1;
+    }
+});
 }
 
 
