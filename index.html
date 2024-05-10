@@ -96,14 +96,11 @@
         let timespeed = '#ff0073'
         let esnake = [];
         let symbiote = []
-        let phasingWall = [{
-    x: 20,
-    y: 15,
-    isVisible: true,
-    interval: 2000, // Time in milliseconds for the wall to phase in and out
-    lastToggle: 0 // Timestamp of the last toggle
-}];
-            var deviceWidth, landscape = Math.abs(window.orientation) == 90
+let magneticField = {
+    x: 15,
+    y: 5,
+    polarity: 'attract' // 'attract' or 'repel'
+};            var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
             else deviceWidth = window.screen[landscape ? "height" : "width"]
@@ -945,7 +942,7 @@ if (symbiote.length !== 0) {
     obstacles.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
     ctx.fillStyle = 'lightgreen';
-    phasingWall.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+    magneticField.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 
     ctx.fillStyle = 'darkgrey';
@@ -1378,23 +1375,34 @@ symbiote.forEach((symbiote, index) => {
     }
     });
             }
-    phasingWall.some(phasingWall => {
-       if (snake[0].x === phasingWall.x && snake[0].y === phasingWall.y && phasingWall.isVisible) {
-        // Apply temporary change to snake's position
-        snake[0].x += 0.25;
-        snake[0].y += 0.25;
-        phasingWall.x += 0.25
-        phasingWall.y += 0.25
-       phasingWall.isVisible = false
-    } else if (snake[0].x === phasingWall.x && snake[0].y === phasingWall.y && !phasingWall.isVisible){
-        // Revert temporary change if no collision with phasing wall
-        snake[0].x -= 0.25;
-        snake[0].y -= 0.25;
-        phasingWall.x -= 0.25
-        phasingWall.y -= 0.25
-        phasingWall.isVisible = true
+     if (snake[0].x === magneticField.x && snake[0].y === magneticField.y) {
+        // Apply magnetic force
+        if (magneticField.polarity === 'attract') {
+            // Code for attracting the snake towards the magnetic field
+            if (snake[0].x < magneticField.x) {
+                snake[0].x += 1; // Move snake towards magnetic field horizontally
+            } else if (snake[0].x > magneticField.x) {
+                snake[0].x -= 1; // Move snake towards magnetic field horizontally
+            }
+            if (snake[0].y < magneticField.y) {
+                snake[0].y += 1; // Move snake towards magnetic field vertically
+            } else if (snake[0].y > magneticField.y) {
+                snake[0].y -= 1; // Move snake towards magnetic field vertically
+            }
+        } else if (magneticField.polarity === 'repel') {
+            // Code for repelling the snake away from the magnetic field
+            if (snake[0].x < magneticField.x) {
+                snake[0].x -= 1; // Move snake away from magnetic field horizontally
+            } else if (snake[0].x > magneticField.x) {
+                snake[0].x += 1; // Move snake away from magnetic field horizontally
+            }
+            if (snake[0].y < magneticField.y) {
+                snake[0].y -= 1; // Move snake away from magnetic field vertically
+            } else if (snake[0].y > magneticField.y) {
+                snake[0].y += 1; // Move snake away from magnetic field vertically
+            }
+        }
     }
-    })
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
