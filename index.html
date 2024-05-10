@@ -231,7 +231,7 @@ function generateRegularPolygonPoints(sides, length, centerX, centerY) {
         // Toggle fill for odd number of intersections
         if (intersections % 2 !== 0 && x !== maxX) {
             for (let y = minY; y <= maxY; y++) {
-                points.push({ x: x, y: y });
+                mirrors.push({ x: x, y: y });
             }
         }
     }
