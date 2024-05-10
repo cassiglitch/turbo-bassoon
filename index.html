@@ -124,25 +124,43 @@ function generatePolygonCoordinates(x, y, length, sides, coordinates) {
     // Calculate the angle between each side
     const angleBetweenSides = (2 * Math.PI) / sides;
 
+    // Store all vertices of the polygon
+    const polygonVertices = [];
+
     // Iterate over each side
     for (let i = 0; i < sides; i++) {
         // Calculate the angle of the current side
         const angle = i * angleBetweenSides;
-        const nextAngle = (i + 1) * angleBetweenSides;
 
         // Calculate the coordinates of the current vertex
         const currentX = Math.round(x + length * Math.cos(angle));
         const currentY = Math.round(y + length * Math.sin(angle));
 
+        // Add the vertex to the polygonVertices array
+        polygonVertices.push({ x: currentX, y: currentY });
+
         // Calculate the coordinates of the next vertex
+        const nextAngle = (i + 1) * angleBetweenSides;
         const nextX = Math.round(x + length * Math.cos(nextAngle));
         const nextY = Math.round(y + length * Math.sin(nextAngle));
 
         // Generate straight line between current and next vertex
         generateStraightLineCoordinates(currentX, currentY, nextX, nextY, coordinates);
     }
+
+    // Iterate over the bounding box of the polygon
+    const [minX, minY, maxX, maxY] = getBoundingBox(polygonVertices);
+    for (let px = minX; px <= maxX; px++) {
+        for (let py = minY; py <= maxY; py++) {
+            // Check if the point is inside the polygon
+            if (!isPointInsidePolygon(px, py, polygonVertices)) {
+                coordinates.push({ x: px, y: py });
+            }
+        }
+    }
 }
 
+// Function to generate coordinates for a straight line between two points
 function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates) {
     // Calculate the distance between the start and end points
     const dx = endX - startX;
@@ -156,6 +174,36 @@ function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates
         coordinates.push({ x, y });
     }
 }
+
+// Function to get the bounding box of a polygon
+function getBoundingBox(vertices) {
+    let minX = Number.POSITIVE_INFINITY;
+    let minY = Number.POSITIVE_INFINITY;
+    let maxX = Number.NEGATIVE_INFINITY;
+    let maxY = Number.NEGATIVE_INFINITY;
+    for (const vertex of vertices) {
+        minX = Math.min(minX, vertex.x);
+        minY = Math.min(minY, vertex.y);
+        maxX = Math.max(maxX, vertex.x);
+        maxY = Math.max(maxY, vertex.y);
+    }
+    return [minX, minY, maxX, maxY];
+}
+
+// Function to check if a point is inside a polygon
+function isPointInsidePolygon(x, y, vertices) {
+    let inside = false;
+    for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+        const xi = vertices[i].x, yi = vertices[i].y;
+        const xj = vertices[j].x, yj = vertices[j].y;
+
+        const intersect = ((yi > y) != (yj > y)) &&
+            (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    return inside;
+}
+
 
 function formshape(x, y, length, sides, coordinates){
     let fill = 1 
