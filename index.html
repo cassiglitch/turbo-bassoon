@@ -180,7 +180,22 @@ function formrandomshape(length){
     array = arrays[arrayIndex];
     formshape(x2, y2, length, sides, array)
 }
+function calculateDistance(point1, point2) {
+    const dx = point2[0] - point1[0];
+    const dy = point2[1] - point1[1];
+    return Math.sqrt(dx * dx + dy * dy);
+}
 
+// Function to check if snake is close to any gravitywell
+function isCloseToGravityWell(snake, gravitywell) {
+    for (let i = 0; i < gravitywell.length; i++) {
+        const distance = calculateDistance(snake, gravitywell[i]);
+        if (distance <= 5) {
+            return true; // Snake is close to a gravitywell
+        }
+    }
+    return false; // Snake is not close to any gravitywell
+}
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
@@ -1690,7 +1705,10 @@ if (esnake.length !== 0) {
             if (isPaused === false){
 symbioteAi(symbiote, canvas, gridSize)
             }}
-            
+
+            if (isCloseToGravityWell(snake, gravitywell)) {
+        gravity(snake, canvas, gridSize)
+            }            
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
