@@ -1381,17 +1381,17 @@ symbiote.forEach((symbiote, index) => {
     phasingWall.some(phasingWall => {
        if (snake[0].x === phasingWall.x && snake[0].y === phasingWall.y && phasingWall.isVisible) {
         // Apply temporary change to snake's position
-        snake[0].x += 0.1;
-        snake[0].y += 0.1;
-        phasingWall.x += 0.1
-        phasingWall.y += 0.1
-        phasingWall.isVisible = false
+        snake[0].x += 0.25;
+        snake[0].y += 0.25;
+        phasingWall.x += 0.25
+        phasingWall.y += 0.25
+       phasingWall.isVisible = false
     } else if (snake[0].x === phasingWall.x && snake[0].y === phasingWall.y && !phasingWall.isVisible){
         // Revert temporary change if no collision with phasing wall
-        snake[0].x -= 0.1;
-        snake[0].y -= 0.1;
-        phasingWall.x -= 0.1 
-        phasingWall.y -= 0.1
+        snake[0].x -= 0.25;
+        snake[0].y -= 0.25;
+        phasingWall.x -= 0.25
+        phasingWall.y -= 0.25
         phasingWall.isVisible = true
     }
     })
