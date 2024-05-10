@@ -1378,7 +1378,7 @@ symbiote.forEach((symbiote, index) => {
     });
             }
 
-if (!isInvincible && timezone.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
+if (!isInvincible && (timezone.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) && !isPaused) {
     pickrandomeffect()
   if (timezone.type === 'superfood') {
                     gamefoods.push('superfood')
@@ -1648,7 +1648,7 @@ function spawnObstacle() {
         if (Math.random() < 0.5) {
             obstacles.push({ x: x, y: y });
         }else if (Math.random() < 0.3){
-        formrandomshape(5)            
+        formrandomshape(3)            
         }else if (Math.random() < 0.4){
             timezone.push({x:x, y:y, type: 0})
         }
