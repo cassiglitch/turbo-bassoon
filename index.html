@@ -113,6 +113,10 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
+
+
+
+
 function venomreset(){
     symbiote = []
 }
@@ -167,6 +171,12 @@ function formShape(x, y, length, sides, coordinates){
     fill += 1
     }
     }
+
+function formrandomshape(length, sides, coordinates){
+    const x2 = Math.floor(Math.random() * (canvas.width / gridSize));
+    const y2 = Math.floor(Math.random() * (canvas.height / gridSize));
+    formshape(x2, y2, length, sides, coordinates)
+}
 
 
 function spawnvenom(type){
@@ -1474,6 +1484,7 @@ const rare = ['invincibility']; // Possible directions
 function spawnObstacle() {
     const x = Math.floor(Math.random() * (canvas.width / gridSize));
     const y = Math.floor(Math.random() * (canvas.height / gridSize));
+
 
     // Check if the coordinates are already occupied by something else
     const occupied = obstacles.some(obstacle => obstacle.x === x && obstacle.y === y) ||
