@@ -1077,7 +1077,7 @@ function HaHaNoCollision(duration) {
 }
       
         function pickrandomeffect(){
-            const types = ['invincibility', 'teleport', 'earth', 'ice', 'fire', 'air', 'poison', 'morph', 'slow', 'breath', 'fast', 'normal', 'superfood', 'ultrafood', 'obstacle']; // Possible directions
+            const types = ['invincibility', 'teleport', 'earth', 'ice', 'fire', 'air', 'poison', 'morph', 'slow', 'breath', 'fast', 'normal', 'superfood', 'ultrafood', 'obstacle', 'mirror']; // Possible directions
     const randomIndex = Math.floor(Math.random() * types.length);
     timezone.type = types[randomIndex];
         }
@@ -1378,7 +1378,7 @@ symbiote.forEach((symbiote, index) => {
     });
             }
 
-if (!isInvincible && (timezone.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) && !isPaused) {
+if (!isInvincible && timezone.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
     pickrandomeffect()
   if (timezone.type === 'superfood') {
                     gamefoods.push('superfood')
@@ -1514,8 +1514,30 @@ if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
 }
   
-  } else if (timezone.type === obstacle){
+  } else if (timezone.type === 'obstacle'){
       spawnObstacle()
+  }else if (timesone.type === 'mirror'){
+  switch (direction) {
+        case 'right':
+                direction = 'left';
+                snake[0].x -= 1;
+            break;
+        case 'left':
+                direction = 'right';
+                snake[0].x += 1
+            break;
+        case 'up':
+                direction = 'down';
+                snake[0].y -= 1
+            break;
+        case 'down':
+                direction = 'up';
+                snake[0].y += 1
+            break;
+        default:
+            // Handle any other direction cases here
+            break;
+    }
   }
 }
     if (!isPaused) { // Check if the game is not paused
@@ -1648,7 +1670,7 @@ function spawnObstacle() {
         if (Math.random() < 0.5) {
             obstacles.push({ x: x, y: y });
         }else if (Math.random() < 0.3){
-        formrandomshape(3)            
+        formrandomshape(5)            
         }else if (Math.random() < 0.4){
             timezone.push({x:x, y:y, type: 0})
         }
