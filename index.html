@@ -78,7 +78,7 @@
         let score = 0;
         let isEating = false;
         let eatingAnimationFrames = 0;
-        let isInvincible = true;
+        let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
         let collisionAnimationFrames = 10;
@@ -105,7 +105,7 @@
             var antiZoomFactor = 1 / zoomFactor;
        let currentInterval = 1;
         let track = []
-let thwomps = [{x:1, y:0, state:1}]
+let thwomps = []
 let pX = 0;
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
@@ -115,7 +115,6 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
 
-HaHaNoCollision(2000000)
 function venomreset(){
     symbiote = []
 }
@@ -1126,11 +1125,10 @@ switch (direction) {
 
 
             // Check if Snake hits obstacles
-                   if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
+            if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
                 !isInvincible && dynamicObstacles.some(obstacle => (head.x >= obstacle.x && head.x < obstacle.x + 2) &&
                     (head.y >= obstacle.y && head.y < obstacle.y + 2)) || !isInvincible && thwomps.some(obstacle => (head.x >= obstacle.x && head.x < obstacle.x + 2) &&
-                    (head.y >= obstacle.y && head.y < obstacle.y + 2))) {
-                const numSegmentsToRemove = Math.ceil(snake.length * lives);
+                    (head.y >= obstacle.y && head.y < obstacle.y + 2))) {                const numSegmentsToRemove = Math.ceil(snake.length * lives);
         if (snake.length > numSegmentsToRemove) {
             snake.splice(0, numSegmentsToRemove);
             lives = (lives * 2);
@@ -1687,7 +1685,7 @@ function spawnObstacle() {
         if (Math.random() < 0.5) {
             obstacles.push({ x: x, y: y });
         }else if (Math.random() < 0.3){
-        formrandomshape(5)            
+        formrandomshape(3)            
         }else if (Math.random() < 0.4){
             timezone.push({x:x, y:y, type: 0})
         }
