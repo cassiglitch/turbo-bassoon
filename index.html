@@ -114,40 +114,8 @@ const projectileSpeed = 10; // Speed of the projectiles
 const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
-let wells = [new GravityWell(10, 10, 5)];
-
-class GravityWell {
-    constructor(x, y, strength) {
-        this.x = x;
-        this.y = y;
-        this.strength = strength;
-        this.pulsation = 0; // Pulsation factor
-        this.pulsationSpeed = 0.05; // Pulsation speed
-    }
-
-    // Method to draw the pulsating square
-    drawWell() {
-        // Adjust the size of the square based on pulsation
-        const squareSize = gridSize + Math.sin(this.pulsation) * 5;
-        
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x * gridSize, this.y * gridSize, squareSize, squareSize);
-    }
-
-    // Method to update the pulsation for animation
-    updatePulsation() {
-        this.pulsation += this.pulsationSpeed;
-    }
-
-    // Method to check if the snake is within range of the Gravity Well
-    isSnakeWithinRange(snake) {
-        const distanceX = Math.abs(snake[0].x - this.x);
-        const distanceY = Math.abs(snake[0].y - this.y);
-        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-        return distance <= this.strength;
-    }
-}
+    let wellcolor = '#00000080'
+let wells = [{x: 3, y: 2}]
 
 function venomreset(){
     symbiote = []
@@ -975,6 +943,9 @@ if (symbiote.length !== 0) {
     ctx.fillStyle = 'lightgreen';
 timezone.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+ctx.fillStyle = wellcolor;
+wells.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+
 
     ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
@@ -1589,18 +1560,6 @@ if (esnake.length !== 0) {
     }
   }
 }
-
-    wells.forEach(well => {
-        well.updatePulsation();
-        well.drawWell();
-
-        // Check if snake is within range and apply effect
-        if (well.isSnakeWithinRange(snake)) {
-            // Apply effect here (e.g., change snake's direction)
-            console.log("Snake affected by Gravity Well!");
-        }
-    });
-
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
         snake.pop();
