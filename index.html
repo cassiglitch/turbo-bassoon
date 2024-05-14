@@ -115,7 +115,17 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
     let wellcolor = '#00000080'
-let wells = [{x: 3, y: 2}]
+let wells = [{x: 3, y: 2}, {x:20, y:21}]
+
+let isGravityWellActive = false;        
+function toggleGravityWell() {
+  isGravityWellActive = !isGravityWellActive;
+}
+
+// Timer to toggle gravity well every 5 seconds
+setInterval(toggleGravityWell, 5000);
+
+
 
 let wellStrength = 5
 function checkDistance(snake) {
@@ -964,8 +974,15 @@ if (symbiote.length !== 0) {
 timezone.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 ctx.fillStyle = wellcolor;
-wells.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
-
+  wells.forEach((well) => {
+    const pulse = Math.sin(Date.now() / 200) * 5; // Adjust pulsating effect
+    ctx.fillRect(
+      well.x * gridSize - pulse / 2,
+      well.y * gridSize - pulse / 2,
+      gridSize + pulse,
+      gridSize + pulse
+    );
+  })
 
     ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
@@ -1858,6 +1875,9 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
+            if (isGravityWellActive === true){
+            checkDistance(snake)
+            }
 if (esnake.length !== 0) {
             enemyAI(esnake, canvas, gridSize) 
 }
