@@ -126,7 +126,7 @@ class GravityWell {
     }
 
     // Method to draw the pulsating square
-    draw() {
+    drawWell() {
         // Adjust the size of the square based on pulsation
         const squareSize = gridSize + Math.sin(this.pulsation) * 5;
         
@@ -1592,7 +1592,7 @@ if (esnake.length !== 0) {
 
     wells.forEach(well => {
         well.updatePulsation();
-        well.draw();
+        well.drawWell();
 
         // Check if snake is within range and apply effect
         if (well.isSnakeWithinRange(snake)) {
