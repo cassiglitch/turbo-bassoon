@@ -117,6 +117,19 @@ let enemymovementspeed = 1
     let wellcolor = '#00000080'
 let wells = [{x: 3, y: 2}]
 
+let wellStrength = 5
+function checkDistance(snake) {
+    wells.forEach((well) => {
+      const distance = Math.abs(snake[0].x - well.x) + Math.abs(snake[0].y - well.y);
+      if (distance <= wellStrength) {
+        // Implement gravity effect here
+        // For demonstration, let's just log that the snake is affected
+        console.log("Snake affected by gravity well!");
+      }
+    });
+}
+
+
 function venomreset(){
     symbiote = []
 }
