@@ -119,6 +119,11 @@ let wells = []
 
 let isGravityWellActive = true; 
 
+document.addEventListener('keypress', function(event) {
+    if (event.key === 'p') {
+        pauseGame();
+    }
+});
 
 let wellStrength = 5
 function checkDistance(snake) {
