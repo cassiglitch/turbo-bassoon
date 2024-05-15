@@ -214,15 +214,25 @@ function formrandomshape(length){
     formshape(x2, y2, length, sides, array)
 }
 function checkAndSplice(polygons, obstacles, mirrors) {
-    polygons.forEach((coord, index) => {
-        if (obstacles.includes(coord)) {
-            obstacles.splice(obstacles.indexOf(coord), 1);
-            }
-        if (mirrors.includes(coord)) {
-            mirrors.splice(mirrors.indexOf(coord), 1);  
+    const polygonsCopy = [...polygons]; // Create copies of the arrays
+    const obstaclesCopy = [...obstacles];
+    const mirrorsCopy = [...mirrors];
+
+    for (let i = polygonsCopy.length - 1; i >= 0; i--) {
+        const coord = polygonsCopy[i];
+        const obstacleIndex = obstaclesCopy.findIndex(obstacle => obstacle[0] === coord[0] && obstacle[1] === coord[1]);
+        const mirrorIndex = mirrorsCopy.findIndex(mirror => mirror[0] === coord[0] && mirror[1] === coord[1]);
+
+        if (obstacleIndex !== -1) {
+            obstacles.splice(obstacles.indexOf(obstaclesCopy[obstacleIndex]), 1); // Remove from original array
+            console.log(`Removed coordinate ${coord} from obstacles.`);
         }
-    });
+        if (mirrorIndex !== -1) {
+            mirrors.splice(mirrors.indexOf(mirrorsCopy[mirrorIndex]), 1); // Remove from original array
+        }
+    }
 }
+
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
