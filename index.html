@@ -695,8 +695,7 @@ function shockwaveAnimation(x, y) {
             opacity = maxOpacity;
             cancelAnimationFrame(animationId);
             applyEarthquake(obstacles)
-            isPaused = false
-            return;
+        pauseGame()
         }
 
         // Request next frame
