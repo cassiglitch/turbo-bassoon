@@ -116,7 +116,7 @@ let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
     let wellcolor = '#00000080'
 let wells = []
-
+let polygons = []
 let isGravityWellActive = true; 
 
 document.addEventListener('keypress', function(event) {
@@ -187,6 +187,7 @@ function generateStraightLineCoordinates(startX, startY, endX, endY, coordinates
         const x = Math.round(startX + dx * (i / steps));
         const y = Math.round(startY + dy * (i / steps));
         coordinates.push({ x, y });
+        polygons.push({ x, y })
     }
 }
 
@@ -211,7 +212,16 @@ function formrandomshape(length){
     array = arrays[arrayIndex];
     formshape(x2, y2, length, sides, array)
 }
-
+function checkAndSplice(polygons, obstacles, mirrors) {
+    polygons.forEach((coord, index) => {
+        if (obstacles.includes(coord)) {
+            obstacles.splice(obstacles.indexOf(coord), 1);
+            }
+        if (mirrors.includes(coord)) {
+            mirrors.splice(mirrors.indexOf(coord), 1);  
+        }
+    });
+}
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
 }
@@ -1768,7 +1778,9 @@ function spawnObstacle() {
             lives = 0.5;
             livecount = 2;
             cangetvenom = true
- wells = []
+            wells = []
+            checkAndSplice(polygons, obstacles, mirrors)
+            polygons = []
             venomreset()
             spawnFood();
             changeInterval(100)
