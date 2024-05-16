@@ -70,7 +70,7 @@
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 0, y: 0};
+        let food = { x: 0, y: 0, type:'poison'};
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
@@ -127,7 +127,7 @@ function cancelEffects(){
 }
 function checkForEffects(){
             if (isPoisoned === true){
-            applyStatus(200, 'poison')
+            applyStatus(500, 'poison')
             }
     if (isConfused == true){
         applyStatus(500, 'confuse')
