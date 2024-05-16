@@ -129,7 +129,7 @@ function cancelEffects(){
 }
 function checkForEffects(){
             if (isPoisoned === true){
-            applyStatus(1500, 'poison')
+            applyStatus(1000, 'poison')
             }
     if (isConfused == true){
         applyStatus(1000, 'confuse')
@@ -157,9 +157,6 @@ if (isConfused === true && effect === 'confuse'){
 }
 if (isBurned === true && effect === 'burn'){
     snake.pop()
-    changeInterval(50)
-} else if (isBurned === false) {
-    changeInterval(100)
 }
 }
 }
@@ -1963,7 +1960,11 @@ if (isPaused === false){
             if (isPaused === false){
 symbioteAi(symbiote, canvas, gridSize)
             }}
-            
+            if (isBurned === true){
+                    changeInterval(50)
+} else if (isBurned === false) {
+    changeInterval(100)
+            }
             // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
