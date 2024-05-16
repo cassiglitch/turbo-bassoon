@@ -121,9 +121,11 @@ let isGravityWellActive = true;
 let isPoisoned = false;
 let effectApplyed = 0
 let isConfused = false
+let isBurned = false
 function cancelEffects(){
     isPoisoned = false
     isConfused = false
+    isBurned = false
 }
 function checkForEffects(){
             if (isPoisoned === true){
@@ -131,6 +133,9 @@ function checkForEffects(){
             }
     if (isConfused == true){
         applyStatus(1000, 'confuse')
+    }
+    if (isBurned === true){
+        applyStatus(1000, 'burn')
     }
 }
 function applyStatus(cooldown, effect){
@@ -149,6 +154,12 @@ if (isConfused === true && effect === 'confuse'){
     const randomIndex = Math.floor(Math.random() * directions.length);
     direction = directions[randomIndex];
     effectApplyed = currentTime
+}
+if (isBurned === true && effect === 'burn'){
+    snake.pop()
+    changeInterval(50)
+} else if (isBurned === false) {
+    changeInterval(100)
 }
 }
 }
@@ -1364,6 +1375,7 @@ HaHaNoCollision(100);
                     shockwaveAnimation(x, y)
                 } else if (food.type === 'fire'){
                     cancelEffects()
+                    isBurned = true
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
