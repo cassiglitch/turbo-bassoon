@@ -127,10 +127,10 @@ function cancelEffects(){
 }
 function checkForEffects(){
             if (isPoisoned === true){
-            applyEffect(200, 'poison')
+            applyStatus(200, 'poison')
             }
     if (isConfused == true){
-        applyEffect(500, 'confuse')
+        applyStatus(500, 'confuse')
     }
 }
 function applyStatus(cooldown, effect){
