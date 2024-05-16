@@ -120,7 +120,7 @@ let polygons = []
 let isGravityWellActive = true;   
 let isPoisoned = false;
 let effectApplyed = 0
-let isConfused = true
+let isConfused = false
 function cancelEffects(){
     isPoisoned = false
     isConfused = false
@@ -148,6 +148,7 @@ if (isConfused === true && effect === 'confuse'){
     const directions = ['up', 'down', 'left', 'right']; // Possible directions
     const randomIndex = Math.floor(Math.random() * directions.length);
     direction = directions[randomIndex];
+    effectApplyed = currentTime
 }
 }
 }
