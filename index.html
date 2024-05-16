@@ -70,7 +70,7 @@
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 0, y: 0, type:'poison'};
+        let food = { x: 0, y: 0};
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
@@ -130,7 +130,7 @@ function checkForEffects(){
             applyStatus(1500, 'poison')
             }
     if (isConfused == true){
-        applyStatus(500, 'confuse')
+        applyStatus(1000, 'confuse')
     }
 }
 function applyStatus(cooldown, effect){
@@ -232,6 +232,7 @@ function formshape(x, y, length, sides, coordinates){
     fill += 1
     }
     }
+
 function formrandomshape(length){
     let sides = 2
     let array = []
@@ -240,25 +241,24 @@ function formrandomshape(length){
     const sidenumber = [3, 4, 5, 6, 7, 8]; // Possible directions
     const sideIndex = Math.floor(Math.random() * sidenumber.length);
     sides = sidenumber[sideIndex];
-    const arrays = [obstacles]; // Possible directions
+    const arrays = [obstacles, mirrors]; // Possible directions
     const arrayIndex = Math.floor(Math.random() * arrays.length);
     array = arrays[arrayIndex];
     formshape(x2, y2, length, sides, array)
 }
-function checkAndSplice(polygons, obstacles, mirrors) {
-    const polygonsCopy = [...polygons]; // Create copies of the arrays
-    const obstaclesCopy = [...obstacles];
+function checkAndSplice(polygons, mirrors) {
+    // Filter out mirrors that have matching coordinates in the polygons array
+    const filteredMirrors = mirrors.filter(mirror => {
+        return !polygons.some(polygon => {
+            return mirror.x === polygon.x && mirror.y === polygon.y;
+        });
+    });
     
-    for (let i = polygonsCopy.length - 1; i >= 0; i--) {
-        const coord = polygonsCopy[i];
-        const obstacleIndex = obstaclesCopy.findIndex(obstacle => obstacle[0] === coord[0] && obstacle[1] === coord[1]);
-        
-        if (obstacleIndex !== -1) {
-            obstacles.splice(obstacles.indexOf(obstaclesCopy[obstacleIndex]), 1); // Remove from original array
-            console.log(`Removed coordinate ${coord} from obstacles.`);
-        }
-        }
+    // Update the original mirrors array with the filtered mirrors
+    mirrors.length = 0; // Clear the original array
+    Array.prototype.push.apply(mirrors, filteredMirrors); // Add filtered mirrors back to the original array
 }
+
 
 function spawnvenom(type){
 symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - index, type: type }));
