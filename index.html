@@ -181,6 +181,44 @@ switch (enemytype) {
         return 'pink'
                }
 }
+// Assume snake is an array representing the snake's body
+// and itemIndex is the index of the item to be picked up
+
+function pickUpItem(itemIndex) {
+    // Store the original colors of the snake segments
+    const originalColors = snake.map(segment => segment.color);
+
+    // Temporary color for the animation
+    const tempColor = 'yellow'; // You can change this to any color you like
+
+    // Create a wave effect by changing colors of the snake segments
+    const animationInterval = setInterval(() => {
+        // Change color of snake segments
+        for (let i = 0; i < snake.length; i++) {
+            // Calculate distance from itemIndex
+            const distance = Math.abs(i - itemIndex);
+            
+            // Calculate color intensity based on distance
+            
+            // Set temporary color with reduced intensity
+            snake[i].color = `rgba(255, 255, 0)`; // Yellow with variable opacity
+        }
+
+        // After the animation duration, restore original colors and stop the animation
+        setTimeout(() => {
+            // Restore original colors
+            snake.forEach((segment, index) => {
+                segment.color = originalColors[index];
+            });
+
+            // Stop the animation interval
+            clearInterval(animationInterval);
+
+            // Redraw the snake with original colors
+            draw();
+        }, 1000); // Adjust this time to control animation duration
+    }, 100); // Adjust this time to control animation speed
+}
 
 
 let wellStrength = 5
@@ -1718,6 +1756,7 @@ if (item.length !== 0) {
         }
         // Clear the item list
         item = [];
+        pickUpItem(item)
     }
 }
 
