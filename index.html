@@ -66,7 +66,7 @@ let isFast = false
         let gamefoods = [];
         let maxscore = 100;
         let psize = 20;
-        let item = [{x:1, y:1, type: 'taxform'}]
+        let item = [{x:1, y:1, type: 'antidote'}]
         let startingGridSize = 20;
         let gridSize = 20;
         let startingLength = 5;
@@ -100,6 +100,7 @@ let isFast = false
         let esnake = [];
         let symbiote = []
         let hasBeenTaxed = false
+        let laserTimer = 45
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
@@ -120,23 +121,18 @@ let enemymovementspeed = 1
     let wellcolor = '#00000080'
 let wells = []
 let polygons = []
-let isGravityWellActive = true;   
-let isPoisoned = false;
+let isGravityWellActive = true;
 let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
 let lightbrown = '#C4A484'
 function cancelEffects(){
-    isPoisoned = false
     isConfused = false
     isBurned = false
     isTaxed = false
 }
 function checkForEffects(){
-            if (isPoisoned === true){
-            applyStatus(10000, 'poison')
-            }
     if (isConfused === true){
         applyStatus(1000, 'confuse')
     }
@@ -154,10 +150,6 @@ function applyStatus(cooldown, effect){
     if (currentTime - effectApplied < cooldown) {
         return; // Laser is still on cooldown
     } else {
-if (isPoisoned === true && effect === 'poison'){
- snake.pop()  
-effectApplyed = currentTime
-}
 if (isConfused === true && effect === 'confuse'){
     const directions = ['up', 'down', 'left', 'right']; // Possible directions
     const randomIndex = Math.floor(Math.random() * directions.length);
@@ -168,10 +160,10 @@ if (isBurned === true && effect === 'burn'){
     snake.pop()
     effectApplied = currentTime
 }
-if(isTaxed === true && effect === 'taxes' && hasBeenTaxed === false){
+if(isTaxed === true && effect === 'taxes' && esnake[0].damage === false){
 let tax = score * 0.20;
 score -= tax;
-hasBeenTaxed = true
+
 }
 }
 }
@@ -185,6 +177,8 @@ function getitem(enemytype){
 switch (enemytype) {
         case 'taxform':
             return lightbrown;
+    case 'antidote':
+        return 'pink'
                }
 }
 
@@ -889,7 +883,7 @@ function drawLaser() {
 }
 
 let lastLaserShot = 0; // Timestamp of the last laser shot
-const laserCooldown = 45 * 1000; // Cooldown period in milliseconds (30 seconds)
+let laserCooldown = laserTimer * 1000; // Cooldown period in milliseconds (30 seconds)
 
 
         // Function to handle shooting the laser
@@ -1282,7 +1276,6 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
 } else if (esnake[0].type === 'IRS' && esnake.damage === false){
         isTaxed = true
         esnake.forEach(enemySegment => enemySegment.damage = true)
-        esnake = []
 }
 }
 if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === false && esnake.type === 'IRS'))){
@@ -1368,7 +1361,9 @@ projectiles.forEach((projectile, index) => { esnake.forEach((esnake, obstacleInd
                     gamefoods.push('poison')
                     cancelEffects()
                     score = Math.max(0, Math.ceil(score / 2)); // Reduce score by 50% rounded up
-                    isPoisoned = true
+                    snake.pop()
+                    snake.pop()
+                    snake.pop()
                 } else if (food.type === 'teleport') {
                     gamefoods.push('teleport')
     // Teleport the snake to a random location
@@ -1498,6 +1493,9 @@ if (esnake.length !== 0) {
                 eatingAnimationFrames = 8; // Set the number of frames for the eating animation
                 spawnFood();
 
+if (Math.random() < itemSpawn()) {
+                    spawnItem();
+}
                 // More frequent black blocks as score increases
                 if (Math.random() < calculateObstacleSpawnProbability()) {
                     spawnObstacle();
@@ -1714,6 +1712,9 @@ if (item.length !== 0) {
         if (item[0].type === 'taxform') {
             // Set TaxFormGot to true
             TaxFormGot = true;
+        } else if (item[0].type === 'antidote'){
+            cancelEffects()
+            laserTimer = laserTimer/2
         }
         // Clear the item list
         item = [];
@@ -1724,6 +1725,7 @@ if (item.length !== 0) {
 if (esnake.some(esnake => esnake.type === 'IRS') && TaxFormGot === true) {
     // Clear the enemy list
     esnake = [];
+    TaxFormGot = false
 }
 
 
@@ -1801,6 +1803,48 @@ if (score >= maxscore / 2) {
             return Math.min(0.1 + score / 100, 1); // Adjust the maximum spawn probability as needed
         }
 
+function itemSpawn() {
+            // Obstacle spawn probability increases with score
+            return Math.min(0.1 + score / 99, 1); // Adjust the maximum spawn probability as needed
+        }
+
+function spawnItem() {
+            let newItem;
+            do {
+                newItem = {
+                    x: Math.floor(Math.random() * (canvas.height / gridSize)),
+                    y: Math.floor(Math.random() * (canvas.height / gridSize)),
+                    type: generateItem()
+                };
+            } while (snake.some(segment => segment.x === newItem.x && segment.y === newItem.y) ||
+                obstacles.some(obstacle => obstacle.x === newItem.x && obstacle.y === newItem.y) ||
+                dynamicObstacles.some(obstacle => (newItem.x >= obstacle.x && newItem.x < obstacle.x + 1) &&
+                    (newItem.y >= obstacle.y && newItem.y < obstacle.y + 1)));
+
+            item.push(newItem);
+        }
+
+function generateItem() {
+            // Adjust the probability for different types of food as needed
+            const random = Math.random();
+            if (random <= 0.01) {
+const rare = ['antidote']; // Possible directions
+                foodCounts.rare = rare.length
+    const randomIndex2 = Math.floor(Math.random() * rare.length);
+    return rare[randomIndex2];
+            } else if (random <= 0.4) {
+    const Special = ['taxform']; // Possible directions
+                foodCounts.special = Special.length
+    const randomIndex2 = Math.floor(Math.random() * Special.length);
+    return Special[randomIndex2];
+            } else{
+                const common = ['taxform']; // Possible directions
+                foodCounts.common = common.length
+    const randomIndex2 = Math.floor(Math.random() * common.length);
+    return common[randomIndex2];
+            }
+        }
+        
         function spawnFood() {
             let newFood;
             do {
@@ -1816,6 +1860,7 @@ if (score >= maxscore / 2) {
 
             food = newFood;
         }
+
 
         function generateFoodType() {
             // Adjust the probability for different types of food as needed
@@ -2020,7 +2065,6 @@ function animateExplosion() {
             }
 if (snake.length <= 1){
     restartGame()
-    isPoisoned = false
 }
 if (esnake.length !== 0) {
 if (isPaused === false){
