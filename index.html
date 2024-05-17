@@ -172,7 +172,6 @@ if(isTaxed === true && effect === 'taxes' && hasBeenTaxed === false){
 let tax = score * 0.20;
 score -= tax;
 hasBeenTaxed = true
-
 }
 }
 }
@@ -1265,6 +1264,7 @@ switch (direction) {
             return;
         }              
             }
+if (esnake.length !== 0){
 if (!isInvincible &&  (esnake.some(esnake => (esnake.x === (snake[1].x) && esnake.y === (snake[1].y)) && esnake.damage === false))){
     if (esnake[0].type === 'base'){
              const numSegmentsToRemove2 = Math.ceil(snake.length * lives);
@@ -1279,7 +1279,7 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
             restartGame(); // End the game if segments (lives) run out
             return;
         }              
-} else if (esnake[0].type === 'IRS' && esnake.damage = false){
+} else if (esnake[0].type === 'IRS' && esnake.damage === false){
         isTaxed = true
         esnake.forEach(enemySegment => enemySegment.damage = true)
         esnake = []
@@ -1292,6 +1292,7 @@ isTaxed = false
                 score = 0
                 esnake = []
             }
+}
 if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
     // If the head collides with a mirror and the player is not invincible
     // Reverse the direction of movement
