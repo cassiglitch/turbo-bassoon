@@ -66,6 +66,7 @@ let isFast = false
         let gamefoods = [];
         let maxscore = 100;
         let psize = 20;
+        let item = [{x:1, y:1, type: 'taxform'}]
         let startingGridSize = 20;
         let gridSize = 20;
         let startingLength = 5;
@@ -89,6 +90,7 @@ let isFast = false
         let isFoodOrange = false;
         let livecount = 2;
         let pausetimer = 900;
+        let TaxFormGot = false
         let snakeprojectilecollisiontime = 2000
         let originalSnakeColor = '#00FF00';
         let neoncolor = '#39ff14';
@@ -97,7 +99,8 @@ let isFast = false
         let timespeed = '#ff0073'
         let esnake = [];
         let symbiote = []
-            var deviceWidth, landscape = Math.abs(window.orientation) == 90
+        let hasBeenTaxed = false
+        var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
             else deviceWidth = window.screen[landscape ? "height" : "width"]
@@ -123,6 +126,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
+let lightbrown = '#C4A484'
 function cancelEffects(){
     isPoisoned = false
     isConfused = false
@@ -131,7 +135,7 @@ function cancelEffects(){
 }
 function checkForEffects(){
             if (isPoisoned === true){
-            applyStatus(2500, 'poison')
+            applyStatus(10000, 'poison')
             }
     if (isConfused === true){
         applyStatus(1000, 'confuse')
@@ -164,9 +168,11 @@ if (isBurned === true && effect === 'burn'){
     snake.pop()
     effectApplied = currentTime
 }
-if(isTaxed === true && effect === 'taxes'){
- score -= 1    
-effectApplied = currentTime
+if(isTaxed === true && effect === 'taxes' && hasBeenTaxed === false){
+let tax = score * 0.20;
+score -= tax;
+hasBeenTaxed = true
+
 }
 }
 }
@@ -175,6 +181,14 @@ document.addEventListener('keypress', function(event) {
         pauseGame();
     }
 });
+
+function getitem(enemytype){
+switch (enemytype) {
+        case 'taxform':
+            return lightbrown;
+               }
+}
+
 
 let wellStrength = 5
 function checkDistance(snake) {
@@ -203,15 +217,6 @@ switch (enemytype) {
             return timespeed;
         case 'IRS':
             return 'lightgrey';
-       }
-}
-
-function getenemyheadcolor(enemytype){
-switch (enemytype) {
-        case 'base':
-            return 'red';
-        case 'IRS':
-            return 'black';
        }
 }
 
@@ -1013,10 +1018,6 @@ setTimeout(() => {
         ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
     });
 
-
-
-
-    
     if (esnake.length !== 0) {
     // Layer 2: Draw Snake Body
             ctx.fillStyle = getenemycolor(esnake[0].type);
@@ -1033,7 +1034,10 @@ if (symbiote.length !== 0) {
     const head = snake[0];
     ctx.fillStyle = 'lightgreen'; // Head color
     ctx.fillRect(head.x * gridSize, head.y * gridSize, gridSize, gridSize);
-
+if (item.length !== 0){
+ctx.fillStyle = getitem(item[0].type); 
+ctx.fillRect(item[0].x * gridSize, item[0].y * gridSize, gridSize, gridSize);
+}
 
     // Draw Food
             ctx.fillStyle = getFoodColor(food.type);
@@ -1275,8 +1279,10 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
             restartGame(); // End the game if segments (lives) run out
             return;
         }              
-} else if (esnake[0].type === 'IRS'){
+} else if (esnake[0].type === 'IRS' && esnake.damage = false){
         isTaxed = true
+        esnake.forEach(enemySegment => enemySegment.damage = true)
+        esnake = []
 }
 }
 if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === false && esnake.type === 'IRS'))){
@@ -1292,6 +1298,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
     switch (direction) {
         case 'right':
             if (!mirrors.some(obstacle => obstacle.x === head.x + 1 && obstacle.y === head.y) && !isCollidingWithBody(head.x + 1, head.y)) {
+                cancelEffects()
                 direction = 'left';
                 snake[0].x -= 1;
                 isConfused = true
@@ -1299,6 +1306,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
             break;
         case 'left':
             if (!mirrors.some(obstacle => obstacle.x === head.x - 1 && obstacle.y === head.y) && !isCollidingWithBody(head.x - 1, head.y)) {
+                cancelEffects()
                 direction = 'right';
                 snake[0].x += 1
                 isConfused = true
@@ -1307,6 +1315,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
             break;
         case 'up':
             if (!mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y - 1) && !isCollidingWithBody(head.x, head.y - 1)) {
+                cancelEffects()
                 direction = 'down';
                 snake[0].y -= 1
                 isConfused = true
@@ -1315,6 +1324,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
             break;
         case 'down':
             if (!mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y + 1) && !isCollidingWithBody(head.x, head.y + 1)) {
+                cancelEffects()
                 direction = 'up';
                 snake[0].y += 1
                 isConfused = true
@@ -1695,6 +1705,27 @@ if (esnake.length !== 0) {
     }
   }
 }
+// Check if there are items in the list
+if (item.length !== 0) {
+    // Check if the head is at the same position as the first item
+    if (head.x === item[0].x && head.y === item[0].y) {
+        // Check if the item is of type 'taxform'
+        if (item[0].type === 'taxform') {
+            // Set TaxFormGot to true
+            TaxFormGot = true;
+        }
+        // Clear the item list
+        item = [];
+    }
+}
+
+// Check if there are any enemies matching the criteria and if TaxFormGot is true
+if (esnake.some(esnake => esnake.type === 'IRS') && TaxFormGot === true) {
+    // Clear the enemy list
+    esnake = [];
+}
+
+
 checkForEffects()
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
@@ -1850,6 +1881,7 @@ function spawnObstacle() {
 
         function restartGame() {
             pauseGame();
+            TaxFormGot = false
             createParticles('red');
             animateExplosion();
             pauseGame();
