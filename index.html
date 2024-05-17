@@ -66,7 +66,7 @@ let isFast = false
         let gamefoods = [];
         let maxscore = 100;
         let psize = 20;
-        let item = [{x:1, y:1, type:'coin'}]
+        let item = [{x:1, y:1, type:'welldelete'}]
         let startingGridSize = 20;
         let gridSize = 20;
         let startingLength = 5;
@@ -183,6 +183,8 @@ switch (enemytype) {
         return 'pink'
     case 'coin':
         return 'yellow'
+    case 'welldelete':
+        return welldeleter
                }
 }
 // Assume snake is an array representing the snake's body
