@@ -135,6 +135,11 @@ function cancelEffects(){
     isBurned = false
     isTaxed = false
 }
+
+        function wellToggle(){
+    isGravityWellActive = !isGravityWellActive
+}
+        
 function checkForEffects(){
     if (isConfused === true){
         applyStatus(1000, 'confuse')
@@ -143,12 +148,12 @@ function checkForEffects(){
         applyStatus(1500, 'burn')
     }
     if (isTaxed === true){
-        applyStatus(900, 'taxes')
+        applyStatus(900, 'taxes') 
+    }
     if (controltype === 'mobile'){
     applyStatus(500, 'well')
     }
     }
-}
 function applyStatus(cooldown, effect){
     const currentTime = new Date().getTime();
 
@@ -174,7 +179,7 @@ effectApplied = currentTime
 }
 if (effect === 'well'){
 wellToggle()
-    effectApplied = currentTime
+effectApplied = currentTime
 }
 }
 }
@@ -395,9 +400,7 @@ symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - 
 }
 
 
-function wellToggle(){
-    isGravityWellActive = !isGravityWellActive
-}
+
         
 function calculateGameProbability(score, foodCounts) {
         const totalFoods = Object.values(foodCounts).reduce((acc, count) => acc + count, 0);
