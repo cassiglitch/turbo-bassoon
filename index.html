@@ -122,7 +122,7 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
     let wellcolor = '#00000080'
-let wells = [{x:1, y:1}]
+let wells = []
 let polygons = []
 let isGravityWellActive = true;
 let effectApplied = 0
@@ -135,11 +135,6 @@ function cancelEffects(){
     isBurned = false
     isTaxed = false
 }
-
-        function wellToggle(){
-    isGravityWellActive = !isGravityWellActive
-}
-        
 function checkForEffects(){
     if (isConfused === true){
         applyStatus(1000, 'confuse')
@@ -148,10 +143,10 @@ function checkForEffects(){
         applyStatus(1500, 'burn')
     }
     if (isTaxed === true){
-        applyStatus(900, 'taxes') 
+        applyStatus(900, 'taxes')
     }
     if (controltype === 'mobile'){
-    applyStatus(500, 'well')
+    applyStatus(5000, 'well')
     }
     }
 function applyStatus(cooldown, effect){
@@ -179,7 +174,6 @@ effectApplied = currentTime
 }
 if (effect === 'well'){
 wellToggle()
-effectApplied = currentTime
 }
 }
 }
@@ -400,7 +394,9 @@ symbiote = Array.from({ length: snake.length }, (_, index) => ({ x: 10, y: 10 - 
 }
 
 
-
+function wellToggle(){
+    isGravityWellActive = !isGravityWellActive
+}
         
 function calculateGameProbability(score, foodCounts) {
         const totalFoods = Object.values(foodCounts).reduce((acc, count) => acc + count, 0);
@@ -2286,18 +2282,22 @@ document.addEventListener('keydown', event => {
             case 'ArrowUp':
                 direction = 'up';
                 controltype = 'arrow'
+                isGravityWellActive = true
                 break;
             case 'ArrowDown':
                 direction = 'down';
                 controltype = 'arrow'
+                isGravityWellActive = true
                 break;
             case 'ArrowLeft':
                 direction = 'left';
                 controltype = 'arrow'
+                isGravityWellActive = true
                 break;
             case 'ArrowRight':
                 direction = 'right';
                 controltype = 'arrow'
+                isGravityWellActive = true
                 break;
         }
     }
