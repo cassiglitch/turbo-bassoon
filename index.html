@@ -612,19 +612,17 @@ function isCollidingWithBody(x, y) {
     return false;
 }
 
-// Function to draw a general polygon
 function drawPolygon(x, y, length, sides, color) {
-    ctx.beginPath();
-    ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
-    for (let i = 1; i <= sides; i++) {
-        ctx.lineTo(x + length * Math.cos(i * (2 * Math.PI) / sides), y + length * Math.sin(i * (2 * Math.PI) / sides));
+        ctx.beginPath();
+        ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
+        for (let i = 1; i <= sides; i++) {
+            ctx.lineTo(x + length * Math.cos(i * (2 * Math.PI) / sides), y + length * Math.sin(i * (2 * Math.PI) / sides));
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
     }
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-}
 
-// Function to draw specific flat polygons like triangles and squares
 function drawFlatPolygon(x, y, size, sides, color) {
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -641,7 +639,7 @@ function drawFlatPolygon(x, y, size, sides, color) {
         ctx.lineTo(x + size / 2, y + size / 2); // Bottom right
         ctx.lineTo(x - size / 2, y + size / 2); // Bottom left
     } else {
-        // General case for regular polygons
+        // General case for regular polygons, centered at (x, y)
         let angleIncrement = (Math.PI * 2) / sides;
         ctx.moveTo(x + size * Math.cos(0), y + size * Math.sin(0));
         for (let i = 1; i < sides; i++) {
@@ -653,16 +651,16 @@ function drawFlatPolygon(x, y, size, sides, color) {
     ctx.fill();
 }
 
-// Function to draw Kamek character
-function drawKamek(x, y) {
+
+function drawKamek(x, y){
     // Scale the coordinates by gridSize
     x = x * gridSize;
     y = y * gridSize;
 
     // Draw the polygons (hat and robe)
     drawPolygon(x, y + gridSize, gridSize, 4, 'blue');
-    drawFlatPolygon(x, y, gridSize, 3, 'purple');
-
+     drawFlatPolygon(x, y, gridSize, 3, 'purple');
+    
     // Calculate eye positions relative to the robe polygon
     let eyeBaseX = x; // Center of the robe
     let eyeBaseY = y + gridSize; // Same y-level as the robe
@@ -682,106 +680,28 @@ function drawKamek(x, y) {
     ctx.fill();
 }
 
-// Function to get direction vector to the snake's head
 function getDirectionToSnakeHead(x, y, snake) {
-    // Get the head of the snake
-    const head = snake[0];
+  // Get the head of the snake
+  const head = snake[0];
+  
+  // Calculate the differences in x and y coordinates
+  const dx = head.x - x;
+  const dy = head.y - y;
 
-    // Calculate the differences in x and y coordinates
-    const dx = head.x - x;
-    const dy = head.y - y;
+  // Calculate the magnitude of the vector
+  const magnitude = Math.sqrt(dx * dx + dy * dy);
 
-    // Calculate the magnitude of the vector
-    const magnitude = Math.sqrt(dx * dx + dy * dy);
+  // Normalize the direction vector (convert to unit vector)
+  const direction = {
+    x: dx / magnitude,
+    y: dy / magnitude
+  };
 
-    // Normalize the direction vector (convert to unit vector)
-    const direction = {
-        x: dx / magnitude,
-        y: dy / magnitude
-    };
-
-    return direction;
+  return direction;
 }
 
-// Projectile class definition
-class Projectile {
-    constructor(x, y, direction) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        this.speed = 5; // Adjust the speed as necessary
-        this.size = 5;  // Adjust the size as necessary
-    }
 
-    update() {
-        // Move the projectile in the specified direction
-        this.x += this.direction.x * this.speed;
-        this.y += this.direction.y * this.speed;
-    }
-
-    draw(ctx) {
-        // Draw the projectile on the canvas
-        ctx.fillStyle = 'purple'; // Color of the projectile
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    // Check collision with the snake
-    checkCollision(snake) {
-        // Assuming snake is an array of segments, each with x and y properties
-        for (let segment of snake) {
-            if (Math.abs(this.x - segment.x) < this.size && Math.abs(this.y - segment.y) < this.size) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
-
-// Array to store projectiles
-let projectiles = [];
-
-// Function for enemies to shoot projectiles
-function enemyShoot() {
-    for (let enemy of kamek) {
-        // Determine the direction of the shot towards the snake's head
-        let direction = getDirectionToSnakeHead(enemy.x, enemy.y, snake);
-
-        // Create a new projectile
-        let projectile = new Projectile(enemy.x, enemy.y, direction);
-
-        // Add the projectile to the projectiles array
-        projectiles.push(projectile);
-    }
-}
-
-// Function to handle magic projectiles
-function handleMagicProjectiles() {
-    for (let i = 0; i < projectiles.length; i++) {
-        let projectile = projectiles[i];
-        projectile.update();
-
-        // Check collision with the snake
-        if (projectile.checkCollision(snake)) {
-            // Handle collision (e.g., end the game, reduce snake size, etc.)
-            console.log("Hit!");
-            // Remove the projectile
-            projectiles.splice(i, 1);
-            i--; // Adjust index due to removal
-        } else {
-            // Render the projectile
-            projectile.draw(ctx);
-        }
-    }
-}
-
-// Set an interval to shoot projectiles every 3 seconds
-setInterval(enemyShoot, 3000);
-
-
-
-function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength) {
+function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength, enemy) {
     // Get the canvas context
     // Mapping of directions to radians
     // Mapping of directions to radians
@@ -804,8 +724,11 @@ const directionRad = directionRadians[direction.toLowerCase()] || 0;
     // Loop through each projectile
     for (let i = 0; i < numberOfProjectiles; i++) {
         // Calculate the angle for this projectile
+        if (enemy === false){
         const angle = angleIncrement * i + adjustedAngle;
-
+        }else{
+const angle = getDirectionToSnakeHead(x, y, snake);            
+        }
         // Calculate the projectile's velocity components
         const velocityX = Math.cos(angle) * projectileSpeed;
         const velocityY = Math.sin(angle) * projectileSpeed;
@@ -1670,7 +1593,7 @@ HaHaNoCollision(100);
      freeze = true;
      pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, false, 3, false, 20, 1)
+                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, false, 3, false, 20, 1, false)
  } else {
      return;         
  }
@@ -1687,7 +1610,7 @@ HaHaNoCollision(100);
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1, false)
                 }else if (food.type === 'ultrafood'){
                     cancelEffects()
                     gamefoods.push('ultrafood')
@@ -1706,12 +1629,12 @@ cancelEffects()
     let pcolourr = 'lightgrey'
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3, false, 20, 1)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3, false, 20, 1, false)
                 }else if (food.type === 'morph'){
                 cancelEffects()
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2)
+                shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2, false)
                 }else if (food.type === 'breath'){
                     cancelEffects()
     let repeat = 30; // Initial size
@@ -1725,7 +1648,7 @@ cancelEffects()
             const pX = snake[0].x * gridSize + gridSize / 2;
             const pY = snake[0].y * gridSize + gridSize / 2;
             // Shoot projectiles
-            shootWaveOfProjectiles(pX, pY, 1, 1, 30, sunset, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20, 1);
+            shootWaveOfProjectiles(pX, pY, 1, 1, 30, sunset, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20, 1, false);
             // Decrease size for the next iteration
             repeat--;
             // Schedule the next execution after a delay
@@ -1808,7 +1731,7 @@ symbiote.forEach((symbiote, index) => {
 }else if (symbiote.type === 'wave'){
             pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1, false)
             }
     }
     });
@@ -1869,7 +1792,7 @@ HaHaNoCollision(100);
      freeze = true;
      pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, false, 3, false, 20, 1)
+                    shootWaveOfProjectiles(pX, pY, 30, 360, projectileSpeed, pcolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, false, 3, false, 20, 1, false)
  } else {
      return;         
  }
@@ -1883,7 +1806,7 @@ HaHaNoCollision(100);
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, 10, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, 10, 70, true, 3, false, 20, 1, false)
                 }else if (timezone.type === 'ultrafood'){
                     gamefoods.push('ultrafood')
                     snake.unshift({ ...snake[0], color: 'green' });
@@ -1899,11 +1822,11 @@ HaHaNoCollision(100);
                 let pcolourr = 'lightgrey'
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3, false, 20, 1)
+                shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3, false, 20, 1,false)
                 }else if (timezone.type === 'morph'){
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
-                shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2)
+                shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2, false)
                 }else if (timezone.type === 'breath'){
     let repeat = 30; // Initial size
     let timeInteger = 1;
@@ -1916,7 +1839,7 @@ HaHaNoCollision(100);
             const pX = snake[0].x * gridSize + gridSize / 2;
             const pY = snake[0].y * gridSize + gridSize / 2;
             // Shoot projectiles
-            shootWaveOfProjectiles(pX, pY, 1, 1, 30, sunset, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20, 1);
+            shootWaveOfProjectiles(pX, pY, 1, 1, 30, sunset, obstacles, dynamicObstacles, gridSize, direction, 30, 20, true, 3, false, 20, 1, false);
             // Decrease size for the next iteration
             repeat--;
             // Schedule the next execution after a delay
