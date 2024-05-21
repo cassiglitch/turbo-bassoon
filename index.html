@@ -712,7 +712,7 @@ function shootmagic(pX, pY, magicpeed, updatespeed) {
         const velocityY = Math.sin(angle) * magicpeed;
 
         // Create the projectile object
-        const projectile = {
+        const magic = {
             x: pX,
             y: pY,
             velocityX: velocityX,
@@ -724,34 +724,34 @@ function shootmagic(pX, pY, magicpeed, updatespeed) {
         };
 
         // Push the projectile into the array
-        magic.push(projectile);
+        magic.push(magic);
     }
     // Update and draw magic
     const updateInterval = setInterval(() => {
         // Loop through each projectile
         if (isPaused === false){
-        magic.forEach((projectile, index) => {
+        magic.forEach((magic, index) => {
             // Clear the previous projectile
-            ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
+            ctx.clearRect(magic.x - 6, magic.y - 6, 12, 12);
 
             // Update the projectile's position
-   projectile.x += projectile.velocityX;
-    projectile.y += projectile.velocityY;
+   magic.x += magic.velocityX;
+    magic.y += magic.velocityY;
             
     
             // Draw the projectile at its new position
-            if (projectile.circle === true){
+            if (magic.circle === true){
             ctx.beginPath();
-            ctx.fillStyle = projectile.color;
-            ctx.arc(projectile.x, projectile.y, projectile.size, 0, Math.PI * 2);
+            ctx.fillStyle = magic.color;
+            ctx.arc(magic.x, magic.y, magic.size, 0, Math.PI * 2);
             ctx.fill();
             
            snake.forEach((snake, obstacleIndex) => {
-        if (projectile.x >= snake.x * gridSize && projectile.x <= (snake.x + 1) * gridSize &&
-            projectile.y >= snake.y * gridSize && projectile.y <= (snake.y + 1) * gridSize) {
+        if (magic.x >= snake.x * gridSize && magic.x <= (snake.x + 1) * gridSize &&
+            magic.y >= snake.y * gridSize && magic.y <= (snake.y + 1) * gridSize) {
             // Remove the obstacle from the array
             // Create an explosion shockwave
-            createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+            createExplosion(ctx, magic.x, magic.y, magic.color, obstacles, dynamicObstacles, gridSize, 70);
 
             // Remove the projectile from the array
             magic.splice(index, 1);
@@ -761,9 +761,9 @@ function shootmagic(pX, pY, magicpeed, updatespeed) {
 
 
             // Check if the projectile is out of bounds
-            if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
+            if (magic.x < 0 || magic.x > canvas.width || magic.y < 0 || magic.y > canvas.height) {
                 // Remove the projectile from the array
-                createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+                createExplosion(ctx, magic.x, magic.y, magic.color, obstacles, dynamicObstacles, gridSize, 70);
                 magic.splice(index, 1);
             }
         });
@@ -771,7 +771,6 @@ function shootmagic(pX, pY, magicpeed, updatespeed) {
         // If all magic are removed, stop the interval
         if (magic.length === 0) {
             clearInterval(updateInterval);
-            magic.count = 0
         }
         }
         else{
