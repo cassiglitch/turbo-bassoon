@@ -82,6 +82,7 @@ let isFast = false
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
+        let kamek = [{x:1, y:2}, {x:6, y:6}]
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -104,6 +105,7 @@ let isFast = false
         let hasBeenTaxed = false
         let laserTimer = 45
         let controltype = 'arrow'
+        let magic = []
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
@@ -610,7 +612,6 @@ function isCollidingWithBody(x, y) {
     return false;
 }
 
-
 function drawPolygon(x, y, length, sides, color) {
         ctx.beginPath();
         ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
@@ -622,7 +623,164 @@ function drawPolygon(x, y, length, sides, color) {
         ctx.fill();
     }
 
- function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength) {
+function drawFlatPolygon(x, y, size, sides, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+
+    if (sides === 3) {
+        // Equilateral triangle pointing upwards
+        ctx.moveTo(x, y - size / Math.sqrt(3)); // Top vertex
+        ctx.lineTo(x - size / 2, y + size / (2 * Math.sqrt(3))); // Bottom left vertex
+        ctx.lineTo(x + size / 2, y + size / (2 * Math.sqrt(3))); // Bottom right vertex
+    } else if (sides === 4) {
+        // Square
+        ctx.moveTo(x - size / 2, y - size / 2); // Top left
+        ctx.lineTo(x + size / 2, y - size / 2); // Top right
+        ctx.lineTo(x + size / 2, y + size / 2); // Bottom right
+        ctx.lineTo(x - size / 2, y + size / 2); // Bottom left
+    } else {
+        // General case for regular polygons, centered at (x, y)
+        let angleIncrement = (Math.PI * 2) / sides;
+        ctx.moveTo(x + size * Math.cos(0), y + size * Math.sin(0));
+        for (let i = 1; i < sides; i++) {
+            ctx.lineTo(x + size * Math.cos(i * angleIncrement), y + size * Math.sin(i * angleIncrement));
+        }
+    }
+
+    ctx.closePath();
+    ctx.fill();
+}
+
+
+function drawKamek(x, y){
+    // Scale the coordinates by gridSize
+    x = x * gridSize;
+    y = y * gridSize;
+
+    // Draw the polygons (hat and robe)
+    drawPolygon(x, y + gridSize, gridSize, 4, 'blue');
+     drawFlatPolygon(x, y, gridSize, 3, 'purple');
+    
+    // Calculate eye positions relative to the robe polygon
+    let eyeBaseX = x; // Center of the robe
+    let eyeBaseY = y + gridSize; // Same y-level as the robe
+
+    // Draw the eyes
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 4, 0, Math.PI * 2); // Left eye
+    ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 4, 0, Math.PI * 2); // Right eye
+    ctx.fill();
+
+    // Draw the pupils
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Left pupil
+    ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Right pupil
+    ctx.fill();
+}
+
+function getDirectionToSnakeHead(x, y, snake) {
+  // Get the head of the snake
+  const head = snake[0];
+  
+  // Calculate the differences in x and y coordinates
+  const dx = head.x - x;
+  const dy = head.y - y;
+
+  // Calculate the magnitude of the vector
+  const magnitude = Math.sqrt(dx * dx + dy * dy);
+
+  // Normalize the direction vector (convert to unit vector)
+  const direction = {
+    x: dx / magnitude,
+    y: dy / magnitude
+  };
+
+  return direction;
+}
+
+
+function shootmagic(pX, pY, magicpeed, updatespeed) {
+    // Loop through each projectile
+    for (let i = 0; i < 1; i++) {
+        // Calculate the angle for this projectile
+        const angle = getDirectionToSnakeHead(pX, pY, snake);
+
+        // Calculate the projectile's velocity components
+        const velocityX = Math.cos(angle) * magicpeed;
+        const velocityY = Math.sin(angle) * magicpeed;
+
+        // Create the projectile object
+        const projectile = {
+            x: pX,
+            y: pY,
+            velocityX: velocityX,
+            velocityY: velocityY,
+            color: 'purple', 
+            size: gridSize,
+            circle: true
+            
+        };
+
+        // Push the projectile into the array
+        magic.push(projectile);
+    }
+    // Update and draw magic
+    const updateInterval = setInterval(() => {
+        // Loop through each projectile
+        if (isPaused === false){
+        magic.forEach((projectile, index) => {
+            // Clear the previous projectile
+            ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
+
+            // Update the projectile's position
+   projectile.x += projectile.velocityX;
+    projectile.y += projectile.velocityY;
+            
+    
+            // Draw the projectile at its new position
+            if (projectile.circle === true){
+            ctx.beginPath();
+            ctx.fillStyle = projectile.color;
+            ctx.arc(projectile.x, projectile.y, projectile.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+           snake.forEach((snake, obstacleIndex) => {
+        if (projectile.x >= snake.x * gridSize && projectile.x <= (snake.x + 1) * gridSize &&
+            projectile.y >= snake.y * gridSize && projectile.y <= (snake.y + 1) * gridSize) {
+            // Remove the obstacle from the array
+            // Create an explosion shockwave
+            createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+
+            // Remove the projectile from the array
+            magic.splice(index, 1);
+        }
+    });
+
+
+
+            // Check if the projectile is out of bounds
+            if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
+                // Remove the projectile from the array
+                createExplosion(ctx, projectile.x, projectile.y, projectileColor, obstacles, dynamicObstacles, gridSize, explode);
+                magic.splice(index, 1);
+            }
+        });
+            
+        // If all magic are removed, stop the interval
+        if (magic.length === 0) {
+            clearInterval(updateInterval);
+            magic.count = 0
+        }
+        }
+        else{
+            return
+        }
+    }, updatespeed * currentInterval); // Update every 20 milliseconds
+}
+
+function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength) {
     // Get the canvas context
     // Mapping of directions to radians
     // Mapping of directions to radians
@@ -1085,7 +1243,11 @@ function pauseGame() {
 function draw() {
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+if (kamek.length !== 0) {
+        kamek.forEach((kamek, index) => {
+    drawKamek(kamek.x, kamek.y)
+        })
+}
     // Layer 1: Draw Invincibility Aura
     if (isInvincible) {
         drawInvincibilityAura('orange');
