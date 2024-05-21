@@ -82,7 +82,7 @@ let isFast = false
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = [{x:10, y:2}, {x:10, y:6}]
+        let kamek = [{x:10, y:2}]
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -132,6 +132,31 @@ let isConfused = false
 let isBurned = false
 let isTaxed = false
 let lightbrown = '#C4A484'
+let magictype = 'bolt'
+function kamekUpdate(){
+            if (kamek.length > 1) {
+    kamek.length = 1;
+}
+    if (kamek.length !== 0){
+        applyStatus(1000, 'magic')
+    }
+}
+
+function kamekMagic(){
+    const magic = ['bolt', 'port']; // Possible directions
+    const randomIndex = Math.floor(Math.random() * magic.length);
+    magictype = magic[randomIndex];
+
+            if (magictype === 'bolt'){
+                enemyshootmagic()
+            }else if (magictype === 'port'){
+                const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+    kamek[0].x = randomX;
+    kamek[0].y = randomY;
+            }
+}        
+        
 function cancelEffects(){
     isConfused = false
     isBurned = false
@@ -184,6 +209,10 @@ effectApplied = currentTime
 return
 }
 })
+}
+if (effect === 'magic' && kamek.length !== 0){
+    kamekMagic()
+    effectApplied = currentTime
 }
     }
 }
@@ -319,7 +348,6 @@ switch (enemytype) {
         return 'yellow'
        }
 }
-setInterval(enemyshootmagic, 1000)
 function venomreset(){
     symbiote = []
 }
@@ -651,15 +679,14 @@ function drawFlatPolygon(x, y, size, sides, color) {
     ctx.fill();
 }
 
-
 function drawKamek(x, y){
     // Scale the coordinates by gridSize
     x = x * gridSize;
     y = y * gridSize;
 
     // Draw the polygons (hat and robe)
-    drawPolygon(x, y + gridSize, gridSize, 4, 'blue');
-     drawFlatPolygon(x, y, gridSize, 3, 'purple');
+    drawPolygon(x, y + gridSize, gridSize, 4, 'gold');
+     drawFlatPolygon(x, y, gridSize, 4, 'blue');
     
     // Calculate eye positions relative to the robe polygon
     let eyeBaseX = x; // Center of the robe
@@ -685,8 +712,8 @@ function getDirectionToSnakeHead(x, y, snake) {
     const head = snake[0];
   
     // Calculate the differences in x and y coordinates
-    const dx = (head.x * gridSize) - (x * gridSize);
-    const dy = (head.y * gridSize) - (y * gridSize);
+    const dx = head.x - x;
+    const dy = head.y - y;
 
     // Calculate the magnitude of the vector
     const magnitude = Math.sqrt(dx * dx + dy * dy);
@@ -719,11 +746,9 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
         if (!enemy) {
             angle = angleIncrement * i + adjustedAngle;
         } else {
-    angle = Math.atan2(
-    snake[0].y - pY,
-    snake[0].x - pX
-  )
+            angle = Math.atan2((snake[0].y * gridSize), (snake[0].x * gridSize));
         }
+
         const velocityX = Math.cos(angle) * projectileSpeed;
         const velocityY = Math.sin(angle) * projectileSpeed;
 
@@ -1349,6 +1374,11 @@ function HaHaNoCollision(duration) {
                 if (invincibilityDuration <= 0) {
                     isInvincible = false;
                 }
+            }
+
+
+            if (kamek !== 0){
+                kamekUpdate()
             }
 
             // Update Snake position
