@@ -143,6 +143,7 @@ function kamekUpdate(){
 }
 
 function kamekMagic(){
+    if (!isPaused){
     const magic = ['bolt', 'port']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];
@@ -156,7 +157,8 @@ function kamekMagic(){
     kamek[0].y = randomY;
             }
 }        
-        
+}
+
 function cancelEffects(){
     isConfused = false
     isBurned = false
@@ -686,7 +688,7 @@ function drawKamek(x, y){
 
     // Draw the polygons (hat and robe)
     drawPolygon(x, y + gridSize, gridSize, 4, 'gold');
-     drawFlatPolygon(x, y, gridSize, 4, 'blue');
+     drawFlatPolygon(x, y, gridSize, 3, 'blue');
     
     // Calculate eye positions relative to the robe polygon
     let eyeBaseX = x; // Center of the robe
@@ -746,7 +748,8 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
         if (!enemy) {
             angle = angleIncrement * i + adjustedAngle;
         } else {
-            angle = Math.atan2((snake[0].y * gridSize), (snake[0].x * gridSize));
+            // Initial angle towards the target
+            angle = Math.atan2(snake[0].y * gridSize - pY, snake[0].x * gridSize - pX);
         }
 
         const velocityX = Math.cos(angle) * projectileSpeed;
@@ -762,7 +765,8 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             size: projectileSize,
             reflect: false,
             count: 0,
-            circle: circle
+            circle: circle,
+            homing: enemy // Only set to true if enemy is true
         };
 
         projectiles.push(projectile);
@@ -774,6 +778,15 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
 
                 if (increase === false || projectile.count <= 5) {
+                    if (projectile.homing) {
+                        // Adjust velocity to home in on the target
+                        const targetX = snake[0].x * gridSize;
+                        const targetY = snake[0].y * gridSize;
+                        const angle = Math.atan2(targetY - projectile.y, targetX - projectile.x);
+                        projectile.velocityX = Math.cos(angle) * projectileSpeed;
+                        projectile.velocityY = Math.sin(angle) * projectileSpeed;
+                    }
+
                     if (projectile.reflect) {
                         projectile.x -= projectile.velocityX;
                         projectile.y -= projectile.velocityY;
@@ -784,7 +797,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     projectile.count += 1;
                 }
 
-                if (increase) {
+                if (increase && !projectile.homing) {
                     projectile.size += 10;
                     explode = projectile.size * explosionstrength;
                 } else {
@@ -800,6 +813,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
 
+                if (!projectile.homing){
                 mirrors.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
                         projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
@@ -857,6 +871,25 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                     projectiles.splice(index, 1);
                 }
+                } else if (projectile.homing){
+                snake.forEach((snakePart) => {
+                        if ((projectile.x >= snakePart.x * gridSize && projectile.x <= (snakePart.x + 1) * gridSize &&
+                            projectile.y >= snakePart.y * gridSize && projectile.y <= (snakePart.y + 1) * gridSize) && !isInvincible) {
+                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                            projectiles.splice(index, 1);
+                            const numSegmentsToRemove = Math.ceil(snake.length * 0.5);
+        if (snake.length > numSegmentsToRemove) {
+            snake.splice(0, numSegmentsToRemove);
+            HaHaNoCollision(10)
+            
+        } else {
+            restartGame(); // End the game if segments (lives) run out
+            return;
+        }
+                            
+                        }
+                    });
+}
             });
 
             if (projectiles.length === 0) {
@@ -1418,7 +1451,8 @@ switch (direction) {
             if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
                 !isInvincible && dynamicObstacles.some(obstacle => (head.x >= obstacle.x && head.x < obstacle.x + 2) &&
                     (head.y >= obstacle.y && head.y < obstacle.y + 2)) || !isInvincible && thwomps.some(obstacle => (head.x >= obstacle.x && head.x < obstacle.x + 2) &&
-                    (head.y >= obstacle.y && head.y < obstacle.y + 2))) {                const numSegmentsToRemove = Math.ceil(snake.length * lives);
+                    (head.y >= obstacle.y && head.y < obstacle.y + 2))) {          
+        const numSegmentsToRemove = Math.ceil(snake.length * lives);
         if (snake.length > numSegmentsToRemove) {
             snake.splice(0, numSegmentsToRemove);
             lives = (lives * 2);
