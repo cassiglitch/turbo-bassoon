@@ -877,7 +877,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                             projectile.y >= snakePart.y * gridSize && projectile.y <= (snakePart.y + 1) * gridSize) && !isInvincible) {
                             createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                             projectiles.splice(index, 1);
-                            const numSegmentsToRemove = Math.ceil(snake.length * 0.5);
+                            const numSegmentsToRemove = Math.ceil(snake.length * 0.1);
         if (snake.length > numSegmentsToRemove) {
             snake.splice(0, numSegmentsToRemove);
             HaHaNoCollision(10)
