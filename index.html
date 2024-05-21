@@ -685,8 +685,8 @@ function getDirectionToSnakeHead(x, y, snake) {
     const head = snake[0];
   
     // Calculate the differences in x and y coordinates
-    const dx = head.x - x;
-    const dy = head.y - y;
+    const dx = (head.x * gridSize) - (x * gridSize);
+    const dy = (head.y * gridSize) - (y * gridSize);
 
     // Calculate the magnitude of the vector
     const magnitude = Math.sqrt(dx * dx + dy * dy);
