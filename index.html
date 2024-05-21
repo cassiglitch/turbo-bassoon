@@ -612,17 +612,19 @@ function isCollidingWithBody(x, y) {
     return false;
 }
 
+// Function to draw a general polygon
 function drawPolygon(x, y, length, sides, color) {
-        ctx.beginPath();
-        ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
-        for (let i = 1; i <= sides; i++) {
-            ctx.lineTo(x + length * Math.cos(i * (2 * Math.PI) / sides), y + length * Math.sin(i * (2 * Math.PI) / sides));
-        }
-        ctx.closePath();
-        ctx.fillStyle = color;
-        ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x + length * Math.cos(0), y + length * Math.sin(0));
+    for (let i = 1; i <= sides; i++) {
+        ctx.lineTo(x + length * Math.cos(i * (2 * Math.PI) / sides), y + length * Math.sin(i * (2 * Math.PI) / sides));
     }
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+}
 
+// Function to draw specific flat polygons like triangles and squares
 function drawFlatPolygon(x, y, size, sides, color) {
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -639,7 +641,7 @@ function drawFlatPolygon(x, y, size, sides, color) {
         ctx.lineTo(x + size / 2, y + size / 2); // Bottom right
         ctx.lineTo(x - size / 2, y + size / 2); // Bottom left
     } else {
-        // General case for regular polygons, centered at (x, y)
+        // General case for regular polygons
         let angleIncrement = (Math.PI * 2) / sides;
         ctx.moveTo(x + size * Math.cos(0), y + size * Math.sin(0));
         for (let i = 1; i < sides; i++) {
@@ -651,16 +653,16 @@ function drawFlatPolygon(x, y, size, sides, color) {
     ctx.fill();
 }
 
-
-function drawKamek(x, y){
+// Function to draw Kamek character
+function drawKamek(x, y) {
     // Scale the coordinates by gridSize
     x = x * gridSize;
     y = y * gridSize;
 
     // Draw the polygons (hat and robe)
     drawPolygon(x, y + gridSize, gridSize, 4, 'blue');
-     drawFlatPolygon(x, y, gridSize, 3, 'purple');
-    
+    drawFlatPolygon(x, y, gridSize, 3, 'purple');
+
     // Calculate eye positions relative to the robe polygon
     let eyeBaseX = x; // Center of the robe
     let eyeBaseY = y + gridSize; // Same y-level as the robe
@@ -678,46 +680,30 @@ function drawKamek(x, y){
     ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Left pupil
     ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Right pupil
     ctx.fill();
-for (let magic of magic) {
-        magic.update();
-        
-        // Check collision with the snake
-        if (magic.checkCollision(snake)) {
-            // Handle collision (e.g., end the game, reduce snake size, etc.)
-            console.log("Hit!");
-            // Remove the projectile or handle accordingly
-            magic = magic.filter(p => p !== magic);
-        }
-    }
-
-    // Render projectiles
-    for (let magic of magic) {
-        magic.draw(ctx);
-    }
 }
 
-setInterval(enemyShoot, 3000);
-
+// Function to get direction vector to the snake's head
 function getDirectionToSnakeHead(x, y, snake) {
-  // Get the head of the snake
-  const head = snake[0];
-  
-  // Calculate the differences in x and y coordinates
-  const dx = head.x - x;
-  const dy = head.y - y;
+    // Get the head of the snake
+    const head = snake[0];
 
-  // Calculate the magnitude of the vector
-  const magnitude = Math.sqrt(dx * dx + dy * dy);
+    // Calculate the differences in x and y coordinates
+    const dx = head.x - x;
+    const dy = head.y - y;
 
-  // Normalize the direction vector (convert to unit vector)
-  const direction = {
-    x: dx / magnitude,
-    y: dy / magnitude
-  };
+    // Calculate the magnitude of the vector
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
 
-  return direction;
+    // Normalize the direction vector (convert to unit vector)
+    const direction = {
+        x: dx / magnitude,
+        y: dy / magnitude
+    };
+
+    return direction;
 }
 
+// Projectile class definition
 class Projectile {
     constructor(x, y, direction) {
         this.x = x;
@@ -729,20 +715,8 @@ class Projectile {
 
     update() {
         // Move the projectile in the specified direction
-        switch(this.direction) {
-            case 'up':
-                this.y -= this.speed;
-                break;
-            case 'down':
-                this.y += this.speed;
-                break;
-            case 'left':
-                this.x -= this.speed;
-                break;
-            case 'right':
-                this.x += this.speed;
-                break;
-        }
+        this.x += this.direction.x * this.speed;
+        this.y += this.direction.y * this.speed;
     }
 
     draw(ctx) {
@@ -764,22 +738,46 @@ class Projectile {
         return false;
     }
 }
+
 // Array to store projectiles
-let magic = [];
+let projectiles = [];
 
 // Function for enemies to shoot projectiles
 function enemyShoot() {
     for (let enemy of kamek) {
-        // Determine the direction of the shot (for simplicity, let's shoot downwards)
-        let direction = 'down';
+        // Determine the direction of the shot towards the snake's head
+        let direction = getDirectionToSnakeHead(enemy.x, enemy.y, snake);
 
         // Create a new projectile
-        let magic = new Projectile(enemy.x, enemy.y, direction);
+        let projectile = new Projectile(enemy.x, enemy.y, direction);
 
         // Add the projectile to the projectiles array
         projectiles.push(projectile);
     }
 }
+
+// Function to handle magic projectiles
+function handleMagicProjectiles() {
+    for (let i = 0; i < projectiles.length; i++) {
+        let projectile = projectiles[i];
+        projectile.update();
+
+        // Check collision with the snake
+        if (projectile.checkCollision(snake)) {
+            // Handle collision (e.g., end the game, reduce snake size, etc.)
+            console.log("Hit!");
+            // Remove the projectile
+            projectiles.splice(i, 1);
+            i--; // Adjust index due to removal
+        } else {
+            // Render the projectile
+            projectile.draw(ctx);
+        }
+    }
+}
+
+// Set an interval to shoot projectiles every 3 seconds
+setInterval(enemyShoot, 3000);
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength) {
     // Get the canvas context
