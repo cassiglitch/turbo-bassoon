@@ -719,7 +719,8 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
         if (!enemy) {
             angle = angleIncrement * i + adjustedAngle;
         } else {
-           angle = Math.atan2(((pY - snake[0].y) * gridSize), (pX - snake[0].x) * gridSize);
+            let directionToSnakeHead = directionToSnakeHead(pX, pY, snake)
+           angle = Math.atan2(directionToSnakeHead.y, directionToSnakeHead.x);
         }
 
         const velocityX = Math.cos(angle) * projectileSpeed;
