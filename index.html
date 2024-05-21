@@ -678,7 +678,25 @@ function drawKamek(x, y){
     ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Left pupil
     ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Right pupil
     ctx.fill();
+for (let magic of magic) {
+        magic.update();
+        
+        // Check collision with the snake
+        if (magic.checkCollision(snake)) {
+            // Handle collision (e.g., end the game, reduce snake size, etc.)
+            console.log("Hit!");
+            // Remove the projectile or handle accordingly
+            magic = magic.filter(p => p !== magic);
+        }
+    }
+
+    // Render projectiles
+    for (let magic of magic) {
+        magic.draw(ctx);
+    }
 }
+
+setInterval(enemyShoot, 3000);
 
 function getDirectionToSnakeHead(x, y, snake) {
   // Get the head of the snake
@@ -700,83 +718,67 @@ function getDirectionToSnakeHead(x, y, snake) {
   return direction;
 }
 
-
-function shootmagic(pX, pY, magicpeed, updatespeed) {
-    // Loop through each projectile
-    for (let i = 0; i < 1; i++) {
-        // Calculate the angle for this projectile
-        const angle = getDirectionToSnakeHead(pX, pY, snake);
-
-        // Calculate the projectile's velocity components
-        const velocityX = Math.cos(angle) * magicpeed;
-        const velocityY = Math.sin(angle) * magicpeed;
-
-        // Create the projectile object
-        const magic = {
-            x: pX,
-            y: pY,
-            velocityX: velocityX,
-            velocityY: velocityY,
-            color: 'purple', 
-            size: gridSize,
-            circle: true
-            
-        };
-
-        // Push the projectile into the array
-        magic.push(magic);
+class Projectile {
+    constructor(x, y, direction) {
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+        this.speed = 5; // Adjust the speed as necessary
+        this.size = 5;  // Adjust the size as necessary
     }
-    // Update and draw magic
-    const updateInterval = setInterval(() => {
-        // Loop through each projectile
-        if (isPaused === false){
-        magic.forEach((magic, index) => {
-            // Clear the previous projectile
-            ctx.clearRect(magic.x - 6, magic.y - 6, 12, 12);
 
-            // Update the projectile's position
-   magic.x += magic.velocityX;
-    magic.y += magic.velocityY;
-            
-    
-            // Draw the projectile at its new position
-            if (magic.circle === true){
-            ctx.beginPath();
-            ctx.fillStyle = magic.color;
-            ctx.arc(magic.x, magic.y, magic.size, 0, Math.PI * 2);
-            ctx.fill();
-            
-           snake.forEach((snake, obstacleIndex) => {
-        if (magic.x >= snake.x * gridSize && magic.x <= (snake.x + 1) * gridSize &&
-            magic.y >= snake.y * gridSize && magic.y <= (snake.y + 1) * gridSize) {
-            // Remove the obstacle from the array
-            // Create an explosion shockwave
-            createExplosion(ctx, magic.x, magic.y, magic.color, obstacles, dynamicObstacles, gridSize, 70);
-
-            // Remove the projectile from the array
-            magic.splice(index, 1);
+    update() {
+        // Move the projectile in the specified direction
+        switch(this.direction) {
+            case 'up':
+                this.y -= this.speed;
+                break;
+            case 'down':
+                this.y += this.speed;
+                break;
+            case 'left':
+                this.x -= this.speed;
+                break;
+            case 'right':
+                this.x += this.speed;
+                break;
         }
-    });
+    }
 
+    draw(ctx) {
+        // Draw the projectile on the canvas
+        ctx.fillStyle = 'purple'; // Color of the projectile
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
 
-
-            // Check if the projectile is out of bounds
-            if (magic.x < 0 || magic.x > canvas.width || magic.y < 0 || magic.y > canvas.height) {
-                // Remove the projectile from the array
-                createExplosion(ctx, magic.x, magic.y, magic.color, obstacles, dynamicObstacles, gridSize, 70);
-                magic.splice(index, 1);
+    // Check collision with the snake
+    checkCollision(snake) {
+        // Assuming snake is an array of segments, each with x and y properties
+        for (let segment of snake) {
+            if (Math.abs(this.x - segment.x) < this.size && Math.abs(this.y - segment.y) < this.size) {
+                return true;
             }
-        });
-            
-        // If all magic are removed, stop the interval
-        if (magic.length === 0) {
-            clearInterval(updateInterval);
         }
-        }
-        else{
-            return
-        }
-    }, updatespeed * currentInterval); // Update every 20 milliseconds
+        return false;
+    }
+}
+// Array to store projectiles
+let magic = [];
+
+// Function for enemies to shoot projectiles
+function enemyShoot() {
+    for (let enemy of kamek) {
+        // Determine the direction of the shot (for simplicity, let's shoot downwards)
+        let direction = 'down';
+
+        // Create a new projectile
+        let magic = new Projectile(enemy.x, enemy.y, direction);
+
+        // Add the projectile to the projectiles array
+        projectiles.push(projectile);
+    }
 }
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength) {
