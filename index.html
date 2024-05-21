@@ -699,7 +699,13 @@ function getDirectionToSnakeHead(x, y, snake) {
 
   return direction;
 }
-
+function enemyshootmagic(){
+if (kamek.length !== 0) {
+        kamek.forEach((kamek, index) => {
+shootWaveOfProjectiles(kamek.x, kamek.y, 1, 1, 20, 'purple', obstacles, dynamicObstacles, gridSize, direction, 20, 70, true, 3, false, 20, 1, true)
+})
+}
+}
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength, enemy) {
     // Get the canvas context
