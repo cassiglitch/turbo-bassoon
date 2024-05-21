@@ -720,7 +720,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             angle = angleIncrement * i + adjustedAngle;
         } else {
 
-        let radians = Math.atan2(pY, pX);
+        let radians = Math.atan2(snake[0].y, snake[0].x);
 let degrees = radians * (180 / Math.PI);
 
 if (degrees > 90) {
