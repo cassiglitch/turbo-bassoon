@@ -155,11 +155,11 @@ if (kamek.length !== 0){
 
 function kamekMagic(){
     if (!isPaused){
-    if (Math.random() <= 0.2){
+    if (Math.random() <= 0.5){
     const magic = ['bolt']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];
-    } else if (kamekcanteleport === false) {
+    } else{
      const magic = ['port', 'wall']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];   
