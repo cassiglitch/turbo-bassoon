@@ -167,7 +167,7 @@ function kamekMagic(){
 
             if (magictype === 'bolt'){
                 enemyshootmagic()
-            }else if (magictype === 'port' kamekcanteleport === true){
+            }else if (magictype === 'port' && kamekcanteleport === true){
                 const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     kamek[0].x = randomX;
@@ -176,6 +176,7 @@ function kamekMagic(){
             } else if (magictype === 'wall'){
                 generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, 3, timezone)
                 kamekcanteleport = false
+        
             }
 }        
 }
