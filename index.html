@@ -163,7 +163,7 @@ function kamekMagic(){
      const magic = ['port', 'wall']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];   
-    } else if (kamekcanteleport === true){
+    } else if (kamekcanteleport === true && Math.random <= 0.2){
     const magic = ['bolt']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];
