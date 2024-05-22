@@ -58,7 +58,8 @@
     <script>
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
-        let isFast = false
+let isFast = false
+        let timezone = []
         let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
@@ -104,6 +105,7 @@
         let hasBeenTaxed = false
         let laserTimer = 45
         let controltype = 'arrow'
+        let magic = []
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
             if (window.screen.width == 320) deviceWidth = landscape ? 480 : 320
@@ -130,6 +132,7 @@ let isConfused = false
 let isBurned = false
 let isTaxed = false
 let lightbrown = '#C4A484'
+let kamekcanteleport = true
 let magictype = 'bolt'
 function kamekUpdate(){
             if (kamek.length > 1) {
@@ -145,6 +148,7 @@ if (kamek.length !== 0){
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     kamek[0].x = randomX;
     kamek[0].y = randomY;
+        timezone = []
       }
 }
 }
@@ -152,7 +156,7 @@ if (kamek.length !== 0){
 function kamekMagic(){
     if (!isPaused){
     if (Math.random() <= 0.2){
-    const magic = ['bolt', 'port', 'wall']; // Possible directions
+    const magic = ['bolt']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];
     } else {
@@ -163,17 +167,18 @@ function kamekMagic(){
 
             if (magictype === 'bolt'){
                 enemyshootmagic()
-            }else if (magictype === 'port'){
+            }else if (magictype === 'port' kamekcanteleport === true){
                 const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     kamek[0].x = randomX;
     kamek[0].y = randomY;
+    timezone = []
             } else if (magictype === 'wall'){
-                generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, 4, mirrors)
+                generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, 3, timezone)
+                kamekcanteleport = false
             }
 }        
 }
-
 function cancelEffects(){
     isConfused = false
     isBurned = false
@@ -802,7 +807,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                         projectile.velocityY = Math.sin(angle) * projectileSpeed;
                     }
 
-                    if (projectile.reflect) {
+                    if (projectile.reflect === true) {
                         projectile.x -= projectile.velocityX;
                         projectile.y -= projectile.velocityY;
                     } else {
@@ -815,12 +820,8 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 if (increase && !projectile.homing) {
                     projectile.size += 10;
                     explode = projectile.size * explosionstrength;
-                    projectile.x += projectile.velocityX;
-                    projectile.y += projectile.velocityY;
                 } else {
                     projectile.size = projectileSize;
-                    projectile.x += projectile.velocityX;
-                    projectile.y += projectile.velocityY;
                 }
 
                 if (projectile.circle) {
@@ -1276,6 +1277,8 @@ ctx.fillRect(item[0].x * gridSize, item[0].y * gridSize, gridSize, gridSize);
     ctx.fillStyle = 'black';
     obstacles.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+    ctx.fillStyle = 'lightgreen';
+timezone.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 ctx.fillStyle = wellcolor;
   wells.forEach((well) => {
@@ -1421,6 +1424,12 @@ function HaHaNoCollision(duration) {
     isInvincible = true;
     invincibilityDuration = duration; // Set the duration for invincibility
 }
+      
+        function pickrandomeffect(){
+            const types = ['teleport']; // Possible directions
+    const randomIndex = Math.floor(Math.random() * types.length);
+    timezone.type = types[randomIndex];
+        }
         function update() {
             // If the snake is invincible, decrement the invincibility duration
             if (isInvincible) {
@@ -1769,6 +1778,22 @@ symbiote.forEach((symbiote, index) => {
     }
     });
             }
+if (!isInvincible && timezone.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
+    pickrandomeffect()
+ if (timezone.type === 'teleport') {
+                    gamefoods.push('teleport')
+    // Teleport the snake to a random location
+    const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+    head.x = randomX;
+    head.y = randomY;
+
+    // Randomize the direction
+    const directions = ['up', 'down', 'left', 'right']; // Possible directions
+    const randomIndex = Math.floor(Math.random() * directions.length);
+    direction = directions[randomIndex];
+}        
+}
 // Check if there are items in the list
 if (item.length !== 0) {
     // Check if the head is at the same position as the first item
@@ -1870,7 +1895,6 @@ if (score >= maxscore / 2) {
         });
     }
         }
-
         function calculateObstacleSpawnProbability() {
             // Obstacle spawn probability increases with score
             return Math.min(0.1 + score / 100, 1); // Adjust the maximum spawn probability as needed
@@ -1980,7 +2004,8 @@ function spawnObstacle() {
             obstacles.push({ x: x, y: y });
         }else if (Math.random() < 0.3){
         formrandomshape(4)            
-        } else if (Math.random() < 0.6) { 
+    }
+        else if (Math.random() < 0.6) { 
             mirrors.push({ x: x, y: y });
         }else if(Math.random() < 0.7){
          wells.push({x:x, y:y})   
@@ -2012,7 +2037,8 @@ function spawnObstacle() {
             gamefoods = [];
             dynamicObstacles = [];
             score = 0;
-            esnake = []      
+            esnake = []        
+            timezone = []
             isEating = false;
             isInvincible = false;
             eatingAnimationFrames = 0;
@@ -2214,7 +2240,7 @@ function resizeCanvas() {
         (food.y >= obstacle.y && food.y < obstacle.y + 2)
     ) ||
     mirrors.some(obstacle => obstacle.x === food.x && obstacle.y === food.y)
-) {
+|| timezone.some(obstacle => obstacle.x === food.x && obstacle.y === food.y)) {
     food.x += 1;
     food.y += 1;
 }
