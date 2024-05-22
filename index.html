@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 let isFast = false
-        let timezone = [{x:0, y:0}]
+        let timezone = []
         let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
@@ -71,7 +71,7 @@ let isFast = false
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 5, y: 0, type:'fire'};
+        let food = { x: 0, y: 0};
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
@@ -821,8 +821,12 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 if (increase && !projectile.homing) {
                     projectile.size += 10;
                     explode = projectile.size * explosionstrength;
+                    projectile.x += projectile.velocityX;
+                    projectile.y += projectile.velocityY;
                 } else {
                     projectile.size = projectileSize;
+                    projectile.x += projectile.velocityX;
+                        projectile.y += projectile.velocityY;
                 }
 
                 if (projectile.circle) {
@@ -888,6 +892,14 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
                 });
 
+        kamek.forEach((esnake) => {
+                    if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
+                        projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
+                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                        projectiles.splice(index, 1);
+                        kamek.splice(index, 1);
+                    }
+                });
                 setTimeout(() => {
                     snake.forEach((snakePart) => {
                         if (projectile.x >= snakePart.x * gridSize && projectile.x <= (snakePart.x + 1) * gridSize &&
@@ -1527,7 +1539,7 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
         esnake.forEach(enemySegment => enemySegment.damage = true)
 }
 }
-if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === true && esnake.type === 'IRS'))){
+if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === false && esnake.type === 'IRS'))){
 isTaxed = false    
 }
             if (score <= 0 && isTaxed === true){
