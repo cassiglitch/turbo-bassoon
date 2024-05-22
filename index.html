@@ -159,10 +159,14 @@ function kamekMagic(){
     const magic = ['bolt']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];
-    } else {
+    } else if (kamekcanteleport === false) {
      const magic = ['port', 'wall']; // Possible directions
     const randomIndex = Math.floor(Math.random() * magic.length);
     magictype = magic[randomIndex];   
+    } else if (kamekcanteleport === true){
+    const magic = ['bolt']; // Possible directions
+    const randomIndex = Math.floor(Math.random() * magic.length);
+    magictype = magic[randomIndex];
     }
 
             if (magictype === 'bolt'){
