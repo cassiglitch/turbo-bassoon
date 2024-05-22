@@ -941,7 +941,7 @@ function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize
 function enemyshootmagic() {
     if (kamek.length !== 0) {
         kamek.forEach((kamek, index) => {
-            shootWaveOfProjectiles(kamek.x * gridSize, kamek.y * gridSize, 1, 1, 2, 'purple', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true, snake, ctx);
+            shootWaveOfProjectiles(kamek.x * gridSize, kamek.y * gridSize, 1, 1, 0.5, 'purple', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true, snake, ctx);
         });
     }
 }
@@ -1135,11 +1135,22 @@ function shootLaser(targetX, targetY) {
                 if (x >= obstacle.x * gridSize && x <= (obstacle.x + 2) * gridSize &&
                     y >= obstacle.y * gridSize && y <= (obstacle.y + 2) * gridSize) {
                     // Remove the dynamic obstacle from the array
+                    thwomps.splice(index, 1);
+                }
+            });
+        }
+
+
+thwomps.forEach((obstacle, index) => {
+                if (x >= obstacle.x * gridSize && x <= (obstacle.x + 2) * gridSize &&
+                    y >= obstacle.y * gridSize && y <= (obstacle.y + 2) * gridSize) {
+                    // Remove the dynamic obstacle from the array
                     dynamicObstacles.splice(index, 1);
                 }
             });
         }
 
+        
         // Draw the laser line with fade effect
         ctx.strokeStyle = gradient;
         ctx.lineWidth = gridSize; // Increase the thickness of the laser
