@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 let isFast = false
-        let timezone = []
+        let timezone = [{x:0, y:0}]
         let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
@@ -71,7 +71,7 @@ let isFast = false
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 0, y: 0};
+        let food = { x: 5, y: 0, type:'fire'};
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
@@ -82,7 +82,7 @@ let isFast = false
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = [{x:1, y:1}]
+        let kamek = []
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -835,13 +835,23 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 }
 
                 if (!projectile.homing){
-                mirrors.forEach((mirror) => {
+                timezone.forEach((mirror) => {
+                    if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
+                        projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
+                        projectile.homing = true;
+                        projectile.color = 'purple'
+                    }
+                });
+
+
+                                    mirrors.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
                         projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
                         projectile.reflect = !projectile.reflect;
                     }
                 });
 
+                
                 obstacles.forEach((obstacle, obstacleIndex) => {
                     if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
                         projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize) {
