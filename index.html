@@ -1527,7 +1527,7 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
         esnake.forEach(enemySegment => enemySegment.damage = true)
 }
 }
-if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === false && esnake.type === 'IRS'))){
+if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === true && esnake.type === 'IRS'))){
 isTaxed = false    
 }
             if (score <= 0 && isTaxed === true){
