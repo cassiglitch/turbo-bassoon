@@ -1135,16 +1135,6 @@ function shootLaser(targetX, targetY) {
                 if (x >= obstacle.x * gridSize && x <= (obstacle.x + 2) * gridSize &&
                     y >= obstacle.y * gridSize && y <= (obstacle.y + 2) * gridSize) {
                     // Remove the dynamic obstacle from the array
-                    thwomps.splice(index, 1);
-                }
-            });
-        }
-
-
-thwomps.forEach((obstacle, index) => {
-                if (x >= obstacle.x * gridSize && x <= (obstacle.x + 2) * gridSize &&
-                    y >= obstacle.y * gridSize && y <= (obstacle.y + 2) * gridSize) {
-                    // Remove the dynamic obstacle from the array
                     dynamicObstacles.splice(index, 1);
                 }
             });
