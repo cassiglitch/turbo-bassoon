@@ -71,7 +71,7 @@ let isFast = false
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 0, y: 0};
+        let food = { x: 0, y: 0, type:'fast'};
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
@@ -92,6 +92,7 @@ let isFast = false
         let livecount = 2;
         let pausetimer = 900;
         let TaxFormGot = false
+        let isParalyzed = false
         let snakeprojectilecollisiontime = 2000
         let originalSnakeColor = '#00FF00';
         let neoncolor = '#39ff14';
@@ -101,7 +102,7 @@ let isFast = false
         let timeslow = '#00ff8c'
         let timespeed = '#ff0073'
         let esnake = [];
-        let symbiote = []
+        let symbiote = [];
         let hasBeenTaxed = false
         let laserTimer = 45
         let controltype = 'arrow'
@@ -131,6 +132,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
+let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
 let magictype = 'bolt'
@@ -152,38 +154,52 @@ if (kamek.length !== 0){
       }
 }
 }
-
-function kamekMagic(){
-    if (!isPaused){
-    if (Math.random() <= 0.5){
-    const magic = ['bolt']; // Possible directions
-    const randomIndex = Math.floor(Math.random() * magic.length);
-    magictype = magic[randomIndex];
-    } else{
-     const magic = ['port', 'wall']; // Possible directions
-    const randomIndex = Math.floor(Math.random() * magic.length);
-    magictype = magic[randomIndex];   
-    }
-
-            if (magictype === 'bolt'){
-                enemyshootmagic()
-            }else if (magictype === 'port' && kamekcanteleport === true){
-                const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
-    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
-    kamek[0].x = randomX;
-    kamek[0].y = randomY;
-    timezone = []
-            } else if (magictype === 'wall'){
-                generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, 3, timezone)
-                kamekcanteleport = false
         
+function kamekMagic() {
+    if (!isPaused) {
+        // Determine the type of magic
+        if ((Math.random() <= 0.5 && kamekcanteleport === false)&&isParalyzed === false) {
+            const magic = ['bolt'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            magictype = magic[randomIndex];
+        } else {
+            const magic = ['port', 'wall', 'status'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            magictype = magic[randomIndex];
+        }
+
+        // Perform the action based on the type of magic
+        if (magictype === 'bolt') {
+            enemyshootmagic();
+        } else if (magictype === 'port' && kamekcanteleport === true) {
+            const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+            const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+            kamek[0].x = randomX;
+            kamek[0].y = randomY;
+            timezone = [];
+        } else if (magictype === 'wall') {
+            generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, 3, timezone);
+            kamekcanteleport = false;
+        } else if (magictype === 'status') {
+            const status = ['paralyzed'];
+            const randomIndex = Math.floor(Math.random() * status.length);
+            const magicstatus = status[randomIndex];
+            
+           if (magicstatus === 'paralyzed') {
+                isParalyzed = true;
+                setTimeout(turnoffpara, 1000);
             }
-}        
+        }
+    }
 }
+
 function cancelEffects(){
     isConfused = false
     isBurned = false
     isTaxed = false
+}
+function turnoffpara(){
+    isParalyzed = false
 }
 function checkForEffects(){
     if (isConfused === true){
@@ -960,6 +976,15 @@ function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize
         }
     });
 
+
+    timezone.forEach((obstacle, index) => {
+                if (x >= obstacle.x * gridSize && x <= (obstacle.x + 1) * gridSize &&
+                    y >= obstacle.y * gridSize && y <= (obstacle.y + 1) * gridSize) {
+                    // Remove the obstacle from the array
+                    timezone.splice(index, 1);
+                }
+            });
+    
     dynamicObstacles.forEach((dynamicObstacle, dynamicObstacleIndex) => {
         const dynamicObstacleCenterX = (dynamicObstacle.x + 1) * gridSize;
         const dynamicObstacleCenterY = (dynamicObstacle.y + 1) * gridSize;
@@ -1172,7 +1197,22 @@ function shootLaser(targetX, targetY) {
                     obstacles.splice(index, 1);
                 }
             });
+            timezone.forEach((obstacle, index) => {
+                if (x >= obstacle.x * gridSize && x <= (obstacle.x + 1) * gridSize &&
+                    y >= obstacle.y * gridSize && y <= (obstacle.y + 1) * gridSize) {
+                    // Remove the obstacle from the array
+                    timezone.splice(index, 1);
+                }
+            });
 
+            kamek.forEach((obstacle, index) => {
+                if (x >= obstacle.x * gridSize && x <= (obstacle.x + 1) * gridSize &&
+                    y >= obstacle.y * gridSize && y <= (obstacle.y + 1) * gridSize) {
+                    // Remove the obstacle from the array
+                    kamek.splice(index, 1);
+                }
+            });
+            
             // Check for collision with dynamic obstacles for the laser pixel
             dynamicObstacles.forEach((obstacle, index) => {
                 if (x >= obstacle.x * gridSize && x <= (obstacle.x + 2) * gridSize &&
@@ -1534,18 +1574,22 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
             restartGame(); // End the game if segments (lives) run out
             return;
         }              
-} else if (esnake[0].type === 'IRS' && esnake.damage === false){
-        isTaxed = true
-        esnake.forEach(enemySegment => enemySegment.damage = true)
 }
+if (esnake[0].type === 'IRS' && esnake[0].damage === false) {
+        isTaxed = true;
+        esnake.forEach(enemySegment => enemySegment.damage = true);
+    }
+
+    if (!isInvincible && esnake.some(segment => segment.x === snake[1].x && segment.y === snake[1].y && segment.damage === false && segment.type === 'IRS')) {
+        isTaxed = false;
+    }
+
+    if (score <= 0 && isTaxed === true) {
+        score = 0;
+        esnake = [];
+    }
+
 }
-if (!isInvincible &&  (esnake.some(esnake => (!esnake.x === (snake[1].x) && !esnake.y === (snake[1].y)) && esnake.damage === false && esnake.type === 'IRS'))){
-isTaxed = false    
-}
-            if (score <= 0 && isTaxed === true){
-                score = 0
-                esnake = []
-            }
 }
 if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
     // If the head collides with a mirror and the player is not invincible
@@ -1740,7 +1784,7 @@ changeInterval(50)
                 setTimeout(function() {
     changeInterval(100);
 }, 3000);           
-                    
+isFast = true
                 }else{
                     cancelEffects()
                     gamefoods.push('normal')
@@ -1853,8 +1897,10 @@ if (esnake.some(esnake => esnake.type === 'IRS') && TaxFormGot === true) {
 checkForEffects()
     if (!isPaused) { // Check if the game is not paused
         // Move Snake
+        if (!isParalyzed){
         snake.pop();
         snake.unshift(head);
+        }
 if (!freeze) {
         // Move Dynamic Obstacles
         dynamicObstacles.forEach(obstacle => {
@@ -2201,7 +2247,7 @@ symbioteAi(symbiote, canvas, gridSize)
 } else if (isBurned === false && currentInterval === 0.5 && isFast === false) {
     changeInterval(100)
             }
-            // Handle eating animation
+// Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
 
