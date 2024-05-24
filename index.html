@@ -901,7 +901,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                         projectile.velocityX = projectile.velocityX * -1;
                     projectile.velocityY = projectile.velocityY * -1; 
                         projectile.reflected = true
-                    } else {
+                    } else if (projectile.reflect === false){
                         projectile.velocityX = projectile.velocityX * -1;
                     projectile.velocityY = projectile.velocityY * -1; 
                         projjectile.reflected = false
