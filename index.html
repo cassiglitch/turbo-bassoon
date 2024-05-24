@@ -875,6 +875,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             count: 0,
             circle: circle,
             speed:projectileSpeed,
+            reflected:false,
             homing: enemy // Only set to true if enemy is true
         };
 
@@ -896,12 +897,14 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                         projectile.velocityY = Math.sin(angle) * projectile.speed;
                     }
 
-                    if (projectile.reflect === true) {
-                        projectile.x -= projectile.velocityX;
-                        projectile.y -= projectile.velocityY;
+                    if (projectile.reflect === true && projectile.reflected === false) {
+                        projectile.velocityX = projectile.velocityX * -1;
+                    projectile.velocityY = projectile.velocityY * -1; 
+                        projectile.reflected = true
                     } else {
-                        projectile.x += projectile.velocityX;
-                        projectile.y += projectile.velocityY;
+                        projectile.velocityX = projectile.velocityX * -1;
+                    projectile.velocityY = projectile.velocityY * -1; 
+                        projjectile.reflected = false
                     }
                     projectile.count += 1;
                 }
