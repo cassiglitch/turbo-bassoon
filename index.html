@@ -880,6 +880,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             x: pX,
             y: pY,
             angle: angle,
+            angle2:angle,
             velocityX: velocityX,
             velocityY: velocityY,
             color: projectileColor,
@@ -917,8 +918,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                         projectile.velocityY = Math.sin(projectile.angle) * projectile.speed;
                         projectile.reflected = true
                     } else if (projectile.reflect === false){
-                        let pangle = invertAngle(projectile.angle)
-                        projectile.angle = angleIncrement * i + adjustedAngle;
+                        projectile.angle = projectile.angle2;
                         projectile.velocityX = Math.cos(projectile.angle) * projectile.speed;
                         projectile.velocityY = Math.sin(projectile.angle) * projectile.speed;
                         projectile.reflected = false
