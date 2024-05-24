@@ -898,12 +898,12 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
 
                     if (projectile.reflect === true && projectile.reflected === false) {
-                        projectile.velocityX = projectile.velocityX * -1;
-                    projectile.velocityY = projectile.velocityY * -1; 
+                        projectile.x -= projectile.velocityX;
+                        projectile.y -= projectile.velocityY; 
                         projectile.reflected = true
                     } else if (projectile.reflect === false){
-                        projectile.velocityX = projectile.velocityX * -1;
-                    projectile.velocityY = projectile.velocityY * -1; 
+                        projectile.x += projectile.velocityX;
+                        projectile.y = projectile.velocityY; 
                         projjectile.reflected = false
                     }
                     projectile.count += 1;
