@@ -58,10 +58,12 @@
     <script>
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
-        
+
+
+        let reflector = [{x:1, y:1}]
         let isFast = false
         let timezone = []
-        let mirrors = [{x:0,y:0}]
+        let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -72,7 +74,7 @@
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 10, y: 0, type: 'fire'};
+        let food = { x: 0, y: 0};
         let obstacles = [];
         let dynamicObstacles = [];
         let direction = 'right';
@@ -91,6 +93,7 @@
         let freeze = false;
         let freezetimer = 5;
         let isFoodOrange = false;
+        let inverted = false;
         let livecount = 2;
         let pausetimer = 900;
         let TaxFormGot = false
@@ -106,6 +109,7 @@
         let esnake = [];
         let turrets = []
         let symbiote = [];
+        let controlsinverted = false
         let hasBeenTaxed = false
         let laserTimer = 45
         let controltype = 'arrow'
@@ -893,6 +897,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             circle: circle,
             speed:projectileSpeed,
             reflected:true,
+            reflectored:false,
             homing: enemy // Only set to true if enemy is true
         };
 
@@ -988,6 +993,15 @@ mirrors.forEach((mirror) => {
                         projectiles.splice(index, 1);
                     }
                 });
+
+        reflector.forEach((obstacle, obstacleIndex) => {
+                    if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
+                        projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize && projectile.reflectored === false) {
+                        angle = invertAngle(angle)
+                    }
+                });
+
+
 
                 dynamicObstacles.forEach((dynamicObstacle, dynamicObstacleIndex) => {
                     if (projectile.x >= dynamicObstacle.x * gridSize && projectile.x <= (dynamicObstacle.x + 2) * gridSize &&
@@ -1450,6 +1464,11 @@ ctx.fillRect(item[0].x * gridSize, item[0].y * gridSize, gridSize, gridSize);
     ctx.fillStyle = 'lightgreen';
 timezone.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+    // Draw Food
+            ctx.fillStyle = '#5B8DFF';
+            reflector.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize))
+
+    
 ctx.fillStyle = wellcolor;
   wells.forEach((well) => {
     const pulse = Math.sin(Date.now() / 200) * 5; // Adjust pulsating effect
@@ -1625,6 +1644,7 @@ function HaHaNoCollision(duration) {
 previousDirection = direction;
 
 // Update the direction based on user input or logic
+            if (inverted === false){
 switch (direction) {
     case 'up':
         head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
@@ -1647,6 +1667,30 @@ switch (direction) {
         track = [{x:head.x - 1, y:head.y}]
         break;
 }
+            }else if (inverted === true){
+           switch (direction) {
+    case 'down':
+        head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        track = []
+        track = [{x:head.x, y:head.y + 1}]
+        break;
+    case 'up':
+        head.y = (head.y + 1) % (canvas.height / gridSize);
+        track = []
+        track = [{x:head.x, y:head.y - 1}]
+        break;
+    case 'right':
+        head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+        track = []
+        track = [{x:head.x + 1, y:head.y}]
+        break;
+    case 'left':
+        head.x = (head.x + 1) % (canvas.width / gridSize);
+        track = []
+        track = [{x:head.x - 1, y:head.y}]
+        break;
+}
+       }
 
 
 
@@ -1743,6 +1787,12 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
             break;
     }
 }
+
+if (!isInvincible && reflector.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
+    inverted = !inverted
+    return
+}
+        
 projectiles.forEach((projectile, index) => { esnake.forEach((esnake, obstacleIndex) => {
         if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
             projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
@@ -2064,6 +2114,12 @@ if (score >= maxscore / 2) {
             }
     }
 
+if (reflector.length === 15 && kamek.length === 0){
+    let kamekX2 = Math.floor(Math.random() * (canvas.width / gridSize));
+    let kamekY2 = Math.floor(Math.random() * (canvas.height / gridSize));
+    kamek.push({ x: kamekX2, y: kamekY2 });
+}
+            
             if (laser.isShooting) {
         obstacles.forEach((obstacle, index) => {
             // Check if the laser intersects with the obstacle
@@ -2180,8 +2236,12 @@ function spawnObstacle() {
            esnake = Array.from({ length: startingLength }, (_, index) => ({ x: 1, y: 10 - index, color: timespeed, damage: false, type:etype })) 
         }
         if (Math.random() < 0.5) {
-            obstacles.push({ x: x, y: y });
-        }else if (Math.random() < 0.3){
+            let otype = 0
+const rare = [obstacle, mirrors, wells, reflector]; // Possible directions
+    const randomIndex2 = Math.floor(Math.random() * rare.length);
+    otype = rare[randomIndex2];
+            otype.push({x:x, y:y})
+            }else if (Math.random() < 0.3){
         formrandomshape(4)            
     }
         else if (Math.random() < 0.6) { 
