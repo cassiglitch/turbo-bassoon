@@ -60,7 +60,7 @@
         const ctx = canvas.getContext('2d');
 
 
-        let reflector = [{x:1, y:1}]
+        let reflector = []
         let isFast = false
         let timezone = []
         let mirrors = []
@@ -2215,9 +2215,6 @@ const rare = ['invincibility']; // Possible directions
     return common[randomIndex2];
             }
         }
-
-spawnObstacle()
-
 
 function spawnObstacle() {
     const x = Math.floor(Math.random() * (canvas.width / gridSize));
