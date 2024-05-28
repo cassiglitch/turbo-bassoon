@@ -2234,22 +2234,21 @@ function spawnObstacle() {
     const randomIndex = Math.floor(Math.random() * etypes.length);
     etype = etypes[randomIndex];
            esnake = Array.from({ length: startingLength }, (_, index) => ({ x: 1, y: 10 - index, color: timespeed, damage: false, type:etype })) 
-        }
-        if (Math.random() < 0.5) {
-            let otype = 0
+        } else if (Math.random() < 0.5) {
+const id = Math.random() < 0.5 ? 1 : 2;
+            dynamicObstacles.push({ x: x, y: y, id: id });
+            }else if (Math.random() < 0.3){
+        formrandomshape(4)            
+    }
+            else if(Math.random() < 0.4){
+            thwomps.push({ x: x, y: 0, state: 1 });
+        } else {
+           let otype = 0
 const rare = [obstacles, mirrors, wells, reflector]; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * rare.length);
     otype = rare[randomIndex2];
             otype.push({x:x, y:y})
-            }else if (Math.random() < 0.3){
-        formrandomshape(4)            
-    }
-            else if(Math.random() < 0.9){
-            thwomps.push({ x: x, y: 0, state: 1 });
-        } else {
-            // Randomly assign an ID to the dynamic obstacle
-            const id = Math.random() < 0.5 ? 1 : 2;
-            dynamicObstacles.push({ x: x, y: y, id: id });
+
         }
     }
 }
