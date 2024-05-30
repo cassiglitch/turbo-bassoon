@@ -147,6 +147,7 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
+
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -1810,7 +1811,9 @@ esnake.forEach(enemySegment => enemySegment.damage = true)
         }              
 }
 if (esnake[0].type === 'IRS' && esnake[0].damage === false) {
-        isTaxed = true;
+        let tax = score * taxrate;
+        score -= tax;
+        score = Math.floor(score);
         esnake.forEach(enemySegment => enemySegment.damage = true);
     }
 
@@ -2343,21 +2346,21 @@ function spawnObstacle() {
                      mirrors.some(mirror => mirror.x === x && mirror.y === y) ||
                      dynamicObstacles.some(dynamic => dynamic.x === x && dynamic.y === y)||
                     (food.x === x && food.y === y)
-
+const randomValue = Math.random()
     if (!occupied) {
-        if ((Math.random() < 0.1) && esnake.length === 0){
+        if ((randomValue < 0.1) && esnake.length === 0){
             let etype = 0
         const etypes = ['base', 'IRS']; // Possible directions
     const randomIndex = Math.floor(Math.random() * etypes.length);
     etype = etypes[randomIndex];
            esnake = Array.from({ length: startingLength }, (_, index) => ({ x: 1, y: 10 - index, color: timespeed, damage: false, type:etype })) 
-        } else if (Math.random() < 0.5) {
+        } else if (randomValue < 0.5) {
 const id = Math.random() < 0.5 ? 1 : 2;
             dynamicObstacles.push({ x: x, y: y, id: id });
-            }else if (Math.random() < 0.3){
+            }
+        if (randomValue < 0.3){
         formrandomshape(4)            
-    }
-            else if(Math.random() < 0.4){
+    } else if (randomValue < 0.4){
             thwomps.push({ x: x, y: 0, state: 1 });
         } else {
            let otype = 0
