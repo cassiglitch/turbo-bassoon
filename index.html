@@ -236,8 +236,12 @@ let y = Math.floor(Math.random() * (canvas.height / gridSize));
 
 // Add the new obstacle or mirror at the random coordinates
 if (spawner !== goombas){
-        spawner.push({ x, y });
-        }else if(spawner === goombas){
+    if (spawner === turrets){
+        spawnTurrets(x,y)
+        }else{
+        spawner.push({x:x,y:y})
+        }
+}else if(spawner === goombas){
     y -= 6
     if(y < 0){
         y = 6
@@ -411,6 +415,13 @@ document.addEventListener('keypress', function(event) {
             requestAnimationFrame(drawPortal);
         }
 
+function spawnTurrets(x,y){
+            createPortalAnimation(x* gridSize, y * gridSize, 30, 500);
+    setTimeout(() => {
+    turrets.push({ x: x, y: y });
+}, 250);
+
+    }
 function spawnGoombas(x,y){
             createPortalAnimation(x* gridSize, y * gridSize, 60, 1000);
     setTimeout(() => {
