@@ -416,7 +416,7 @@ document.addEventListener('keypress', function(event) {
         }
 
 function spawnTurrets(x,y){
-            createPortalAnimation(x* gridSize, y * gridSize, 30, 500);
+            createPortalAnimation((x* gridSize) + 0.5, (y * gridSize) + 0.5, 30, 500);
     setTimeout(() => {
     turrets.push({ x: x, y: y });
 }, 250);
