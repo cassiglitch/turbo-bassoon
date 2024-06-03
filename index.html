@@ -1154,8 +1154,8 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     projectile.count += 1
                 }
 if (projectile.reflectored === true){
- angle = invertAngle(angle)   
-    projectile.invertangleonce = true
+projectile.angle = invertAngle(projectile.angle2)
+projectile.invertangleonce = true
 }
                 if (increase && !projectile.homing) {
                     projectile.size += 10;
