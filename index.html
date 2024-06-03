@@ -1214,7 +1214,7 @@ mirrors.forEach((mirror) => {
         reflector.forEach((obstacle, obstacleIndex) => {
                     if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
                         projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize && projectile.reflectored === false) {
-                        projectile.reflect = true
+                        projectile.reflect = !projectile.reflect
                     }
                 });
 
