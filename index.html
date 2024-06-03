@@ -1153,7 +1153,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
                     projectile.count += 1
                 }
-if (projectile.reflectored === true && !projectile.invertangleonce === true){
+if (projectile.reflectored === true){
  angle = invertAngle(angle)   
     projectile.invertangleonce = true
 }
