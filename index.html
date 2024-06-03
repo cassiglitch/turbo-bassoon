@@ -2514,13 +2514,13 @@ const randomValue = Math.random()
 const id = Math.random() < 0.5 ? 1 : 2;
             dynamicObstacles.push({ x: x, y: y, id: id });
             }
-        if (randomValue < 0.3){
+        else if (randomValue < 0.3){
         formrandomshape(4)            
     } else if (randomValue < 0.4){
             thwomps.push({ x: x, y: 0, state: 1 });
         } else {
            let otype = 0
-const rare = [obstacles, mirrors, wells, reflector]; // Possible directions
+const rare = [obstacles, mirrors, wells, reflector, reflector]; // Possible directions
     const randomIndex2 = Math.floor(Math.random() * rare.length);
     otype = rare[randomIndex2];
             otype.push({x:x, y:y})
