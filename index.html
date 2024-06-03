@@ -148,7 +148,7 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
-spawnTurrets(4,10)
+
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -237,8 +237,10 @@ let y = Math.floor(Math.random() * (canvas.height / gridSize));
 // Add the new obstacle or mirror at the random coordinates
 if (spawner !== goombas){
     if (spawner === turrets){
+        if (turrets.length >= 5){
         spawnTurrets(x,y)
-        }else{
+        }
+    }else{
         spawner.push({x:x,y:y})
         }
 }else if(spawner === goombas){
