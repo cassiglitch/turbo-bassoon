@@ -1115,8 +1115,6 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             circle: circle,
             speed:projectileSpeed,
             reflected:true,
-            reflectored:false,
-            reflector2:false,
             homing: enemy // Only set to true if enemy is true
         };
 
@@ -1153,10 +1151,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
                     projectile.count += 1
                 }
-if (projectile.reflectored === true && projectile.reflector2 === false){
-projectile.angle = invertAngle(angle)
-projectile.reflector2 = true
-}
+
                 if (increase && !projectile.homing) {
                     projectile.size += 10;
                     explode = projectile.size * explosionstrength;
@@ -1219,7 +1214,7 @@ mirrors.forEach((mirror) => {
         reflector.forEach((obstacle, obstacleIndex) => {
                     if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
                         projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize && projectile.reflectored === false) {
-                        projectile.reflectored = true
+                        projectile.reflect = true
                     }
                 });
 
