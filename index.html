@@ -1116,7 +1116,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             speed:projectileSpeed,
             reflected:true,
             reflectored:false,
-            invertangleonce:false,
+            reflector2:false,
             homing: enemy // Only set to true if enemy is true
         };
 
@@ -1153,9 +1153,9 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
                     projectile.count += 1
                 }
-if (projectile.reflectored === true){
+if (projectile.reflectored === true && projectile.reflector2 === false){
 projectile.angle = invertAngle(projectile.angle2)
-projectile.invertangleonce = true
+projectile.reflector2 = true
 }
                 if (increase && !projectile.homing) {
                     projectile.size += 10;
