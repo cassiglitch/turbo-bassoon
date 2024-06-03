@@ -61,7 +61,7 @@
 
         let goombadirection = 'left'
         let goombaoffset = 1.00
-        let reflector = [{x:10,y:0}]
+        let reflector = [{x:0, y:0}]
         let isFast = false
         let timezone = []
         let mirrors = []
@@ -75,7 +75,7 @@
         let gridSize = 20;
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
-        let food = { x: 1, y: 0, type:'fire'};
+        let food = { x: 1, y: 0};
         let obstacles = [];
         let kamekappears = false
         let dynamicObstacles = [];
