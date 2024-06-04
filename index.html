@@ -2781,7 +2781,7 @@ obstacles.forEach((obstacle, obstacleIndex) => {
 });
 }
 
-if (controltype === 'set'){
+if (controltype === 'set' || (controltype === 'arrow' && controltype !== 'mobile')){
 // Handle arrow key presses
 document.addEventListener('keydown', event => {
     // Prevent default arrow key behavior (scrolling)
@@ -2815,7 +2815,7 @@ document.addEventListener('keydown', event => {
     }
 });
 }
-if (controltype === 'set'){
+if (controltype === 'set' || (controltype === 'mobile' && controltype !== 'arrow')){
 if (!isPaused) {
 // Handle touch events for mobile controls
 let touchStartX = 0;
