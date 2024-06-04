@@ -2814,6 +2814,8 @@ document.addEventListener('keydown', event => {
         }
     }
 });
+canvas.removeEventListener('touchstart', handleTouchStart);
+canvas.removeEventListener('touchend', handleTouchEnd);
 }
 if (controltype === 'set' || (controltype === 'mobile' && controltype !== 'arrow')){
 if (!isPaused) {
