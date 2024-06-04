@@ -61,7 +61,7 @@
 
         let goombadirection = 'left'
         let goombaoffset = 1.00
-        let reflector = []
+        let reflector = [{x:1,y:1},{x:2,y:1},{x:3,y:1},{x:4,y:1},{x:5,y:1},{x:6,y:1},{x:7,y:1},{x:8,y:1}]
         let isFast = false
         let timezone = []
         let mirrors = []
@@ -2385,8 +2385,9 @@ if (reflector.length === 8 && kamek.length === 0 && kamekappears === false){
     isPaused = true
     reflector = []
     kamekappears = true
+    let gridOffset = ((2*gridSize) + (gridSize / 2))/2
             // Call the function with desired parameters
-        createPortalAnimation(kamekX2* gridSize, kamekY2 * gridSize, 120, 5000);
+        createPortalAnimation(kamekX2* gridSize, (kamekY2 * gridSize) + gridOffset, 120, 5000);
     setTimeout(() => {
 kamek.push({ x: kamekX2, y: kamekY2 });
     }, 2500);
