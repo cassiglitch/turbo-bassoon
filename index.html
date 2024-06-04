@@ -1730,7 +1730,7 @@ ctx.fillStyle = 'black';
     });
         // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay');
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>${startingGridSize}`;
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
 }
 
@@ -2858,21 +2858,6 @@ function changeInterval(interval) {
     gameInterval = setInterval(gameLoop, interval);
     currentInterval = interval/100
 }
-let initialWindowWidth = window.innerWidth;
-
-canvas.addEventListener("resize", function() {
-  const currentWindowWidth = window.innerWidth;
-  const hasWindowShrunk = canvas.height < initialWindowWidth;
-
-  if (hasWindowShrunk) {
-startingGridSize = 40
-  } else {
-    startingGridSize = 20
-  }
-
-  // Update initial width for next resize check
-  initialWindowWidth = currentWindowWidth;
-});
 
         function getZoomFactor() {
             var deviceWidth, landscape = Math.abs(window.orientation) == 90
@@ -2914,11 +2899,10 @@ window.addEventListener('resize', resizeCanvasHeight);
             // Adjust the grid size based on the zoom factor
             document.documentElement.style.setProperty('--grid-size', (20 * antiZoomFactor) + 'px');
             // Adjust the position of the score display
-            if (gridSize < startingGridSize){
             const scoreDisplay = document.getElementById('scoreDisplay');
             scoreDisplay.style.marginTop = `calc(var(--grid-size) * antiZoomFactor)`;
             scoreDisplay.style.fontSize = `var(--grid-size)`;
-            }}
+        }
 window.addEventListener('resize', getZoomFactor);
         // Call the adjustForZoom function initially and on window resize
         window.addEventListener('resize', adjustForZoom);
