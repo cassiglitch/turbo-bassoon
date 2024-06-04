@@ -237,7 +237,7 @@ let y = Math.floor(Math.random() * (canvas.height / gridSize));
 // Add the new obstacle or mirror at the random coordinates
 if (spawner !== goombas){
     if (spawner === turrets){
-        if (turrets.length <= 5){
+        if (turrets.length < 5){
         spawnTurrets(x,y)
         }
     }else{
