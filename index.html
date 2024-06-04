@@ -2860,7 +2860,7 @@ function changeInterval(interval) {
 }
 let initialWindowWidth = window.innerWidth;
 
-window.addEventListener("resize", function() {
+canvas.addEventListener("resize", function() {
   const currentWindowWidth = window.innerWidth;
   const hasWindowShrunk = currentWindowWidth < initialWindowWidth;
 
