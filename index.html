@@ -2858,6 +2858,21 @@ function changeInterval(interval) {
     gameInterval = setInterval(gameLoop, interval);
     currentInterval = interval/100
 }
+let initialWindowWidth = window.innerWidth;
+
+window.addEventListener("resize", function() {
+  const currentWindowWidth = window.innerWidth;
+  const hasWindowShrunk = currentWindowWidth < initialWindowWidth;
+
+  if (hasWindowShrunk) {
+startingGridSize = 40
+  } else {
+    startingGridSize = 20
+  }
+
+  // Update initial width for next resize check
+  initialWindowWidth = currentWindowWidth;
+});
 
         function getZoomFactor() {
             var deviceWidth, landscape = Math.abs(window.orientation) == 90
