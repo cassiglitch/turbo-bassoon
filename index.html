@@ -114,7 +114,7 @@
         let controlsinverted = false
         let hasBeenTaxed = false
         let laserTimer = 45
-        let controltype = 'arrow'
+        let controltype = 'set'
         let goombas = []
         let magic = []
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
@@ -2781,7 +2781,7 @@ obstacles.forEach((obstacle, obstacleIndex) => {
 });
 }
 
-
+if (controltype === 'set'){
 // Handle arrow key presses
 document.addEventListener('keydown', event => {
     // Prevent default arrow key behavior (scrolling)
@@ -2814,6 +2814,8 @@ document.addEventListener('keydown', event => {
         }
     }
 });
+}
+if (controltype === 'set'){
 if (!isPaused) {
 // Handle touch events for mobile controls
 let touchStartX = 0;
@@ -2849,6 +2851,8 @@ function handleTouchEnd(event) {
 canvas.addEventListener('touchstart', handleTouchStart);
 canvas.addEventListener('touchend', handleTouchEnd);
 }
+}
+
 
         // Start the game loop
         let gameInterval = setInterval(gameLoop, 100); // Adjust the interval as needed
