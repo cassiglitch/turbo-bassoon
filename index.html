@@ -2914,10 +2914,11 @@ window.addEventListener('resize', resizeCanvasHeight);
             // Adjust the grid size based on the zoom factor
             document.documentElement.style.setProperty('--grid-size', (20 * antiZoomFactor) + 'px');
             // Adjust the position of the score display
+            if (gridSize < startingGridSize){
             const scoreDisplay = document.getElementById('scoreDisplay');
             scoreDisplay.style.marginTop = `calc(var(--grid-size) * antiZoomFactor)`;
             scoreDisplay.style.fontSize = `var(--grid-size)`;
-        }
+            }}
 window.addEventListener('resize', getZoomFactor);
         // Call the adjustForZoom function initially and on window resize
         window.addEventListener('resize', adjustForZoom);
