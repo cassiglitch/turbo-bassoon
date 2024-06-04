@@ -1593,14 +1593,14 @@ if (kamekappears === true){
 }
         // After 5 seconds, reset the shooting state and fade out the laser
 
-        
-            isShooting = false;
-            charging = true;
-        
-        hascollided = false
-        
-        // Update the timestamp of the last laser shot
-        lastLaserShot = currentTime;
+
+setTimeout(() => {
+    charging = true;
+        isShooting = false;
+            hascollided = false   
+}, 5);
+
+            lastLaserShot = currentTime;
     }
 }
 // Function to pause the game
