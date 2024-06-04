@@ -1582,18 +1582,23 @@ thwomps.forEach((obstacle, index) => {
             }
         });
         ctx.stroke();
-if (laserTimer > 22.5){
+
+if (kamekappears === true){
         laserTimer = laserTimer/2
-           laserCooldown = laserTimer * 1000
- 
+           laserCooldown = laserTimer * 1000 
+}else if (kamekappears === false){
+    laserTimer = 45
+           laserCooldown = laserTimer * 1000 
+
 }
         // After 5 seconds, reset the shooting state and fade out the laser
-        setTimeout(() => {
+
+        
             isShooting = false;
             charging = true;
-            hascollided = false
-        }, 5 * 1000);
-
+        
+        hascollided = false
+        
         // Update the timestamp of the last laser shot
         lastLaserShot = currentTime;
     }
