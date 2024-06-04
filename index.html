@@ -2862,7 +2862,7 @@ let initialWindowWidth = window.innerWidth;
 
 canvas.addEventListener("resize", function() {
   const currentWindowWidth = window.innerWidth;
-  const hasWindowShrunk = currentWindowWidth < initialWindowWidth;
+  const hasWindowShrunk = canvas.height < initialWindowWidth;
 
   if (hasWindowShrunk) {
 startingGridSize = 40
