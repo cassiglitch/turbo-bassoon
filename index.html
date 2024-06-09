@@ -1088,12 +1088,9 @@ function getBoundingBox(polygon) {
     return { minX, minY, maxX, maxY };
 }
 
-// Function to check if two bounding boxes overlap
-function isColliding(box1, box2) {
-    return !(box1.maxX < box2.minX || 
-             box1.minX > box2.maxX || 
-             box1.maxY < box2.minY || 
-             box1.minY > box2.maxY);
+// Function to check if a point is within a bounding box
+function isPointInBox(pointX, pointY, box) {
+    return pointX >= box.minX && pointX <= box.maxX && pointY >= box.minY && pointY <= box.maxY;
 }
 
 // Function to get Kamek's bounding box
@@ -1120,18 +1117,14 @@ function getKamekBoundingBox(x, y, gridSize) {
     return getBoundingBox(allVertices);
 }
 
-// Function to check if another object is colliding with Kamek
-function isCollidingWithKamek(kamekX, kamekY, gridSize, otherMinX, otherMinY, otherMaxX, otherMaxY) {
+// Function to check if a point is colliding with Kamek
+function isCollidingWithKamek(kamekX, kamekY, gridSize, pointX, pointY) {
     // Get Kamek's bounding box
     let kamekBoundingBox = getKamekBoundingBox(kamekX, kamekY, gridSize);
     
-    // Define the other object's bounding box
-    let otherObjectBox = { minX: otherMinX, minY: otherMinY, maxX: otherMaxX, maxY: otherMaxY };
-    
-    // Check if they are colliding
-    return isColliding(kamekBoundingBox, otherObjectBox);
+    // Check if the point is within Kamek's bounding box
+    return isPointInBox(pointX, pointY, kamekBoundingBox);
 }
-
 // Example usage
 
 
@@ -1642,12 +1635,7 @@ thwomps.forEach((obstacle, index) => {
                     thwomps.splice(index, 1);
                 }
             });
-        kamek.forEach((kamek, index) => {
-            let collisionResult = isCollidingWithKamek(kamek.x * gridSize, kamek.y * gridSize, gridSize, x, y, x, y);
-            if (collisionResult === true && sideshield >= 2){
-                kamek.splice(index, 1);
-            }
-        })
+    
         }
 
 
