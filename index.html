@@ -1072,6 +1072,71 @@ function getDirectionToSnakeHead(x, y, snake) {
 
     return direction;
 }
+function getBoundingBox(polygon) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    
+    for (let i = 0; i < polygon.length; i++) {
+        let x = polygon[i][0];
+        let y = polygon[i][1];
+        
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+    }
+    
+    return { minX, minY, maxX, maxY };
+}
+
+// Function to check if two bounding boxes overlap
+function isColliding(box1, box2) {
+    return !(box1.maxX < box2.minX || 
+             box1.minX > box2.maxX || 
+             box1.maxY < box2.minY || 
+             box1.minY > box2.maxY);
+}
+
+// Function to get Kamek's bounding box
+function getKamekBoundingBox(x, y, gridSize) {
+    // Calculate vertices of Kamek's polygons
+    let robePolygon = [
+        [x, y + gridSize + gridSize],
+        [x + gridSize + (gridSize / 2), y + gridSize + gridSize],
+        [x + gridSize + (gridSize / 2), y],
+        [x - gridSize - (gridSize / 2), y],
+        [x - gridSize - (gridSize / 2), y + gridSize + gridSize]
+    ];
+
+    let hatPolygon = [
+        [x, y - gridSize / Math.sqrt(3)],
+        [x - gridSize / 2, y + gridSize / (2 * Math.sqrt(3))],
+        [x + gridSize / 2, y + gridSize / (2 * Math.sqrt(3))]
+    ];
+
+    // Combine all vertices
+    let allVertices = robePolygon.concat(hatPolygon);
+
+    // Get bounding box
+    return getBoundingBox(allVertices);
+}
+
+// Function to check if another object is colliding with Kamek
+function isCollidingWithKamek(kamekX, kamekY, gridSize, otherMinX, otherMinY, otherMaxX, otherMaxY) {
+    // Get Kamek's bounding box
+    let kamekBoundingBox = getKamekBoundingBox(kamekX, kamekY, gridSize);
+    
+    // Define the other object's bounding box
+    let otherObjectBox = { minX: otherMinX, minY: otherMinY, maxX: otherMaxX, maxY: otherMaxY };
+    
+    // Check if they are colliding
+    return isColliding(kamekBoundingBox, otherObjectBox);
+}
+
+// Example usage
+
+let otherMinX = 12, otherMinY = 22, otherMaxX = 20, otherMaxY = 30;
+
+let collisionResult = isCollidingWithKamek(kamekX, kamekY, gridSize, otherMinX, otherMinY, otherMaxX, otherMaxY);
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength, enemy) {
  
@@ -1580,8 +1645,13 @@ thwomps.forEach((obstacle, index) => {
                     thwomps.splice(index, 1);
                 }
             });
-        
-        }
+        kamek.forEach((kamek, index) => {
+            let collisionResult = isCollidingWithKamek(kamek.x * gridSize, kamek.y * gridSize, gridSize, x, y, x, y);
+            if (collisionResult === true && sideshield >= 2){
+                kamek.splice(index, 1);
+            }
+        })
+
 
 
         
