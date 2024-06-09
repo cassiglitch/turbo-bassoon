@@ -1635,9 +1635,23 @@ thwomps.forEach((obstacle, index) => {
                     thwomps.splice(index, 1);
                 }
             });
-    
-        }
+            if(kamek.length < 0){
+    for (let i = kamek.length - 1; i >= 0; i--) {
+    let kamekElement = kamek[i];
+    let collisionResult = isCollidingWithKamek(
+        kamekElement.x * gridSize,
+        kamekElement.y * gridSize,
+        gridSize,
+        x,
+        y
+    );
 
+    if (collisionResult === true && sideshield >= 2) {
+        kamek.splice(i, 1);
+    }
+}
+        }
+        }
 
         
         // Draw the laser line with fade effect
