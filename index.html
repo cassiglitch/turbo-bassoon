@@ -156,12 +156,10 @@ function kamekUpdate(){
 }
     if (kamek.length !== 0){
         applyStatus(1000, 'magic')
-if (kamek[0].health === undefined){
-    kamek[0].health = 100;
-}
         if (kamek[0].opacity === undefined){
-    kamek[0].opacity = 100;
+    kamek[0].opacity = 1;
 }
+        kamek[0].opacity = 1; // or any other default v
     }
 if (kamek.length !== 0){
     const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
