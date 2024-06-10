@@ -1053,6 +1053,70 @@ function drawKamek(x, y){
 
 }
 
+let fragments = [];
+let opacity = 1;
+let deathAnimationStarted = false;
+
+function createFragments(x, y) {
+    const numFragments = 20;
+    for (let i = 0; i < numFragments; i++) {
+        fragments.push({
+            x: x * gridSize,
+            y: y * gridSize,
+            size: Math.random() * 10 + 5,
+            vx: Math.random() * 4 - 2,
+            vy: Math.random() * 4 - 2,
+            opacity: 1,
+            shrink: 0.05
+        });
+    }
+}
+
+function drawFragments(fragments) {
+    fragments.forEach((fragment, index) => {
+        ctx.save();
+        ctx.translate(fragment.x, fragment.y);
+        ctx.globalAlpha = fragment.opacity;
+        ctx.fillStyle = 'blue';
+        ctx.beginPath();
+        ctx.arc(0, 0, fragment.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        fragment.x += fragment.vx;
+        fragment.y += fragment.vy;
+        fragment.size -= fragment.shrink;
+        fragment.opacity -= 0.02;
+
+        if (fragment.opacity <= 0 || fragment.size <= 0) {
+            fragments.splice(index, 1);
+        }
+    });
+}
+
+function animateKamekDeath() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (opacity > 0) {
+        // Draw Kamek and decrease opacity for fade-out effect
+        ctx.globalAlpha = opacity;
+        drawKamek(kamek.x, kamek.y);
+        opacity -= 0.02;
+    } else if (!deathAnimationStarted) {
+        // Start death animation
+        createFragments(kamek.x, kamek.y);
+        deathAnimationStarted = true;
+    }
+
+    if (fragments.length > 0) {
+        // Draw fragments
+        drawFragments(fragments);
+    }
+    ctx.globalAlpha = 1; // Reset globalAlpha for any future drawings
+
+    requestAnimationFrame(animateKamekDeath);
+}
+
 function getDirectionToSnakeHead(x, y, snake) {
     // Get the head of the snake
     const head = snake[0];
@@ -1310,7 +1374,14 @@ mirrors.forEach((mirror) => {
                         projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
-                        kamek.splice(index, 1);
+                        isPaused = true
+                        
+        animateKamekDeath();
+        setTimeout(() => {
+    isPaused = false;
+            kamek.splice(index, 1);
+    console.log('After timeout: ', isPaused); // Output: false
+}, 1000)
       const distance = Math.abs(kamke[0].x - projectile.x) + Math.abs(kamek[0].y - projectile.y);
       if (distance <= wellStrength) {
           projectile.homing = true
@@ -1648,6 +1719,12 @@ thwomps.forEach((obstacle, index) => {
 
     if (collisionResult === true && sideshield >= 2) {
         kamek.splice(i, 1);
+        isPaused = true
+        animateKamekDeath();
+        setTimeout(() => {
+    isPaused = false;
+    console.log('After timeout: ', isPaused); // Output: false
+}, 1000)
     }
 }
         }
