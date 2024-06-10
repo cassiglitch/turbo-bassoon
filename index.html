@@ -159,6 +159,9 @@ function kamekUpdate(){
 if (kamek[0].health === undefined){
     kamek[0].health = 100;
 }
+        if (kamek[0].opacity === undefined){
+    kamek[0].opacity = 100;
+}
     }
 if (kamek.length !== 0){
     const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
@@ -1052,9 +1055,7 @@ function drawKamek(x, y){
     ctx.fill();
 
 }
-
 let fragments = [];
-let opacity = 1;
 let deathAnimationStarted = false;
 
 function createFragments(x, y) {
@@ -1094,14 +1095,13 @@ function drawFragments(fragments) {
     });
 }
 
-function animateKamekDeath() {
+function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (opacity > 0) {
+    if (kamek.opacity > 0) {
         // Draw Kamek and decrease opacity for fade-out effect
-        ctx.globalAlpha = opacity;
-        drawKamek(kamek.x, kamek.y);
-        opacity -= 0.02;
+        drawKamek();
+        kamek.opacity -= 0.02;
     } else if (!deathAnimationStarted) {
         // Start death animation
         createFragments(kamek.x, kamek.y);
@@ -1112,10 +1112,11 @@ function animateKamekDeath() {
         // Draw fragments
         drawFragments(fragments);
     }
-    ctx.globalAlpha = 1; // Reset globalAlpha for any future drawings
 
-    requestAnimationFrame(animateKamekDeath);
+    requestAnimationFrame(animate);
 }
+
+animate();
 
 function getDirectionToSnakeHead(x, y, snake) {
     // Get the head of the snake
