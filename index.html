@@ -89,7 +89,7 @@
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = [{x:1,y:1, opacity:1}]
+        let kamek = []
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -146,7 +146,7 @@ let isTaxed = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
-let sideshield = 2
+let sideshield = 6
         let shield = false
 let magictype = 'bolt'
 
@@ -156,8 +156,9 @@ function kamekUpdate(){
 }
     if (kamek.length !== 0){
         applyStatus(1000, 'magic')
-        
-        kamek[0].opacity = 1; // or any other default v
+if (kamek[0].health === undefined){
+    kamek[0].health = 100;
+}
     }
 if (kamek.length !== 0){
     const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
@@ -1019,120 +1020,6 @@ function drawGoomba(gx, gy) {
     ctx.fillStyle = "#000000";
     ctx.fillRect(x - mouthWidth / 2, y + headHeight * 0.8, mouthWidth, mouthHeight);
 }
-
-function drawKamek(x, y){
-    // Scale the coordinates by gridSize
-    x = x * gridSize;
-    y = y * gridSize;
-
-    // Draw the polygons (hat and robe)
-    drawFlatPolygon(x, y + gridSize + gridSize, gridSize + (gridSize / 2), 5, 'blue');
-    drawPolygon(x, y + gridSize, gridSize, 4, 'gold');
-    drawFlatPolygon(x, y, gridSize, 3, 'blue');
-    drawPolygon(x + gridSize, y + gridSize + gridSize, (gridSize / 2), 4, 'gold');
-    drawPolygon(x - gridSize, y + gridSize + gridSize, (gridSize / 2), 4, 'gold');
-    
-    // Calculate eye positions relative to the robe polygon
-    let eyeBaseX = x; // Center of the robe
-    let eyeBaseY = y + gridSize; // Same y-level as the robe
-
-    // Draw the eyes
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 4, 0, Math.PI * 2); // Left eye
-    ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 4, 0, Math.PI * 2); // Right eye
-    ctx.fill();
-
-    // Draw the pupils
-    ctx.fillStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Left pupil
-    ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Right pupil
-    ctx.fill();
-
-}
-let fragments = [];
-let deathAnimationStarted = false;
-
-function createFragments(x, y) {
-    const numFragments = 20;
-    for (let i = 0; i < numFragments; i++) {
-        fragments.push({
-            x: x * gridSize,
-            y: y * gridSize,
-            size: Math.random() * 10 + 5,
-            vx: Math.random() * 4 - 2,
-            vy: Math.random() * 4 - 2,
-            opacity: 1,
-            shrink: 0.05
-        });
-    }
-}
-
-function drawFragments(fragments) {
-    fragments.forEach((fragment, index) => {
-        ctx.save();
-        ctx.translate(fragment.x, fragment.y);
-        ctx.globalAlpha = fragment.opacity;
-        ctx.fillStyle = 'blue';
-        ctx.beginPath();
-        ctx.arc(0, 0, fragment.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        fragment.x += fragment.vx;
-        fragment.y += fragment.vy;
-        fragment.size -= fragment.shrink;
-        fragment.opacity -= 0.02;
-
-        if (fragment.opacity <= 0 || fragment.size <= 0) {
-            fragments.splice(index, 1);
-        }
-    });
-}
-
-function animateKamekDeath() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (kamek.opacity > 0) {
-        // Draw Kamek and decrease opacity for fade-out effect
-        drawKamek();
-        kamek.opacity -= 0.02;
-    } else if (!deathAnimationStarted) {
-        // Start death animation
-        createFragments(kamek.x, kamek.y);
-        deathAnimationStarted = true;
-    }
-
-    if (fragments.length > 0) {
-        // Draw fragments
-        drawFragments(fragments);
-    }
-
-    requestAnimationFrame(animate);
-}
-
-animate();
-
-function getDirectionToSnakeHead(x, y, snake) {
-    // Get the head of the snake
-    const head = snake[0];
-  
-    // Calculate the differences in x and y coordinates
-    const dx = head.x - x;
-    const dy = head.y - y;
-
-    // Calculate the magnitude of the vector
-    const magnitude = Math.sqrt(dx * dx + dy * dy);
-
-    // Normalize the direction vector (convert to unit vector)
-    const direction = {
-        x: dx / magnitude,
-        y: dy / magnitude
-    };
-
-    return direction;
-}
 function getBoundingBox(polygon) {
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     
@@ -1186,8 +1073,57 @@ function isCollidingWithKamek(kamekX, kamekY, gridSize, pointX, pointY) {
     // Check if the point is within Kamek's bounding box
     return isPointInBox(pointX, pointY, kamekBoundingBox);
 }
-// Example usage
+function drawKamek(x, y){
+    // Scale the coordinates by gridSize
+    x = x * gridSize;
+    y = y * gridSize;
 
+    // Draw the polygons (hat and robe)
+    drawFlatPolygon(x, y + gridSize + gridSize, gridSize + (gridSize / 2), 5, 'blue');
+    drawPolygon(x, y + gridSize, gridSize, 4, 'gold');
+    drawFlatPolygon(x, y, gridSize, 3, 'blue');
+    drawPolygon(x + gridSize, y + gridSize + gridSize, (gridSize / 2), 4, 'gold');
+    drawPolygon(x - gridSize, y + gridSize + gridSize, (gridSize / 2), 4, 'gold');
+    
+    // Calculate eye positions relative to the robe polygon
+    let eyeBaseX = x; // Center of the robe
+    let eyeBaseY = y + gridSize; // Same y-level as the robe
+
+    // Draw the eyes
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 4, 0, Math.PI * 2); // Left eye
+    ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 4, 0, Math.PI * 2); // Right eye
+    ctx.fill();
+
+    // Draw the pupils
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(eyeBaseX - gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Left pupil
+    ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Right pupil
+    ctx.fill();
+
+}
+
+function getDirectionToSnakeHead(x, y, snake) {
+    // Get the head of the snake
+    const head = snake[0];
+  
+    // Calculate the differences in x and y coordinates
+    const dx = head.x - x;
+    const dy = head.y - y;
+
+    // Calculate the magnitude of the vector
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
+
+    // Normalize the direction vector (convert to unit vector)
+    const direction = {
+        x: dx / magnitude,
+        y: dy / magnitude
+    };
+
+    return direction;
+}
 
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength, enemy) {
  
@@ -1371,14 +1307,7 @@ mirrors.forEach((mirror) => {
                         projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
-                        isPaused = true
-                        
-        animateKamekDeath();
-        setTimeout(() => {
-    isPaused = false;
-            kamek.splice(index, 1);
-    console.log('After timeout: ', isPaused); // Output: false
-}, 1000)
+                        kamek.splice(index, 1);
       const distance = Math.abs(kamke[0].x - projectile.x) + Math.abs(kamek[0].y - projectile.y);
       if (distance <= wellStrength) {
           projectile.homing = true
@@ -1703,7 +1632,7 @@ thwomps.forEach((obstacle, index) => {
                     thwomps.splice(index, 1);
                 }
             });
-            if(kamek.length > 0){
+         if(kamek.length > 0){
     for (let i = kamek.length - 1; i >= 0; i--) {
     let kamekElement = kamek[i];
     let collisionResult = isCollidingWithKamek(
@@ -1716,17 +1645,9 @@ thwomps.forEach((obstacle, index) => {
 
     if (collisionResult === true && sideshield >= 2) {
         kamek.splice(i, 1);
-        isPaused = true
-        animateKamekDeath();
-        setTimeout(() => {
-    isPaused = false;
-    console.log('After timeout: ', isPaused); // Output: false
-}, 1000)
-    }
-}
         }
+    }}
         }
-
         
         // Draw the laser line with fade effect
         ctx.strokeStyle = gradient;
@@ -2551,7 +2472,7 @@ if (reflector.length === 12 && kamek.length === 0 && kamekappears === false){
             // Call the function with desired parameters
         createPortalAnimation(kamekX2* gridSize, (kamekY2 * gridSize) + gridOffset, 120, 5000);
     setTimeout(() => {
-kamek.push({ x: kamekX2, y: kamekY2, opacity:1});
+kamek.push({ x: kamekX2, y: kamekY2 });
     }, 2500);
     setTimeout(() => {
         isPaused = false
