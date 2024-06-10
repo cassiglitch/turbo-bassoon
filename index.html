@@ -89,7 +89,7 @@
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = [{x:1,y:1}]
+        let kamek = [{x:1,y:1, opacity:1}]
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -2551,7 +2551,7 @@ if (reflector.length === 12 && kamek.length === 0 && kamekappears === false){
             // Call the function with desired parameters
         createPortalAnimation(kamekX2* gridSize, (kamekY2 * gridSize) + gridOffset, 120, 5000);
     setTimeout(() => {
-kamek.push({ x: kamekX2, y: kamekY2 });
+kamek.push({ x: kamekX2, y: kamekY2, opacity:1});
     }, 2500);
     setTimeout(() => {
         isPaused = false
