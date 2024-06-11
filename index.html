@@ -1131,7 +1131,7 @@ function kamekDeath(){
 createPortalAnimation(turret.x* gridSize, turret.y * gridSize, 30, 2000);
     })
     goombas.forEach((turret, index) =>{
-createPortalAnimation(turret.x* gridSize, turret.y * gridSize, 75, 2000);
+createPortalAnimation(turret.x* gridSize, (turret.y * gridSize) + gridSize /2, 75, 2000);
     })
     createExplosion(ctx, kamek[0].x* gridSize, (kamek[0].y * gridSize) + gridOffset, 'green', obstacles, dynamicObstacles, gridSize, 90)
 createPortalAnimation(kamek[0].x* gridSize, (kamek[0].y * gridSize) + gridOffset, 100, 2000);
