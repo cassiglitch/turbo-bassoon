@@ -89,7 +89,7 @@
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = []
+        let kamek = [{x:1,y:1}]
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -146,7 +146,7 @@ let isTaxed = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
-let sideshield = 6
+let sideshield = 2
         let shield = false
 let magictype = 'bolt'
 
@@ -1124,7 +1124,24 @@ function getDirectionToSnakeHead(x, y, snake) {
 
     return direction;
 }
-
+function kamekDeath(){
+    isPaused = true
+    turrets.forEach((turret, index) =>{
+createPortalAnimation(turret.x* gridSize, turret.y * gridSize, 60, 1000);
+    })
+    goombas.forEach((turret, index) =>{
+createPortalAnimation(turret.x* gridSize, turret.y * gridSize, 60, 1000);
+    })
+createPortalAnimation(kamek[0].x* gridSize, kamek[0].y * gridSize, 60, 1000);
+    setTimeout(() => {
+    kamek=[]
+    turrets = []
+    goombas = []
+}, 500);
+setTimeout(() => {
+    isPaused = false
+}, 1000);
+}
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength, enemy) {
  
     const directionRadians = {
@@ -1307,7 +1324,7 @@ mirrors.forEach((mirror) => {
                         projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
-                        kamek.splice(index, 1);
+                        kamekDeath()
       const distance = Math.abs(kamke[0].x - projectile.x) + Math.abs(kamek[0].y - projectile.y);
       if (distance <= wellStrength) {
           projectile.homing = true
@@ -1644,7 +1661,7 @@ thwomps.forEach((obstacle, index) => {
     );
 
     if (collisionResult === true && sideshield >= 2) {
-        kamek.splice(i, 1);
+        kamekDeath()
         }
     }}
         }
