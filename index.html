@@ -181,6 +181,17 @@ function parseColor(hex) {
 }
 
 /**
+ * Converts an RGBA array to a hex color string.
+ * @param {number[]} rgba - The RGBA array.
+ * @return {string} The hex color string.
+ */
+function rgbaToHex(rgba) {
+    let [r, g, b, a] = rgba;
+    let alpha = Math.round(a * 255).toString(16).padStart(2, '0');
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}${alpha}`;
+}
+
+/**
  * Draws the current state of lava areas on the canvas and handles fading.
  */
 function drawLava() {
@@ -194,12 +205,13 @@ function drawLava() {
                 lava.splice(i, 1); // Remove the lava area if completely transparent
                 i--; // Adjust index due to removal
             } else {
-                lavaArea.color = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+                lavaArea.color = rgbaToHex(rgba);
                 ctx.fillStyle = lavaArea.color;
                 ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
             }
         }
     }
+}
 }
         addLavaArea(4,4,4, lavacolor)
 function kamekUpdate(){
@@ -1865,8 +1877,10 @@ ctx.fillStyle = wellcolor;
   })
     
     drawLava()
-    ctx.fillStyle = lavacolor;
+if (lava.length !== 0){
+    ctx.fillStyle = lava[0].color;
 lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+}
 ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
