@@ -151,7 +151,18 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
+function addLavaArea(x, y, size, color) {
+    let offset = Math.floor(size / 2);
 
+    for (let dx = -offset; dx <= offset; dx++) {
+        for (let dy = -offset; dy <= offset; dy++) {
+            let newX = x + dx;
+            let newY = y + dy;
+            // Add the coordinates with initial color to the lava array
+            lava.push({x: newX, y: newY, color: color});
+        }
+    }
+}
 
 function fadeLavaAreas() {
     for (let i = 0; i < lava.length; i++) {
@@ -184,14 +195,7 @@ function parseColor(hex) {
 
 
 // Simulate fading over time
-let fadeInterval = setInterval(() => {
-    fadeLavaAreas();
-    console.log(lava);
-    if (lava.length === 0) {
-        clearInterval(fadeInterval);
-        console.log("All lava areas have been cleared.");
-    }
-}, 1000);
+
         addLavaArea(4,4,4, lavacolor)
 function kamekUpdate(){
             if (kamek.length > 1) {
@@ -1861,7 +1865,7 @@ ctx.fillStyle = wellcolor;
       gridSize + pulse
     );
   })
-
+    fadeLavaAreas()
     drawLava()
     
 ctx.fillStyle = 'darkgrey';
