@@ -1988,7 +1988,6 @@ function HaHaNoCollision(duration) {
                 kamekUpdate()
             }
             
-if (lava.length !== 0){
 lava.forEach((lava, index) => {
 if (lava.countdown > 0){
 lava.countdown -= 0.1
@@ -1997,7 +1996,6 @@ if (lava.countdown <= 0){
 lava.splice(index, 1)
 }
 })
-            }
             
             // Update Snake position
             const head = { ...snake[0] };
