@@ -165,13 +165,15 @@ function addLavaArea(x, y, size, color) {
     }
 }
 
-function drawLava() 
+function drawLava() {
+    lava = lava.filter(lavaArea => {
         ctx.fillStyle = lavaArea.color;
         ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
 
         // Return true to keep lavaArea in array if alpha is not fully faded
-    });
-}setInterval(() => {
+    })
+}
+        setInterval(() => {
       // Filter out lava areas with alpha > 0 to draw and update
     lava = lava.filter(lavaArea => {
         // Increase alpha value by 0.1, capped at 1.0
