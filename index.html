@@ -169,7 +169,7 @@ function fadeLavaAreas() {
         let lavaArea = lava[i];
         let rgba = parseColor(lavaArea.color);
         if (rgba) {
-            rgba[3] -= 0.1; // Decrease the alpha value
+            rgba[3] += 0.1; // Decrease the alpha value
             if (rgba[3] <= 0) {
                 lava.splice(i, 1); // Remove the lava area if completely transparent
                 i--; // Adjust index due to removal
@@ -1760,11 +1760,12 @@ function drawLava() {
 
     lava.forEach(lavaArea => {
         // Increase alpha value by 0.1, capped at 1.0
-        let rgba = parseColor(lavaArea.color);
-        if (rgba) {
-            rgba[3] = Math.min(1.0, rgba[3] + 0.1); // Increase alpha by 0.1, but not beyond 1.0
-            lavaArea.color = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
-        }
+        let hexWithoutAlpha = lavaArea.color.substring(0, 7); // Extract hex color without alpha
+        let currentAlpha = parseInt(lavaArea.color.substring(7, 9), 16) / 255; // Extract current alpha and convert to [0, 1] range
+        let newAlpha = Math.min(1.0, currentAlpha + 0.1); // Increase alpha by 0.1, but not beyond 1.0
+        let newColor = hexWithoutAlpha + Math.round(newAlpha * 255).toString(16).padStart(2, '0'); // Combine hex color and new alpha
+
+        lavaArea.color = newColor;
 
         ctx.fillStyle = lavaArea.color;
         ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
@@ -1872,7 +1873,6 @@ ctx.fillStyle = wellcolor;
       gridSize + pulse
     );
   })
-    fadeLavaAreas()
     drawLava()
     
 ctx.fillStyle = 'darkgrey';
