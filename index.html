@@ -117,8 +117,6 @@
         let laserTimer = 45
         let controltype = 'set'
         let goombas = []
-        let lava = []
-        let lavacolor = '#f14e2380'
         let magic = []
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
@@ -151,7 +149,9 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
-    
+        let lava = []
+        let lavacolor = '#f14e2380'
+
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -166,6 +166,7 @@ function addLavaArea(x, y, size, countdown) {
 }
 
         addLavaArea(4,4,4, 4)
+
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -1816,6 +1817,9 @@ timezone.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gr
             ctx.fillStyle = '#5B8DFF';
             reflector.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize))
 
+ctx.fillStyle = lavacolor;
+lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+
     
 ctx.fillStyle = wellcolor;
   wells.forEach((well) => {
@@ -1827,11 +1831,8 @@ ctx.fillStyle = wellcolor;
       gridSize + pulse
     );
   })
-    
-    ctx.fillStyle = lavacolor;
-lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
-ctx.fillStyle = 'darkgrey';
+    ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 ctx.fillStyle = '#6ec485';
@@ -1983,11 +1984,11 @@ function HaHaNoCollision(duration) {
                 }
             }
             ManageTurrets()
-            if (kamek.length !== 0){
+            if (kamek !== 0){
                 kamekUpdate()
             }
-
-            if (lava.length !== 0){
+            
+if (lava.length !== 0){
 lava.forEach((lava, index) => {
 if (lava.countdown > 0){
 lava.countdown -= 0.1
@@ -1997,7 +1998,7 @@ lava.splice(index, 1)
 }
 })
             }
-
+            
             // Update Snake position
             const head = { ...snake[0] };
 // Define a variable to store the previous direction
