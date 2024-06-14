@@ -166,7 +166,7 @@ function addLavaArea(x, y, size, color) {
 }
 
 function drawLava() {
-    lava = lava.filter(lavaArea => {
+    lava.forEach(lavaArea => {
         ctx.fillStyle = lavaArea.color;
         ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
 
