@@ -181,7 +181,6 @@ function drawLava() {
         ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
 
         // Return true to keep lavaArea in array if alpha is not fully faded
-        return currentAlpha < 1.0;
     });
 }setInterval(() => {
     drawLava(); // Redraw the lava areas with increased alpha
