@@ -117,6 +117,8 @@
         let laserTimer = 45
         let controltype = 'set'
         let goombas = []
+        let lava = []
+        let lavacolor = '#f14e2380'
         let magic = []
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
@@ -149,7 +151,22 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
-
+ * Adds coordinates to the lava array in a 3x3 area around the given point (x, y).
+ * @param {number} x - The x-coordinate of the central point.
+ * @param {number} y - The y-coordinate of the central point.
+ */
+function addLavaArea(x, y) {
+    // Iterate through the 3x3 grid centered at (x, y)
+    for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+            // Calculate the new coordinates
+            let newX = x + dx;
+            let newY = y + dy;
+            // Add the coordinates to the lava array
+            lava.push({x: newX, y: newY});
+        }
+    }
+}
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -1812,7 +1829,10 @@ ctx.fillStyle = wellcolor;
     );
   })
 
-    ctx.fillStyle = 'darkgrey';
+    ctx.fillStyle = lavacolor
+lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+
+ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 ctx.fillStyle = '#6ec485';
