@@ -152,7 +152,7 @@ let sideshield = 6
         let shield = false
 let magictype = 'bolt'
     
-function addLavaArea(x, y, size, color) {
+function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
     for (let dx = -offset; dx <= offset; dx++) {
@@ -160,60 +160,12 @@ function addLavaArea(x, y, size, color) {
             let newX = x + dx;
             let newY = y + dy;
             // Add the coordinates with initial color to the lava array
-            lava.push({x: newX, y: newY, color: color});
+            lava.push({x: newX, y: newY, countdown: countdown});
         }
     }
 }
 
-/**
- * Parses a hex color string and returns an RGBA array.
- * @param {string} hex - The hex color string.
- * @return {number[]} The RGBA array.
- */
-function parseColor(hex) {
-    let match = hex.match(/^#([A-Fa-f0-9]{6})([A-Fa-f0-9]{2})?$/);
-    if (match) {
-        let rgb = match[1].match(/.{2}/g).map(hex => parseInt(hex, 16));
-        let alpha = match[2] ? parseInt(match[2], 16) / 255 : 1;
-        return [...rgb, alpha];
-    }
-    return null;
-}
-
-/**
- * Converts an RGBA array to a hex color string.
- * @param {number[]} rgba - The RGBA array.
- * @return {string} The hex color string.
- */
-function rgbaToHex(rgba) {
-    let [r, g, b, a] = rgba;
-    let alpha = Math.round(a * 255).toString(16).padStart(2, '0');
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}${alpha}`;
-}
-
-/**
- * Draws the current state of lava areas on the canvas and handles fading.
- */
-function drawLava() {
-
-    for (let i = 0; i < lava.length; i++) {
-        let lavaArea = lava[i];
-        let rgba = parseColor(lavaArea.color);
-        if (rgba) {
-            rgba[3] -= 0.1; // Decrease the alpha value
-            if (rgba[3] <= 0) {
-                lava.splice(i, 1); // Remove the lava area if completely transparent
-                i--; // Adjust index due to removal
-            } else {
-                lavaArea.color = rgbaToHex(rgba);
-                ctx.fillStyle = lavaArea.color;
-                ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
-            }
-        }
-    }
-}
-}
-        addLavaArea(4,4,4, lavacolor)
+        addLavaArea(4,4,4, 4)
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -1876,7 +1828,8 @@ ctx.fillStyle = wellcolor;
     );
   })
     
-    drawLava()
+    ctx.fillStyle = lavacolor;
+lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
@@ -2030,8 +1983,19 @@ function HaHaNoCollision(duration) {
                 }
             }
             ManageTurrets()
-            if (kamek !== 0){
+            if (kamek.length !== 0){
                 kamekUpdate()
+            }
+
+            if (lava.length !== 0){
+lava.forEach((lava, index) => {
+if (lava.countdown > 0){
+lava.countdown -= 0.1
+}
+if (lava.countdown =< 0){
+lava.splice(index, 1)
+}
+})
             }
 
             // Update Snake position
