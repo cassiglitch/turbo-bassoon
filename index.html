@@ -1877,10 +1877,7 @@ ctx.fillStyle = wellcolor;
   })
     
     drawLava()
-if (lava.length !== 0){
-    ctx.fillStyle = lava[0].color;
-lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
-}
+
 ctx.fillStyle = 'darkgrey';
 mirrors.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
