@@ -1759,6 +1759,13 @@ function drawLava() {
     
 
     lava.forEach(lavaArea => {
+        // Increase alpha value by 0.1, capped at 1.0
+        let rgba = parseColor(lavaArea.color);
+        if (rgba) {
+            rgba[3] = Math.min(1.0, rgba[3] + 0.1); // Increase alpha by 0.1, but not beyond 1.0
+            lavaArea.color = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+        }
+
         ctx.fillStyle = lavaArea.color;
         ctx.fillRect(lavaArea.x * gridSize, lavaArea.y * gridSize, gridSize, gridSize);
     });
