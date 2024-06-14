@@ -153,11 +153,13 @@ let sideshield = 6
 let magictype = 'bolt'
 
 
+function addLavaArea(x, y, size) {
+    // Calculate the range offset from the central point
+    let offset = Math.floor(size / 2);
 
-function addLavaArea(x, y) {
-    // Iterate through the 3x3 grid centered at (x, y)
-    for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
+    // Iterate through the square area centered at (x, y)
+    for (let dx = -offset; dx <= offset; dx++) {
+        for (let dy = -offset; dy <= offset; dy++) {
             // Calculate the new coordinates
             let newX = x + dx;
             let newY = y + dy;
@@ -166,7 +168,7 @@ function addLavaArea(x, y) {
         }
     }
 }
-        addLavaArea(4,4)
+        addLavaArea(4,4,4)
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
