@@ -150,7 +150,9 @@ let lightbrown = '#C4A484'
 let kamekcanteleport = true
 let sideshield = 6
         let shield = false
-let magictype = 'bolt'function addLavaArea(x, y, size, color) {
+let magictype = 'bolt'
+    
+function addLavaArea(x, y, size, color) {
     let offset = Math.floor(size / 2);
 
     for (let dx = -offset; dx <= offset; dx++) {
@@ -163,11 +165,7 @@ let magictype = 'bolt'function addLavaArea(x, y, size, color) {
     }
 }
 
-/**
- * Draws the current state of lava areas on the canvas.
- */
 function drawLava() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
     // Filter out lava areas with alpha > 0 to draw and update
     lava = lava.filter(lavaArea => {
