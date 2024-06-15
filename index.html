@@ -1866,19 +1866,8 @@ ctx.fillStyle = 'black';
         ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize * 2, gridSize * 2);
     });
         // Draw Score
-    const scoreDisplay = document.getElementById('scoreDisplay');
-     // Constructing the HTML content
-    let lavaContent = '<ul>'; // Using a list for better formatting
-
-    // Iterate through lava array and add each object as a list item
-    lava.forEach((item) => {
-        lavaContent += `<li>x: ${item.x}, y: ${item.y}, countdown: ${item.countdown}</li>`;
-    });
-
-    lavaContent += '</ul>';
-
-    // Update the inner HTML of scoreDisplay
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>Lava:<br>${lavaContent}<br>${canvas.width/gridSize} <br> ${canvas.height/gridSize}`;
+    const scoreDisplay = document.getElementById('scoreDisplay')
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
 }
 
