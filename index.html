@@ -1867,7 +1867,18 @@ ctx.fillStyle = 'black';
     });
         // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay');
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br> ${lava}`;
+     // Constructing the HTML content
+    let lavaContent = '<ul>'; // Using a list for better formatting
+
+    // Iterate through lava array and add each object as a list item
+    lava.forEach((item) => {
+        lavaContent += `<li>x: ${item.x}, y: ${item.y}, countdown: ${item.countdown}</li>`;
+    });
+
+    lavaContent += '</ul>';
+
+    // Update the inner HTML of scoreDisplay
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>Lava:<br>${lavaContent}`;
     drawLaser();
 }
 
