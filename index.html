@@ -168,7 +168,7 @@ function addLavaArea(x, y, size, countdown) {
             // Check if newX and newY are within canvas boundaries
             if (newX >= 0 && newX < canvasWidth && newY >= 0 && newY < canvasHeight) {
                 // Add the coordinates with initial color to the lava array
-                lava.push({x: newX, y: newY, countdown: countdown});
+                lava.push({x: Math.round(newX), y: Math.round(newY), countdown: countdown});
             }
         }
     }
@@ -1878,7 +1878,7 @@ ctx.fillStyle = 'black';
     lavaContent += '</ul>';
 
     // Update the inner HTML of scoreDisplay
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>Lava:<br>${lavaContent}`;
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>Lava:<br>${lavaContent}<br>${canvas.width/gridSize} <br> ${canvas.height/gridSize}`;
     drawLaser();
 }
 
