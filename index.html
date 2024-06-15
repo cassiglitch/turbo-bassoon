@@ -159,19 +159,14 @@ function addLavaArea(x, y, size, countdown) {
     // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
     let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
     let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
-
-    for (let dx = -offset; dx <= offset; dx++) {
-        for (let dy = -offset; dy <= offset; dy++) {
-            let newX = Math.floor((x + dx) / gridSize);
-            let newY = Math.floor((y + dy) / gridSize);
-
-            // Check if newX and newY are within canvas boundaries
-            if (newX >= 0 && newX < canvasWidth && newY >= 0 && newY < canvasHeight) {
-                // Add the coordinates with initial countdown to the lava array
-                lava.push({ x: newX, y: newY, countdown: countdown });
-            }
+    let halfGridSize = Math.floor(offset);
+    
+    for (let i = -halfGridSize; i <= halfGridSize; i++) {
+        for (let j = -halfGridSize; j <= halfGridSize; j++) {
+            lava.push({ x: i, y: j });
         }
     }
+    
 }
 
 function kamekUpdate(){
