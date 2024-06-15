@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let lavacoords = [{x:2,y:2}]
+        let lavacoords = []
         let goombadirection = 'left'
         let goombaoffset = 1.00
         let reflector = []
@@ -129,6 +129,7 @@
         let track = []
 let thwomps = []
 let pX = 0;
+let firelord = []
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -167,7 +168,7 @@ function addLavaArea(x, y, size, countdown) {
     }
     
 }
-addLavaArea(5, 9, 6, 10)
+
         
 function kamekUpdate(){
             if (kamek.length > 1) {
@@ -1774,7 +1775,9 @@ setTimeout(() => {
             }, 400);
 
 }
-
+firelord.forEach((firelord) =>{
+drawPolygon(fireloed.x * gridSize,firelord.y* gridSize,gridSize, 4, 'red');
+})
 if (freeze === true) {
                     drawInvincibilityAura('blue');
 setTimeout(() => {
