@@ -165,7 +165,7 @@ function addLavaArea(x, y, size, countdown) {
     }
 }
 
-
+addLavaArea(4,4,20,20)
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -1398,6 +1398,7 @@ mirrors.forEach((mirror) => {
         }
     }, updatespeed);
 }
+        
 
 function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
     ctx.beginPath();
