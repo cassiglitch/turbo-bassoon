@@ -156,14 +156,23 @@ let magictype = 'bolt'
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
+    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+    let canvasWidth = canvas.width; // Example canvas width
+    let canvasHeight = canvas.height; // Example canvas height
+
     for (let dx = -offset; dx <= offset; dx++) {
         for (let dy = -offset; dy <= offset; dy++) {
             let newX = x + dx;
             let newY = y + dy;
-            // Add the coordinates with initial color to the lava array
-            lava.push({x: newX, y: newY, countdown: countdown});
+
+            // Check if newX and newY are within canvas boundaries
+            if (newX >= 0 && newX < canvasWidth && newY >= 0 && newY < canvasHeight) {
+                // Add the coordinates with initial color to the lava array
+                lava.push({x: newX, y: newY, countdown: countdown});
+            }
         }
     }
+}
 }
 
 function kamekUpdate(){
@@ -1409,8 +1418,7 @@ function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize
     ctx.globalAlpha = 0.5;
     ctx.fill();
     ctx.globalAlpha = 1
-    lavacoords.push({x:x,y:y,countdown:10})
-addLavaArea(x,y, 6, 10)
+addLavaArea(x,y, 3, 10)
     score += 1
     obstacles.forEach((obstacle, obstacleIndex) => {
         const obstacleCenterX = (obstacle.x + 0.5) * gridSize;
