@@ -1165,14 +1165,12 @@ setTimeout(() => {
 lavacoords.push({x:lavax,y:lavay})
         }
 function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, projectileColor, obstacles, dynamicObstacles, gridSize, direction, projectileSize, explode, circle, sides, increase, updatespeed, explosionstrength, enemy) {
- 
     const directionRadians = {
-    'right': inverted ? Math.PI : 0,
-    'left': inverted ? 0 : Math.PI,
-    'up': inverted ? Math.PI / 2 : -Math.PI / 2,
-    'down': inverted ? -Math.PI / 2 : Math.PI / 2
-};
-
+        'right': inverted ? Math.PI : 0,
+        'left': inverted ? 0 : Math.PI,
+        'up': inverted ? Math.PI / 2 : -Math.PI / 2,
+        'down': inverted ? -Math.PI / 2 : Math.PI / 2
+    };
 
     const directionRad = directionRadians[direction.toLowerCase()] || 0;
     const halfSpread = waveSpreadAngle / 2;
@@ -1180,14 +1178,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
     const angleIncrement = (waveSpreadAngle / numberOfProjectiles) * (Math.PI / 180);
 
     for (let i = 0; i < numberOfProjectiles; i++) {
-        let angle;
-
-        if (!enemy) {
-            angle = angleIncrement * i + adjustedAngle;
-        } else {
-            // Initial angle towards the target
-            angle = Math.atan2(snake[0].y * gridSize - pY, snake[0].x * gridSize - pX);
-        }
+        let angle = enemy ? Math.atan2(snake[0].y * gridSize - pY, snake[0].x * gridSize - pX) : angleIncrement * i + adjustedAngle;
 
         const velocityX = Math.cos(angle) * projectileSpeed;
         const velocityY = Math.sin(angle) * projectileSpeed;
@@ -1196,19 +1187,16 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
             x: pX,
             y: pY,
             angle: angle,
-            angle2:angle,
             velocityX: velocityX,
             velocityY: velocityY,
-            velocityX2: velocityX,
-            velocityY2: velocityY,
             color: projectileColor,
             sides: sides,
             size: projectileSize,
             reflect: false,
             count: 0,
             circle: circle,
-            speed:projectileSpeed,
-            reflected:true,
+            speed: projectileSpeed,
+            reflected: true,
             homing: enemy // Only set to true if enemy is true
         };
 
@@ -1217,33 +1205,30 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
 
     const updateInterval = setInterval(() => {
         if (!isPaused) {
-            projectiles.forEach((projectile, index) => {
+            for (let index = 0; index < projectiles.length; index++) {
+                const projectile = projectiles[index];
                 ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
 
-                if (increase === false || projectile.count <= 5) {
+                if (!increase || projectile.count <= 5) {
                     if (projectile.homing) {
-                        // Adjust velocity to home in on the target
                         const targetX = snake[0].x * gridSize;
                         const targetY = snake[0].y * gridSize;
-                        angle = Math.atan2(targetY - projectile.y, targetX - projectile.x);
+                        let angle = Math.atan2(targetY - projectile.y, targetX - projectile.x);
                         projectile.velocityX = Math.cos(angle) * projectile.speed;
                         projectile.velocityY = Math.sin(angle) * projectile.speed;
                     }
-                
-                    if (projectile.reflected !== projectile.reflect) {
 
-    if (projectile.reflect) {
-        projectile.velocityX = -projectile.velocityX;
-        projectile.velocityY = -projectile.velocityY;
-        projectile.reflected = projectile.reflect;
-    } else {
-        // Optionally, store the original velocity if you want to reset to those values
-        projectile.velocityX = projectile.velocityX2;
-        projectile.velocityY = projectile.velocityY2;
-        projectile.reflected = projectile.reflect;
-    }
+                    if (projectile.reflected !== projectile.reflect) {
+                        if (projectile.reflect) {
+                            projectile.velocityX = -projectile.velocityX;
+                            projectile.velocityY = -projectile.velocityY;
+                        } else {
+                            projectile.velocityX = projectile.velocityX2;
+                            projectile.velocityY = projectile.velocityY2;
+                        }
+                        projectile.reflected = projectile.reflect;
                     }
-                    projectile.count += 1
+                    projectile.count += 1;
                 }
 
                 if (increase && !projectile.homing) {
@@ -1254,7 +1239,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 } else {
                     projectile.size = projectileSize;
                     projectile.x += projectile.velocityX;
-                        projectile.y += projectile.velocityY;
+                    projectile.y += projectile.velocityY;
                 }
 
                 if (projectile.circle) {
@@ -1266,134 +1251,150 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
 
-                if (!projectile.homing){
-                timezone.forEach((mirror) => {
-                    if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
-                        projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
-                        projectile.homing = true;
-                        projectile.color = 'purple'
-                        projectile.speed = 0.5
-                    }
-                });
-
-
-let reflecttime = 0; // Move this line outside of the loop
-let colldown = 1000
-
-mirrors.forEach((mirror) => {
-    if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
-        projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
-
-        const currentTime = new Date().getTime();
-
-        // Check if the cooldown period has elapsed
-        if (currentTime - reflecttime < colldown) {
-            console.log("Beware of the flying spaghetti monster lurking in the code spaghetti jungle!");
-        } else {
-            projectile.reflect = !projectile.reflect;
-            reflecttime = currentTime; // Update reflecttime to the current time
-        }
-    }
-});
-           
-                obstacles.forEach((obstacle, obstacleIndex) => {
-                    if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
-                        projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize) {
-                        obstacles.splice(obstacleIndex, 1);
-                        addCoordsToArray(projectile.x,projectile.y)
-                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                        projectiles.splice(index, 1);
-                    }
-                });
-
-        reflector.forEach((obstacle, obstacleIndex) => {
-                    if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
-                        projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize && projectile.reflectored === false) {
-                        projectile.reflect = !projectile.reflect
-                    }
-                });
-
-
-
-                dynamicObstacles.forEach((dynamicObstacle, dynamicObstacleIndex) => {
-                    if (projectile.x >= dynamicObstacle.x * gridSize && projectile.x <= (dynamicObstacle.x + 2) * gridSize &&
-                        projectile.y >= dynamicObstacle.y * gridSize && projectile.y <= (dynamicObstacle.y + 2) * gridSize) {
-                        dynamicObstacles.splice(dynamicObstacleIndex, 1);
-                        addCoordsToArray(projectile.x,projectile.y)
-                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                        projectiles.splice(index, 1);
-                    }
-                });
-
-                thwomps.forEach((thwomp, thwompindex) => {
-                    if (projectile.x >= thwomp.x * gridSize && projectile.x <= (thwomp.x + 2) * gridSize &&
-                        projectile.y >= thwomp.y * gridSize && projectile.y <= (thwomp.y + 2) * gridSize) {
-                        thwomps.splice(thwompindex, 1);
-                        addCoordsToArray(projectile.x,projectile.y)
-                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                        projectiles.splice(index, 1);
-                    }
-                });
-
-                esnake.forEach((esnake) => {
-                    if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
-                        projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
-                        addCoordsToArray(projectile.x,projectile.y)
-                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                        projectiles.splice(index, 1);
-                        Dieenemy();
-                    }
-                });
-
-        kamek.forEach((esnake) => {
-                    if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
-                        projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
-                        addCoordsToArray(projectile.x,projectile.y)
-                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                        projectiles.splice(index, 1);
-                        kamekDeath()
-      const distance = Math.abs(kamke[0].x - projectile.x) + Math.abs(kamek[0].y - projectile.y);
-      if (distance <= wellStrength) {
-          projectile.homing = true
-      }
-                    }
-                });
-                setTimeout(() => {
-                    snake.forEach((snakePart) => {
-                        if (projectile.x >= snakePart.x * gridSize && projectile.x <= (snakePart.x + 1) * gridSize &&
-                            projectile.y >= snakePart.y * gridSize && projectile.y <= (snakePart.y + 1) * gridSize) {
-                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                            projectiles.splice(index, 1);
+                if (!projectile.homing) {
+                    timezone.forEach((mirror) => {
+                        if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
+                            projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
+                            projectile.homing = true;
+                            projectile.color = 'purple';
+                            projectile.speed = 0.5;
                         }
                     });
-                }, snakeprojectilecollisiontime);
 
-                if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
-                    addCoordsToArray(projectile.x,projectile.y)
-                    createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
-                    projectiles.splice(index, 1);
-                }
-                } else if (projectile.homing){
-                snake.forEach((snakePart) => {
+                    let reflecttime = 0;
+                    let colldown = 1000;
+
+                    mirrors.forEach((mirror) => {
+                        if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
+                            projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
+
+                            const currentTime = new Date().getTime();
+                            if (currentTime - reflecttime < colldown) {
+                                console.log("Beware of the flying spaghetti monster lurking in the code spaghetti jungle!");
+                            } else {
+                                projectile.reflect = !projectile.reflect;
+                                reflecttime = currentTime;
+                            }
+                        }
+                    });
+
+                    for (let obstacleIndex = 0; obstacleIndex < obstacles.length; obstacleIndex++) {
+                        const obstacle = obstacles[obstacleIndex];
+                        if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
+                            projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize) {
+                            obstacles.splice(obstacleIndex, 1);
+                            addCoordsToArray(projectile.x, projectile.y);
+                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                            projectiles.splice(index, 1);
+                            index--; // Adjust index after splice
+                            break; // Break to avoid further iteration over the same projectile
+                        }
+                    }
+
+                    reflector.forEach((obstacle, obstacleIndex) => {
+                        if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
+                            projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize && !projectile.reflectored) {
+                            projectile.reflect = !projectile.reflect;
+                        }
+                    });
+
+                    for (let dynamicObstacleIndex = 0; dynamicObstacleIndex < dynamicObstacles.length; dynamicObstacleIndex++) {
+                        const dynamicObstacle = dynamicObstacles[dynamicObstacleIndex];
+                        if (projectile.x >= dynamicObstacle.x * gridSize && projectile.x <= (dynamicObstacle.x + 2) * gridSize &&
+                            projectile.y >= dynamicObstacle.y * gridSize && projectile.y <= (dynamicObstacle.y + 2) * gridSize) {
+                            dynamicObstacles.splice(dynamicObstacleIndex, 1);
+                            addCoordsToArray(projectile.x, projectile.y);
+                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                            projectiles.splice(index, 1);
+                            index--; // Adjust index after splice
+                            break; // Break to avoid further iteration over the same projectile
+                        }
+                    }
+
+                    for (let thwompIndex = 0; thwompIndex < thwomps.length; thwompIndex++) {
+                        const thwomp = thwomps[thwompIndex];
+                        if (projectile.x >= thwomp.x * gridSize && projectile.x <= (thwomp.x + 2) * gridSize &&
+                            projectile.y >= thwomp.y * gridSize && projectile.y <= (thwomp.y + 2) * gridSize) {
+                            thwomps.splice(thwompIndex, 1);
+                            addCoordsToArray(projectile.x, projectile.y);
+                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                            projectiles.splice(index, 1);
+                            index--; // Adjust index after splice
+                            break; // Break to avoid further iteration over the same projectile
+                        }
+                    }
+
+                    for (let esnakeIndex = 0; esnakeIndex < esnake.length; esnakeIndex++) {
+                        const esnakePart = esnake[esnakeIndex];
+                        if (projectile.x >= esnakePart.x * gridSize && projectile.x <= (esnakePart.x + 1) * gridSize &&
+                            projectile.y >= esnakePart.y * gridSize && projectile.y <= (esnakePart.y + 1) * gridSize) {
+                            addCoordsToArray(projectile.x, projectile.y);
+                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                            projectiles.splice(index, 1);
+                            index--; // Adjust index after splice
+                            Dieenemy();
+                            break; // Break to avoid further iteration over the same projectile
+                        }
+                    }
+
+                    for (let kamekIndex = 0; kamekIndex < kamek.length; kamekIndex++) {
+                        const kamekPart = kamek[kamekIndex];
+                        if (projectile.x >= kamekPart.x * gridSize && projectile.x <= (kamekPart.x + 1) * gridSize &&
+                            projectile.y >= kamekPart.y * gridSize && projectile.y <= (kamekPart.y + 1) * gridSize) {
+                            addCoordsToArray(projectile.x, projectile.y);
+                            createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                            projectiles.splice(index, 1);
+                            index--; // Adjust index after splice
+                            kamekDeath();
+                            const distance = Math.abs(kamek[0].x - projectile.x) + Math.abs(kamek[0].y - projectile.y);
+                            if (distance <= wellStrength) {
+                                projectile.homing = true;
+                            }
+                            break; // Break to avoid further iteration over the same projectile
+                        }
+                    }
+
+                    setTimeout(() => {
+                        for (let snakePartIndex = 0; snakePartIndex < snake.length; snakePartIndex++) {
+                            const snakePart = snake[snakePartIndex];
+                            if (projectile.x >= snakePart.x * gridSize && projectile.x <= (snakePart.x + 1) * gridSize &&
+                                projectile.y >= snakePart.y * gridSize && projectile.y <= (snakePart.y + 1) * gridSize) {
+                                createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                                projectiles.splice(index, 1);
+                                index--; // Adjust index after splice
+                                break; // Break to avoid further iteration over the same projectile
+                            }
+                        }
+                    }, snakeprojectilecollisiontime);
+
+                    if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
+                        addCoordsToArray(projectile.x, projectile.y);
+                        createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                        projectiles.splice(index, 1);
+                        index--; // Adjust index after splice
+                    }
+                } else if (projectile.homing) {
+                    for (let snakePartIndex = 0; snakePartIndex < snake.length; snakePartIndex++) {
+                        const snakePart = snake[snakePartIndex];
                         if ((projectile.x >= snakePart.x * gridSize && projectile.x <= (snakePart.x + 1) * gridSize &&
                             projectile.y >= snakePart.y * gridSize && projectile.y <= (snakePart.y + 1) * gridSize) && !isInvincible) {
-                            addCoordsToArray(projectile.x,projectile.y)
+                            addCoordsToArray(projectile.x, projectile.y);
                             createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                             projectiles.splice(index, 1);
+                            index--; // Adjust index after splice
                             const numSegmentsToRemove = Math.ceil(snake.length * 0.01);
-        if (snake.length > numSegmentsToRemove) {
-            snake.splice(0, numSegmentsToRemove);
-            HaHaNoCollision(10)
-            
-        } else {
-            restartGame(); // End the game if segments (lives) run out
-            return;
-        }
-                            
+                            if (snake.length > numSegmentsToRemove) {
+                                snake.splice(0, numSegmentsToRemove);
+                                HaHaNoCollision(10);
+                            } else {
+                                restartGame();
+                                return;
+                            }
+                            break; // Break to avoid further iteration over the same projectile
                         }
-                    });
-}
-            });
+                    }
+                }
+            }
 
             if (projectiles.length === 0) {
                 clearInterval(updateInterval);
@@ -1401,6 +1402,7 @@ mirrors.forEach((mirror) => {
         }
     }, updatespeed);
 }
+
         
 
 function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
