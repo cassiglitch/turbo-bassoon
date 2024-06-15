@@ -1411,14 +1411,13 @@ mirrors.forEach((mirror) => {
         
 
 function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
+    addLavaArea(x,y, 3, 10)
     ctx.beginPath();
     ctx.arc(x, y, explode, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.globalAlpha = 0.5;
     ctx.fill();
     ctx.globalAlpha = 1
-addLavaArea(x,y, 3, 10)
-    score += 1
     obstacles.forEach((obstacle, obstacleIndex) => {
         const obstacleCenterX = (obstacle.x + 0.5) * gridSize;
         const obstacleCenterY = (obstacle.y + 0.5) * gridSize;
