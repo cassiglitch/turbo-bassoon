@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let lavacoords = [{x:1,y:9}]
+        let lavacoords = []
         let goombadirection = 'left'
         let goombaoffset = 1.00
         let reflector = []
@@ -150,7 +150,7 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
-        let lava = []
+        let lava = [{x:1,y:2}]
         let lavacolor = '#f14e2380'
 
 function addLavaArea(x, y, size, countdown) {
