@@ -59,7 +59,7 @@
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
 
-        let lavacoords = []
+        let lavacoords = [{x:1,y:9}]
         let goombadirection = 'left'
         let goombaoffset = 1.00
         let reflector = []
@@ -100,8 +100,6 @@
         let inverted = false;
         let livecount = 2;
         let pausetimer = 900;
-        let lavax = 0
-        let lavay = 0
         let TaxFormGot = false
         let isParalyzed = false
         let snakeprojectilecollisiontime = 2000
@@ -168,7 +166,6 @@ function addLavaArea(x, y, size, countdown) {
     }
 }
 
-addLavaArea(0,0,6,3)
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
