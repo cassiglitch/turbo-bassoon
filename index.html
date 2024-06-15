@@ -154,41 +154,25 @@ let magictype = 'bolt'
         let lavacolor = '#f14e2380'
 
 function addLavaArea(x, y, size, countdown) {
-    let offset = Math.floor(size / 2);
-    let halfGrid = gridSize / 2;
+let offset = Math.floor(size / 2);
 
-    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
-    let canvasWidth = canvas.width; // Example canvas width
-    let canvasHeight = canvas.height; // Example canvas height
 
-    for (let dx = -offset; dx <= offset; dx++) {
-        for (let dy = -offset; dy <= offset; dy++) {
-            let newX = Math.round(x + dx);
-            let newY = Math.round(y + dy);
+// Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+let canvasWidth = canvas.width/gridSize; // Example canvas width
+let canvasHeight = canvas.height/gridSize; // Example canvas height
 
-            // Check if newX and newY are within canvas boundaries
-            if (newX >= 0 && newX < canvasWidth && newY >= 0 && newY < canvasHeight) {
-                // Add the coordinates with initial color to the lava array
-                lava.push({x: newX, y: newY, countdown: countdown});
-            } else {
-                // Adjust newX and newY to the closest non-occupied grid position within canvas boundaries
-                if (newX < 0) newX = 0;
-                if (newX >= canvasWidth) newX = canvasWidth - 1;
-                if (newY < 0) newY = 0;
-                if (newY >= canvasHeight) newY = canvasHeight - 1;
+for (let dx = -offset; dx <= offset; dx++) {
+    for (let dy = -offset; dy <= offset; dy++) {
+        let newX = (x + dx)/gridSize
+        let newY = (y + dy)/gridSize
 
-                // Adjust to the closest grid position
-                newX = Math.round(newX / gridSize) * gridSize;
-                newY = Math.round(newY / gridSize) * gridSize;
-
-                // Check if adjusted position is within canvas boundaries
-                if (newX >= 0 && newX < canvasWidth && newY >= 0 && newY < canvasHeight) {
-                    // Add the adjusted coordinates with initial color to the lava array
-                    lava.push({x: newX, y: newY, countdown: countdown});
-                }
-            }
+        // Check if newX and newY are within canvas boundaries
+        if (newX >= 0 && newX < canvasWidth && newY >= 0 && newY < canvasHeight) {
+            // Add the coordinates with initial color to the lava array
+            lava.push({x: Math.round(newX), y: Math.round(newY), countdown: countdown});
         }
     }
+}
 }
 function kamekUpdate(){
             if (kamek.length > 1) {
