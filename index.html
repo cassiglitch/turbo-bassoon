@@ -160,8 +160,8 @@ function addLavaArea(x, y, size, countdown) {
     let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
     let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
     
-    for (let i = -size; i <= size; i++) {
-        for (let j = -size; j <= size; j++) {
+    for (let i = -offset; i <= offset; i++) {
+        for (let j = -offset; j <= offset; j++) {
             lava.push({ x: x + i, y: y + j, countdown:countdown});
         }
     }
