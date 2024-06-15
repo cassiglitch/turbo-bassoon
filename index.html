@@ -1409,7 +1409,7 @@ function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize
     ctx.globalAlpha = 0.5;
     ctx.fill();
     ctx.globalAlpha = 1
-    lava.push({x:x,y:y,countdown:10})
+    lavacoords.push({x:x,y:y,countdown:10})
 addLavaArea(x,y, 6, 10)
     score += 1
     obstacles.forEach((obstacle, obstacleIndex) => {
@@ -1861,7 +1861,7 @@ ctx.fillStyle = 'black';
     });
         // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay');
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br> ${lavacoords}`;
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br> ${lava}`;
     drawLaser();
 }
 
