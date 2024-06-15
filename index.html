@@ -99,6 +99,8 @@
         let inverted = false;
         let livecount = 2;
         let pausetimer = 900;
+        let lavax = 0
+        let lavay = 0
         let TaxFormGot = false
         let isParalyzed = false
         let snakeprojectilecollisiontime = 2000
@@ -1297,7 +1299,9 @@ mirrors.forEach((mirror) => {
                     if (projectile.x >= obstacle.x * gridSize && projectile.x <= (obstacle.x + 1) * gridSize &&
                         projectile.y >= obstacle.y * gridSize && projectile.y <= (obstacle.y + 1) * gridSize) {
                         obstacles.splice(obstacleIndex, 1);
-                        addLavaArea(projectile.x,projectile.y,4, 4)
+                        lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
                     }
@@ -1316,7 +1320,9 @@ mirrors.forEach((mirror) => {
                     if (projectile.x >= dynamicObstacle.x * gridSize && projectile.x <= (dynamicObstacle.x + 2) * gridSize &&
                         projectile.y >= dynamicObstacle.y * gridSize && projectile.y <= (dynamicObstacle.y + 2) * gridSize) {
                         dynamicObstacles.splice(dynamicObstacleIndex, 1);
-                        addLavaArea(projectile.x,projectile.y,4, 4)
+                        lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
                     }
@@ -1326,7 +1332,9 @@ mirrors.forEach((mirror) => {
                     if (projectile.x >= thwomp.x * gridSize && projectile.x <= (thwomp.x + 2) * gridSize &&
                         projectile.y >= thwomp.y * gridSize && projectile.y <= (thwomp.y + 2) * gridSize) {
                         thwomps.splice(thwompindex, 1);
-                        addLavaArea(projectile.x,projectile.y,4, 4)
+                        lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
                     }
@@ -1335,7 +1343,9 @@ mirrors.forEach((mirror) => {
                 esnake.forEach((esnake) => {
                     if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
                         projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
-                        addLavaArea(projectile.x,projectile.y,4, 4)
+                        lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
                         Dieenemy();
@@ -1345,7 +1355,9 @@ mirrors.forEach((mirror) => {
         kamek.forEach((esnake) => {
                     if (projectile.x >= esnake.x * gridSize && projectile.x <= (esnake.x + 1) * gridSize &&
                         projectile.y >= esnake.y * gridSize && projectile.y <= (esnake.y + 1) * gridSize) {
-                        addLavaArea(projectile.x,projectile.y,4, 4)
+                        lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                         createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
                         kamekDeath()
@@ -1366,7 +1378,9 @@ mirrors.forEach((mirror) => {
                 }, snakeprojectilecollisiontime);
 
                 if (projectile.x < 0 || projectile.x > canvas.width || projectile.y < 0 || projectile.y > canvas.height) {
-                    addLavaArea(projectile.x,projectile.y,4, 4)
+                    lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                     createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                     projectiles.splice(index, 1);
                 }
@@ -1374,7 +1388,9 @@ mirrors.forEach((mirror) => {
                 snake.forEach((snakePart) => {
                         if ((projectile.x >= snakePart.x * gridSize && projectile.x <= (snakePart.x + 1) * gridSize &&
                             projectile.y >= snakePart.y * gridSize && projectile.y <= (snakePart.y + 1) * gridSize) && !isInvincible) {
-                            addLavaArea(projectile.x,projectile.y,5, 4)
+                            lavax = projectile.x
+                            lavay = projectile.y
+                            addLavaArea(lavax,lavay,5, 4)
                             createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                             projectiles.splice(index, 1);
                             const numSegmentsToRemove = Math.ceil(snake.length * 0.01);
