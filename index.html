@@ -1408,7 +1408,8 @@ function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize
     ctx.fillStyle = color;
     ctx.globalAlpha = 0.5;
     ctx.fill();
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 1
+    lava.push({x:x,y:y,countdown:10})
 addLavaArea(x,y, 6, 10)
     score += 1
     obstacles.forEach((obstacle, obstacleIndex) => {
@@ -1446,7 +1447,7 @@ addLavaArea(x,y, 6, 10)
         const distance = Math.sqrt((thwompx - x) ** 2 + (thwompy - y) ** 2);
 
         if (distance <= explode) {
-            thwomp.splice(dynamicObstacleIndex, 1);
+            thwomps.splice(dynamicObstacleIndex, 1);
         }
     });
 }
