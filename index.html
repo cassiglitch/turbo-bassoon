@@ -1155,37 +1155,53 @@ function drawKamek(x, y){
     ctx.arc(x + gridSize * 0.2, y - gridSize, pupilRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Draw the flames (triangles) around the body
-    drawFlatPolygon(x - gridSize, y + gridSize * 0.5, gridSize * 0.5, 3, 'orange');
-    drawFlatPolygon(x + gridSize, y + gridSize * 0.5, gridSize * 0.5, 3, 'yellow');
-    drawFlatPolygon(x, y + gridSize * 1.5, gridSize * 0.5, 3, 'orange');
+    // Draw the robe (a black rectangle) covering the lower part of the body
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x - gridSize * 0.7, y, gridSize * 1.4, gridSize);
 
     // Draw the arms (small black rectangles) connected to the body
     let armWidth = gridSize * 0.2;
     let armHeight = gridSize * 0.6;
-    ctx.fillStyle = 'black';
-    ctx.fillRect(x - gridSize * 0.7, y, armWidth, armHeight);
-    ctx.fillRect(x + gridSize * 0.5, y, armWidth, armHeight);
+    ctx.fillRect(x - gridSize * 0.9, y - gridSize * 0.2, armWidth, armHeight);
+    ctx.fillRect(x + gridSize * 0.7, y - gridSize * 0.2, armWidth, armHeight);
 
-    // Draw the feet (black rectangles) touching the body
+    // Draw the feet (black rectangles) touching the body and robe
     let footWidth = gridSize * 0.4;
-    let footHeight = gridSize * 0.6;
-    ctx.fillRect(x - gridSize * 0.5, y + gridSize * 1.2, footWidth, footHeight);
-    ctx.fillRect(x + gridSize * 0.1, y + gridSize * 1.2, footWidth, footHeight);
+    let footHeight = gridSize * 0.4;
+    ctx.fillRect(x - gridSize * 0.5, y + gridSize * 0.8, footWidth, footHeight);
+    ctx.fillRect(x + gridSize * 0.1, y + gridSize * 0.8, footWidth, footHeight);
 
     // Bounding box calculation
     let boundingBox = {
-        xMin: x - gridSize,
+        xMin: x - gridSize * 0.9,
         yMin: y - gridSize * 1.4,
-        xMax: x + gridSize,
-        yMax: y + gridSize * 1.8
+        xMax: x + gridSize * 0.9,
+        yMax: y + gridSize * 1.2
     };
 
     // Draw bounding box for debugging purposes (optional)
     ctx.strokeStyle = 'blue';
     ctx.strokeRect(boundingBox.xMin, boundingBox.yMin, boundingBox.xMax - boundingBox.xMin, boundingBox.yMax - boundingBox.yMin);
 
+    // Flickering fire effect
+    drawFlickeringFire(x, y + gridSize * 1.5, gridSize * 0.5);
+
     return boundingBox;
+}
+
+
+function drawFlickeringFire(x, y, size) {
+    const colors = ['yellow', 'orange', 'red'];
+    let colorIndex = 0;
+
+    function drawFire() {
+        ctx.clearRect(x - size * 1.5, y - size * 1.5, size * 3, size * 3);
+        let currentColor = colors[colorIndex];
+        drawFlatPolygon(x, y, size, 3, currentColor);
+        colorIndex = (colorIndex + 1) % colors.length;
+    }
+
+    setInterval(drawFire, 500); // Flicker every 500ms
 }
 
 
