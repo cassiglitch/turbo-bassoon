@@ -65,7 +65,7 @@
         let reflector = []
         let isFast = false
         let timezone = []
-        let mirrors = [{x:2,y:2}]
+        let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -78,10 +78,10 @@
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
-        let obstacles = [{x:2,y:2}];
+        let obstacles = [];
         let kamekappears = false
         let firstControlSchemeSet = false;
-        let dynamicObstacles = [{x:2,y:2}];
+        let dynamicObstacles = [];
         let direction = 'right';
         let previousDirection = 'direction';
         let score = 0;
@@ -128,7 +128,7 @@
             var antiZoomFactor = 1 / zoomFactor;
        let currentInterval = 1;
         let track = []
-let thwomps = [{x:2,y:2}]
+let thwomps = []
 let pX = 0;
 let firelord = []
 let pY = 0;
@@ -139,7 +139,7 @@ const projectileColor = 'orange'; // Color of the projectiles
 let projectiles = []; // Array to store projectiles
 let enemymovementspeed = 1
     let wellcolor = '#00000080'
-let wells = [{x:2,y:2}]
+let wells = []
 let polygons = []
 let isGravityWellActive = true;
 let effectApplied = 0
@@ -152,7 +152,7 @@ let kamekcanteleport = true
 let sideshield = 6
         let shield = false
 let magictype = 'bolt'
-        let lava = [{x:2,y:2}]
+        let lava = []
         let lavacolor = '#f14e2380'
 
 function addLavaArea(x, y, size, countdown) {
