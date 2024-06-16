@@ -2131,7 +2131,9 @@ function HaHaNoCollision(duration) {
             if (kamek.length !== 0){
                 kamekUpdate()
             }
+            if (!isPaused){
             manageFireLord()
+            }
             lavacoords.forEach((coords, index) => {
             addLavaArea(coords.x, coords.y, 4,4)
             lavacoords.splice(index,1)
