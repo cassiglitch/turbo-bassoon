@@ -1243,8 +1243,6 @@ firelordInMotion = true;
         if (fireLordBoundingBox.xMin < 0 || fireLordBoundingBox.yMin < 0 ||
             fireLordBoundingBox.xMax > canvas.width || fireLordBoundingBox.yMax > canvas.height) {
             // Stop the FireLord
-            firelord[0].x -= velocityX;
-            firelord[0].y -= velocityY;;
             firelordInMotion = false;
         }
 }
