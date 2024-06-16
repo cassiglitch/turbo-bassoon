@@ -1133,41 +1133,62 @@ function drawKamek(x, y){
     // Draw the body (a red pentagon)
     drawFlatPolygon(x, y + gridSize, gridSize, 5, 'red');
 
-    // Draw the head (an orange triangle)
-    drawFlatPolygon(x, y - gridSize, gridSize * 0.7, 3, 'orange');
+    // Draw the head (an orange triangle) closer to the body
+    drawFlatPolygon(x, y, gridSize * 0.7, 3, 'orange');
 
-    // Draw the crown (a yellow pentagon)
-    drawFlatPolygon(x, y - gridSize * 1.8, gridSize * 0.5, 5, 'yellow');
+    // Draw the crown (a yellow pentagon) closer to the head
+    drawFlatPolygon(x, y - gridSize * 0.7, gridSize * 0.5, 5, 'yellow');
 
-    // Draw the eyes (two white circles)
+    // Draw the eyes (two white circles) on the head
     let eyeRadius = gridSize * 0.2;
     ctx.fillStyle = 'white';
     ctx.beginPath();
-    ctx.arc(x - gridSize * 0.3, y - gridSize * 0.3, eyeRadius, 0, Math.PI * 2);
-    ctx.arc(x + gridSize * 0.3, y - gridSize * 0.3, eyeRadius, 0, Math.PI * 2);
+    ctx.arc(x - gridSize * 0.2, y - gridSize * 0.2, eyeRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.2, y - gridSize * 0.2, eyeRadius, 0, Math.PI * 2);
     ctx.fill();
 
     // Draw the pupils (two black circles)
     let pupilRadius = gridSize * 0.1;
     ctx.fillStyle = 'black';
     ctx.beginPath();
-    ctx.arc(x - gridSize * 0.3, y - gridSize * 0.3, pupilRadius, 0, Math.PI * 2);
-    ctx.arc(x + gridSize * 0.3, y - gridSize * 0.3, pupilRadius, 0, Math.PI * 2);
+    ctx.arc(x - gridSize * 0.2, y - gridSize * 0.2, pupilRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.2, y - gridSize * 0.2, pupilRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Draw the flames (triangles) around the body
-    drawFlatPolygon(x - gridSize * 1.5, y + gridSize, gridSize * 0.5, 3, 'orange');
-    drawFlatPolygon(x + gridSize * 1.5, y + gridSize, gridSize * 0.5, 3, 'yellow');
-    drawFlatPolygon(x, y + gridSize * 2, gridSize * 0.5, 3, 'orange');
+    // Draw the flames (triangles) closer to the body
+    drawFlatPolygon(x - gridSize, y + gridSize, gridSize * 0.5, 3, 'orange');
+    drawFlatPolygon(x + gridSize, y + gridSize, gridSize * 0.5, 3, 'yellow');
+    drawFlatPolygon(x, y + gridSize * 1.8, gridSize * 0.5, 3, 'orange');
 
-    // Draw the feet (black rectangles)
+    // Draw the feet (black rectangles) touching the body
     let footWidth = gridSize * 0.4;
     let footHeight = gridSize * 0.6;
     ctx.fillStyle = 'black';
-    ctx.fillRect(x - gridSize * 0.6, y + gridSize * 2.5, footWidth, footHeight);
-    ctx.fillRect(x + gridSize * 0.2, y + gridSize * 2.5, footWidth, footHeight);
+    ctx.fillRect(x - gridSize * 0.5, y + gridSize * 1.8, footWidth, footHeight);
+    ctx.fillRect(x + gridSize * 0.1, y + gridSize * 1.8, footWidth, footHeight);
+
+    // Bounding box calculation
+    let boundingBox = {
+        xMin: x - gridSize,
+        yMin: y - gridSize * 1.5,
+        xMax: x + gridSize,
+        yMax: y + gridSize * 2.4
+    };
+
+    // Draw bounding box for debugging purposes (optional)
+    
+
+    return boundingBox;
 }
 
+
+
+// Collision detection function
+function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
+    return pointX >= fireLordBoundingBox.xMin && pointX <= fireLordBoundingBox.xMax &&
+           pointY >= fireLordBoundingBox.yMin && pointY <= fireLordBoundingBox.yMax;
+}
+let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
 if (firelord.length !== 0){
 addLavaArea(firelord[0].x,firelord[0].y,4,10)
