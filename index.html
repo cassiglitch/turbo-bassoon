@@ -1195,7 +1195,18 @@ function drawFlickeringFire(x, y, size) {
     let colorIndex = 0;
 
     function drawLayeredFire() {
-        ctx.clearRect(x - size * 1.5, y - size * 1.5, size * 3, size * 3);
+        ctx.save();
+        // Create a clipping region
+        ctx.beginPath();
+        ctx.moveTo(x, y - size);
+        ctx.lineTo(x - size / 2, y + size / (2 * Math.sqrt(3))); // Bottom left vertex
+        ctx.lineTo(x + size / 2, y + size / (2 * Math.sqrt(3))); // Bottom right vertex
+        ctx.closePath();
+        ctx.clip();
+
+        ctx.clearRect(x - size, y - size * 2, size * 2, size * 2);
+
+        // Draw fire layers
         let currentColor = colors[colorIndex];
         drawFlatPolygon(x, y, size, 3, currentColor);
 
@@ -1205,6 +1216,7 @@ function drawFlickeringFire(x, y, size) {
         drawFlatPolygon(x, y - size * 0.9, size * 0.4, 3, 'yellow');
 
         colorIndex = (colorIndex + 1) % colors.length;
+        ctx.restore();
     }
 
     setInterval(drawLayeredFire, 500); // Flicker every 500ms
