@@ -1245,7 +1245,7 @@ firelordInMotion = true;
             // Stop the FireLord
             firelordInMotion = false;
         }
-}else if(firelordmagic === 'bolt'){
+}else if(firelordmagic === 'bolt'&& firelordInMotion === false){
         flaming = true
 shootWaveOfProjectiles(firelord[0].x * gridSize, firelord[0].y * gridSize, 1, 1, 0.5, 'orange', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true);
     }
@@ -1405,8 +1405,8 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
                 });
 
-if (flaming === true && projectile.homing ){
-addLavaArea(projectile.x,projectile.y,4,10)
+if (flaming === true && projectile.homing === true){
+addLavaArea(projectile.x,projectile.y,4,2)
 }
 let reflecttime = 0; // Move this line outside of the loop
 let colldown = 1000
