@@ -1211,14 +1211,18 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
     return pointX >= fireLordBoundingBox.xMin && pointX <= fireLordBoundingBox.xMax &&
            pointY >= fireLordBoundingBox.yMin && pointY <= fireLordBoundingBox.yMax;
 }
+
+        let firelordInMotion = false;
 let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
 if (firelord.length !== 0){
 addLavaArea(firelord[0].x,firelord[0].y,4,10)
 }
+    if (firelordInMotion === false){
     const targetX = snake[0].x * gridSize;
     const targetY = snake[0].y * gridSize;
     let angle = Math.atan2(targetY - firelord[0].y * gridSize, targetX - firelord[0].x * gridSize);
+    }
     let velocityX = Math.cos(angle);
     let velocityY = Math.sin(angle);
 
@@ -1233,7 +1237,7 @@ addLavaArea(firelord[0].x,firelord[0].y,4,10)
     if (firelordmagic === 'launch') {
         firelord[0].x += velocityX;
         firelord[0].y += velocityY;
-
+firelordInMotion = true;
         fireLordBoundingBox = drawFireLord(firelord[0].x, firelord[0].y);
 
         // Check if the FireLord's bounding box touches any edge of the canvas
@@ -1242,6 +1246,7 @@ addLavaArea(firelord[0].x,firelord[0].y,4,10)
             // Stop the FireLord
             firelord[0].x -= velocityX;
             firelord[0].y -= velocityY;
+            firelordInMotion = false;
         }
 }
 }
