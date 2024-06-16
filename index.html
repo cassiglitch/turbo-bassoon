@@ -1229,7 +1229,7 @@ addLavaArea(firelord[0].x,firelord[0].y,2,2)
         firelord.length = 1;
     }
 
-    const magic = ['launch'];
+    const magic = ['launch','bolt'];
     const randomIndex = Math.floor(Math.random() * magic.length);
     let firelordmagic = magic[randomIndex];
 
@@ -1245,7 +1245,10 @@ firelordInMotion = true;
             // Stop the FireLord
             firelordInMotion = false;
         }
-}
+}else if(firelordmagic === 'bolt'){
+        flaming = true
+shootWaveOfProjectiles(firelord[0].x * gridSize, firelord[0].y * gridSize, 1, 1, 0.5, 'orange', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true);
+    }
 }
 function getDirectionToSnakeHead(x, y, snake) {
     // Get the head of the snake
