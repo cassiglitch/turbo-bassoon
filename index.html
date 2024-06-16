@@ -1217,7 +1217,7 @@ let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
 if (firelord.length !== 0){
 addLavaArea(firelord[0].x,firelord[0].y,2,2)
-}
+
     if (firelordInMotion === false){
     const targetX = snake[0].x * gridSize;
     const targetY = snake[0].y * gridSize;
@@ -1250,6 +1250,7 @@ firelordInMotion = true;
         flaming = true
 shootWaveOfProjectiles(firelord[0].x * gridSize, firelord[0].y * gridSize, 1, 1, 0.5, 'orange', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true);
     }
+}
 }
 function getDirectionToSnakeHead(x, y, snake) {
     // Get the head of the snake
@@ -2131,7 +2132,7 @@ function HaHaNoCollision(duration) {
             if (kamek.length !== 0){
                 kamekUpdate()
             }
-            if (!isPaused || firelord.length !== 0){
+            if (!isPaused && firelord.length !== 0){
             manageFireLord()
             }
             lavacoords.forEach((coords, index) => {
