@@ -1156,9 +1156,15 @@ function drawKamek(x, y){
     ctx.fill();
 
 let mouthWidth = gridSize * 0.8;
-    let mouthHeight = gridSize * 0.5;
+    let mouthHeight = gridSize * 0.15;
     ctx.fillStyle = 'black';
-    ctx.fillRect(x, y + gridSize * 0.8, mouthWidth, mouthHeight);
+    ctx.fillRect(x, y, mouthWidth, mouthHeight);
+
+let mouthWidth = gridSize * 0.8;
+    let mouthHeight = gridSize * 0.15;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x, y, mouthWidth, mouthHeight);
+ctx.fillRect(x - mouthWidth / 2, y + gridSize * 0.8, mouthWidth, mouthHeight);
     
     // Draw the robe (a black rectangle) covering the lower part of the body
     ctx.fillStyle = 'black';
