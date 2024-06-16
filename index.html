@@ -2131,7 +2131,7 @@ function HaHaNoCollision(duration) {
             if (kamek.length !== 0){
                 kamekUpdate()
             }
-            if (!isPaused){
+            if (!isPaused || firelord.length !== 0){
             manageFireLord()
             }
             lavacoords.forEach((coords, index) => {
