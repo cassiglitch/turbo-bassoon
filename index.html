@@ -1196,9 +1196,7 @@ ctx.strokeStyle = 'orange';
         yMax: y + gridSize * 1.2
     };
 
-    // Draw bounding box for debugging purposes (optional)
-    ctx.strokeStyle = 'blue';
-    ctx.strokeRect(boundingBox.xMin, boundingBox.yMin, boundingBox.xMax - boundingBox.xMin, boundingBox.yMax - boundingBox.yMin);
+    
 
 
     return boundingBox;
@@ -1216,7 +1214,7 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
 let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
 if (firelord.length !== 0){
-addLavaArea(firelord[0].x,firelord[0].y,4,10)
+addLavaArea(firelord[0].x,firelord[0].y,4,4)
 }
     let angle = 0
     if (firelordInMotion === false){
@@ -1247,7 +1245,7 @@ firelordInMotion = true;
             // Stop the FireLord
             firelord[0].x -= velocityX;
             firelord[0].y -= velocityY;;
-            firelordInMotion = true;
+            firelordInMotion = false;
         }
 }
 }
