@@ -1210,20 +1210,20 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
            pointY >= fireLordBoundingBox.yMin && pointY <= fireLordBoundingBox.yMax;
 }
 
+        let langle = 0
         let firelordInMotion = false;
 let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
 if (firelord.length !== 0){
 addLavaArea(firelord[0].x,firelord[0].y,4,4)
 }
-    let angle = 0
     if (firelordInMotion === false){
     const targetX = snake[0].x * gridSize;
     const targetY = snake[0].y * gridSize;
      angle = Math.atan2(targetY - firelord[0].y * gridSize, targetX - firelord[0].x * gridSize);
     }
-    let velocityX = Math.cos(angle);
-    let velocityY = Math.sin(angle);
+    let velocityX = Math.cos(langle);
+    let velocityY = Math.sin(langle);
 
     if (firelord.length > 1) {
         firelord.length = 1;
