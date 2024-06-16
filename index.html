@@ -1134,7 +1134,7 @@ function drawKamek(x, y){
     drawFlatPolygon(x, y, gridSize, 5, 'red');
 
     // Draw the head (an orange triangle) connected to the body
-    drawFlatPolygon(x, y - gridSize * 0.8, gridSize * 0.7, 3, 'orange');
+    drawFlatPolygon(x, y - gridSize * 0.8, gridSize, 3, 'orange');
 
     // Draw the crown (a yellow pentagon) on the head
     drawFlatPolygon(x, y - gridSize * 1.4, gridSize * 0.5, 5, 'yellow');
@@ -1155,6 +1155,11 @@ function drawKamek(x, y){
     ctx.arc(x + gridSize * 0.2, y - gridSize, pupilRadius, 0, Math.PI * 2);
     ctx.fill();
 
+let mouthWidth = gridSize * 0.8;
+    let mouthHeight = gridSize * 0.15;
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(x - mouthWidth / 2, y + gridSize * 0.8, mouthWidth, mouthHeight);
+    
     // Draw the robe (a black rectangle) covering the lower part of the body
     ctx.fillStyle = 'black';
     ctx.fillRect(x - gridSize * 0.7, y, gridSize * 1.4, gridSize);
