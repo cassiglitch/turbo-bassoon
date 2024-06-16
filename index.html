@@ -1124,75 +1124,48 @@ function drawKamek(x, y){
     ctx.arc(eyeBaseX + gridSize / 4, eyeBaseY - gridSize / 2, gridSize / 8, 0, Math.PI * 2); // Right pupil
     ctx.fill();
 }
-        function drawFireLord(fx, fy) {
-            x = fx * gridSize
-            y = fy * gridSize
-    // Draw the head (hexagon) in red
-    ctx.fillStyle = "red";
+  
+    function drawFireLord(x, y, gridSize) {
+    // Scale the coordinates by gridSize
+    x = x * gridSize;
+    y = y * gridSize;
+
+    // Draw the body (a red pentagon)
+    drawFlatPolygon(x, y + gridSize, gridSize, 5, 'red');
+
+    // Draw the head (an orange triangle)
+    drawFlatPolygon(x, y - gridSize, gridSize * 0.7, 3, 'orange');
+
+    // Draw the crown (a yellow pentagon)
+    drawFlatPolygon(x, y - gridSize * 1.8, gridSize * 0.5, 5, 'yellow');
+
+    // Draw the eyes (two white circles)
+    let eyeRadius = gridSize * 0.2;
+    ctx.fillStyle = 'white';
     ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + gridSize * 1.5, y + gridSize / 3);
-    ctx.lineTo(x + gridSize * 1.5, y + gridSize);
-    ctx.lineTo(x, y + gridSize * 1.25);
-    ctx.lineTo(x - gridSize * 1.5, y + gridSize);
-    ctx.lineTo(x - gridSize * 1.5, y + gridSize / 3);
-    ctx.closePath();
+    ctx.arc(x - gridSize * 0.3, y - gridSize * 0.3, eyeRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.3, y - gridSize * 0.3, eyeRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Draw the eyes (two circles and black pupils)
-    let eyeRadius = gridSize * 0.3;
+    // Draw the pupils (two black circles)
     let pupilRadius = gridSize * 0.1;
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = 'black';
     ctx.beginPath();
-    ctx.arc(x - gridSize * 0.5, y + gridSize / 2, eyeRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + gridSize * 0.5, y + gridSize / 2, eyeRadius, 0, Math.PI * 2);
+    ctx.arc(x - gridSize * 0.3, y - gridSize * 0.3, pupilRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.3, y - gridSize * 0.3, pupilRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.arc(x - gridSize * 0.5, y + gridSize / 2, pupilRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + gridSize * 0.5, y + gridSize / 2, pupilRadius, 0, Math.PI * 2);
-    ctx.fill();
+    // Draw the flames (triangles) around the body
+    drawFlatPolygon(x - gridSize * 1.5, y + gridSize, gridSize * 0.5, 3, 'orange');
+    drawFlatPolygon(x + gridSize * 1.5, y + gridSize, gridSize * 0.5, 3, 'yellow');
+    drawFlatPolygon(x, y + gridSize * 2, gridSize * 0.5, 3, 'orange');
 
-    // Draw the eyebrows (two rectangles) in black
-    let browWidth = gridSize * 0.6;
-    let browHeight = gridSize * 0.1;
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(x - gridSize * 0.8, y + gridSize / 3.5, browWidth, browHeight);
-    ctx.fillRect(x + gridSize * 0.2, y + gridSize / 3.5, browWidth, browHeight);
-
-    // Draw the mouth (a rectangle) in black
-    let mouthWidth = gridSize * 0.8;
-    let mouthHeight = gridSize * 0.15;
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(x - mouthWidth / 2, y + gridSize * 0.8, mouthWidth, mouthHeight);
-
-    // Draw the body (a rectangle) in dark orange
-    let bodyWidth = gridSize * 1.2;
-    let bodyHeight = gridSize * 2;
-    ctx.fillStyle = "darkorange";
-    ctx.fillRect(x - bodyWidth / 2, y + gridSize * 1.25, bodyWidth, bodyHeight);
-
-    // Draw the feet (two circles) in black
-    let footRadius = gridSize * 0.6;
-    ctx.fillStyle = "black";
-    ctx.beginPath();
-    ctx.arc(x - gridSize * 0.75, y + gridSize * 2.75, footRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + gridSize * 0.75, y + gridSize * 2.75, footRadius, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Draw the crown (pentagon) in gold
-    drawFlatPolygon(x, y - gridSize, gridSize * 0.8, 5, "gold");
-    
-    // Draw flames (triangles) on the sides in orange and yellow
-    drawFlatPolygon(x - gridSize * 1.5, y + gridSize * 0.5, gridSize * 0.6, 3, "orange");
-    drawFlatPolygon(x + gridSize * 1.5, y + gridSize * 0.5, gridSize * 0.6, 3, "yellow");
+    // Draw the feet (black rectangles)
+    let footWidth = gridSize * 0.4;
+    let footHeight = gridSize * 0.6;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x - gridSize * 0.6, y + gridSize * 2.5, footWidth, footHeight);
+    ctx.fillRect(x + gridSize * 0.2, y + gridSize * 2.5, footWidth, footHeight);
 }
 
 function manageFireLord(){
