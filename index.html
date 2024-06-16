@@ -1218,10 +1218,11 @@ function manageFireLord(){
 if (firelord.length !== 0){
 addLavaArea(firelord[0].x,firelord[0].y,4,10)
 }
+    let angle = 0
     if (firelordInMotion === false){
     const targetX = snake[0].x * gridSize;
     const targetY = snake[0].y * gridSize;
-    let angle = Math.atan2(targetY - firelord[0].y * gridSize, targetX - firelord[0].x * gridSize);
+     angle = Math.atan2(targetY - firelord[0].y * gridSize, targetX - firelord[0].x * gridSize);
     }
     let velocityX = Math.cos(angle);
     let velocityY = Math.sin(angle);
@@ -1245,8 +1246,7 @@ firelordInMotion = true;
             fireLordBoundingBox.xMax > canvas.width || fireLordBoundingBox.yMax > canvas.height) {
             // Stop the FireLord
             firelord[0].x -= velocityX;
-            firelord[0].y -= velocityY;
-            firelordInMotion = false;
+            firelord[0].y -= velocityY;;
         }
 }
 }
