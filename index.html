@@ -1156,7 +1156,7 @@ function drawKamek(x, y){
     ctx.fill();
 
 let mouthWidth = gridSize * 0.8;
-    let mouthHeight = gridSize * 0.15;
+    let mouthHeight = gridSize * 0.5;
     ctx.fillStyle = 'black';
     ctx.fillRect(x - mouthWidth / 2, y + gridSize * 0.8, mouthWidth, mouthHeight);
     
@@ -1195,45 +1195,9 @@ ctx.strokeStyle = 'orange';
     ctx.strokeStyle = 'blue';
     ctx.strokeRect(boundingBox.xMin, boundingBox.yMin, boundingBox.xMax - boundingBox.xMin, boundingBox.yMax - boundingBox.yMin);
 
-    // Flickering fire effect
-    drawFlickeringFire(x, y + gridSize * 1.5, gridSize * 0.5);
 
     return boundingBox;
 }
-
-
-function drawFlickeringFire(x, y, size) {
-    const colors = ['yellow', 'orange', 'red'];
-    let colorIndex = 0;
-
-    function drawLayeredFire() {
-        ctx.save();
-        // Create a clipping region
-        ctx.beginPath();
-        ctx.moveTo(x, y - size);
-        ctx.lineTo(x - size / 2, y + size / (2 * Math.sqrt(3))); // Bottom left vertex
-        ctx.lineTo(x + size / 2, y + size / (2 * Math.sqrt(3))); // Bottom right vertex
-        ctx.closePath();
-        ctx.clip();
-
-        ctx.clearRect(x - size, y - size * 2, size * 2, size * 2);
-
-        // Draw fire layers
-        let currentColor = colors[colorIndex];
-        drawFlatPolygon(x, y, size, 3, currentColor);
-
-        // Add additional layers of fire
-        drawFlatPolygon(x, y - size * 0.3, size * 0.8, 3, 'orange');
-        drawFlatPolygon(x, y - size * 0.6, size * 0.6, 3, 'red');
-        drawFlatPolygon(x, y - size * 0.9, size * 0.4, 3, 'yellow');
-
-        colorIndex = (colorIndex + 1) % colors.length;
-        ctx.restore();
-    }
-
-    setInterval(drawLayeredFire, 500); // Flicker every 500ms
-}
-
 
 
 
