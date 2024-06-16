@@ -1211,6 +1211,7 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
 }
 
         let langle = 0
+        let firelordmagic = 0
         let firelordInMotion = false;
 let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
@@ -1231,7 +1232,7 @@ addLavaArea(firelord[0].x,firelord[0].y,2,2)
 if (firelordInMotion === false){
     const magic = ['launch','bolt'];
     const randomIndex = Math.floor(Math.random() * magic.length);
-    let firelordmagic = magic[randomIndex];
+    firelordmagic = magic[randomIndex];
 }
     if (firelordmagic === 'launch') {
         firelord[0].x += velocityX;
