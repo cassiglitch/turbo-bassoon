@@ -74,6 +74,7 @@
         let item = []
         let startingGridSize = 20;
         let gridSize = 20;
+        let flaming = false
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
@@ -1124,7 +1125,14 @@ function drawKamek(x, y){
     ctx.fill();
 
 }
-
+function manageFireLord(){
+if (firelord.length !== 0){
+addLavaArea(firelord[0].x,firelord[0].y,4,10)
+}
+    if (firelord.length > 1){
+firelord.length = 1
+    }
+}
 function getDirectionToSnakeHead(x, y, snake) {
     // Get the head of the snake
     const head = snake[0];
@@ -1225,7 +1233,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
 
                 if (increase === false || projectile.count <= 5) {
-                    if (projectile.homing) {
+                    if (projectile.homing && flaming === false) {
                         // Adjust velocity to home in on the target
                         const targetX = snake[0].x * gridSize;
                         const targetY = snake[0].y * gridSize;
@@ -1280,7 +1288,9 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     }
                 });
 
-
+if (flaming === true && projectile.homing ){
+addLavaArea(projectile.x,projectile.y,4,10)
+}
 let reflecttime = 0; // Move this line outside of the loop
 let colldown = 1000
 
@@ -1999,9 +2009,10 @@ function HaHaNoCollision(duration) {
                 }
             }
             ManageTurrets()
-            if (kamek !== 0){
+            if (kamek.length !== 0){
                 kamekUpdate()
             }
+            manageFireLord()
             lavacoords.forEach((coords, index) => {
             addLavaArea(coords.x, coords.y, 4,4)
             lavacoords.splice(index,1)
