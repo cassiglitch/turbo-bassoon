@@ -1228,11 +1228,11 @@ addLavaArea(firelord[0].x,firelord[0].y,2,2)
     if (firelord.length > 1) {
         firelord.length = 1;
     }
-
+if (firelordInMotion === false){
     const magic = ['launch','bolt'];
     const randomIndex = Math.floor(Math.random() * magic.length);
     let firelordmagic = magic[randomIndex];
-
+}
     if (firelordmagic === 'launch') {
         firelord[0].x += velocityX;
         firelord[0].y += velocityY;
