@@ -2204,47 +2204,29 @@ switch (direction) {
 }
        }
 
-obstacles.forEach((obstacle,index)=> {
-lava.forEach((lava)=> {
-    if(lava.x === obstacle.x && lava.y === obstacle.y){
-obstacle.splice(index,1)
-    }
-   })
-})
+const checkCollisions = (obstacles, isDynamic) => {
+    obstacles.forEach((obstacle, index) => {
+        lava.forEach((lava) => {
+            if (
+                (isDynamic
+                    ? lava.x >= obstacle.x && lava.x < obstacle.x + 2 &&
+                      lava.y >= obstacle.y && lava.y < obstacle.y + 2
+                    : lava.x === obstacle.x && lava.y === obstacle.y)
+            ) {
+                obstacles.splice(index, 1);
+            }
+        });
+    });
+};
 
-mirrors.forEach((obstacle,index)=> {
-lava.forEach((lava)=> {
-    if(lava.x === obstacle.x && lava.y === obstacle.y){
-obstacle.splice(index,1)
-    }
-   })
-})
-            
-wells.forEach((obstacle,index)=> {
-lava.forEach((lava)=> {
-    if(lava.x === obstacle.x && lava.y === obstacle.y){
-obstacle.splice(index,1)
-    }
-   })
-})
+// Static obstacles
+checkCollisions(obstacles, false);
+checkCollisions(mirrors, false);
+checkCollisions(wells, false);
 
-dynamicObstacles.forEach((obstacle,index)=> {
-lava.forEach((lava)=> {
-    if(lava.x >= obstacle.x && lava.x < obstacle.x + 2 &&
-                    (lava.y >= obstacle.y && lava.y < obstacle.y + 2)){
-obstacle.splice(index,1)
-    }
-   })
-})
-            
-thwomps.forEach((obstacle,index)=> {
-lava.forEach((lava)=> {
-    if(lava.x >= obstacle.x && lava.x < obstacle.x + 2 &&
-                    (lava.y >= obstacle.y && lava.y < obstacle.y + 2)){
-obstacle.splice(index,1)
-    }
-   })
-})
+// Dynamic obstacles
+checkCollisions(dynamicObstacles, true);
+checkCollisions(thwomps, true);
             
             // Check if Snake hits obstacles
             if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
