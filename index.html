@@ -164,7 +164,7 @@ function addLavaArea(x, y, size, countdown) {
     
     for (let i = -offset; i <= offset; i++) {
         for (let j = -offset; j <= offset; j++) {
-            lava.push({ x: x + i, y: y + j, countdown:countdown});
+            lava.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
         }
     }
     
@@ -1215,7 +1215,7 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
 let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
 function manageFireLord(){
 if (firelord.length !== 0){
-addLavaArea(firelord[0].x,firelord[0].y,4,4)
+addLavaArea(firelord[0].x,firelord[0].y,2,3)
 }
     if (firelordInMotion === false){
     const targetX = snake[0].x * gridSize;
