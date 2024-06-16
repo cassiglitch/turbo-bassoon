@@ -169,7 +169,7 @@ function addLavaArea(x, y, size, countdown) {
     }
     
 }
-
+addLavaArea(9,9,5,2000)
         
 function kamekUpdate(){
             if (kamek.length > 1) {
@@ -2204,8 +2204,48 @@ switch (direction) {
 }
        }
 
+obstacles.forEach((obstacle,index)=> {
+lava.forEach((lava)=> {
+    if(lava.x === obstacle.x && lava.y === obstacle.y){
+obstacle.splice(index,1)
+    }
+   })
+})
 
+mirrors.forEach((obstacle,index)=> {
+lava.forEach((lava)=> {
+    if(lava.x === obstacle.x && lava.y === obstacle.y){
+obstacle.splice(index,1)
+    }
+   })
+})
+            
+wells.forEach((obstacle,index)=> {
+lava.forEach((lava)=> {
+    if(lava.x === obstacle.x && lava.y === obstacle.y){
+obstacle.splice(index,1)
+    }
+   })
+})
 
+dynamicObstacles.forEach((obstacle,index)=> {
+lava.forEach((lava)=> {
+    if(lava.x >= obstacle.x && lava.x < obstacle.x + 2 &&
+                    (lava.y >= obstacle.y && lava.y < obstacle.y + 2)){
+obstacle.splice(index,1)
+    }
+   })
+})
+            
+thwomps.forEach((obstacle,index)=> {
+lava.forEach((lava)=> {
+    if(lava.x >= obstacle.x && lava.x < obstacle.x + 2 &&
+                    (lava.y >= obstacle.y && lava.y < obstacle.y + 2)){
+obstacle.splice(index,1)
+    }
+   })
+})
+            
             // Check if Snake hits obstacles
             if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
                 !isInvincible && dynamicObstacles.some(obstacle => (head.x >= obstacle.x && head.x < obstacle.x + 2) &&
@@ -2848,6 +2888,7 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
             projectiles = []
             lava = []
             lavacoords = []
+            firelord = []
             isInvincible = false;
             eatingAnimationFrames = 0;
             lives = 0.5;
