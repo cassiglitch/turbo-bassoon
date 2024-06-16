@@ -1194,14 +1194,20 @@ function drawFlickeringFire(x, y, size) {
     const colors = ['yellow', 'orange', 'red'];
     let colorIndex = 0;
 
-    function drawFire() {
+    function drawLayeredFire() {
         ctx.clearRect(x - size * 1.5, y - size * 1.5, size * 3, size * 3);
         let currentColor = colors[colorIndex];
         drawFlatPolygon(x, y, size, 3, currentColor);
+
+        // Add additional layers of fire
+        drawFlatPolygon(x, y - size * 0.3, size * 0.8, 3, 'orange');
+        drawFlatPolygon(x, y - size * 0.6, size * 0.6, 3, 'red');
+        drawFlatPolygon(x, y - size * 0.9, size * 0.4, 3, 'yellow');
+
         colorIndex = (colorIndex + 1) % colors.length;
     }
 
-    setInterval(drawFire, 500); // Flicker every 500ms
+    setInterval(drawLayeredFire, 500); // Flicker every 500ms
 }
 
 
