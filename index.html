@@ -1447,6 +1447,15 @@ addLavaArea(projectile.x,projectile.y,4,2)
 let reflecttime = 0; // Move this line outside of the loop
 let colldown = 1000
 
+
+firelord.forEach((firelord,findex) => {
+let firelordhit = isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY)
+if (firelordhit === true){
+    firelord.splice(findex,1)
+createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                        projectiles.splice(index, 1);
+}
+})
 mirrors.forEach((mirror) => {
     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
         projectile.y >= mirror.y * gridSize && projectile.y <= (mirror.y + 1) * gridSize) {
@@ -2029,7 +2038,7 @@ ctx.fillStyle = 'black';
     });
         // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay')
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>${GoombaCollision}`;
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
 }
 
