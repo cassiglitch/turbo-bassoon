@@ -1043,7 +1043,7 @@ function drawGoomba(gx, gy) {
     const boundingBoxX = x - size * 1.5;
     const boundingBoxY = y;
     const boundingBoxWidth = size * 3;
-    const boundingBoxHeight = headHeight * 1.25 + bodyHeight + footRadius * 2;
+    const boundingBoxHeight = headHeight + bodyHeight + (footRadius * 2)
 
     // Draw bounding box
     ctx.strokeStyle = "#FF0000"; // Red color for bounding box
