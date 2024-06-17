@@ -2255,7 +2255,7 @@ const checkCollisions = (obstacles, isDynamic) => {
 };
 goombas.forEach((goomba,index) => {
 GoombaCollision = isPointInGoombaBoundingBox(snake[0].x* gridSize, snake[0].y * gridSize,goomba.x, goomba.y)
-    if (GoombaCollision === true && direction !== 'down'){
+    if (!isInvincible && (GoombaCollision === true && direction !== 'down')){
 const numSegmentsToRemove = Math.ceil(snake.length * lives);
         if (snake.length > numSegmentsToRemove) {
             snake.splice(0, numSegmentsToRemove);
