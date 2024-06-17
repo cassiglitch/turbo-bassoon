@@ -118,7 +118,7 @@
         let hasBeenTaxed = false
         let laserTimer = 45
         let controltype = 'set'
-        let goombas = []
+        let goombas = [{x:1,y:1,}]
         let magic = []
         var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
@@ -974,9 +974,9 @@ function drawFlatPolygon(x, y, size, sides, color) {
 
 function drawGoomba(gx, gy) {
     // Scale size
-    let x = gx * gridSize
-    let y = gy * gridSize
-    let size = gridSize
+    let x = gx * gridSize;
+    let y = gy * gridSize;
+    let size = gridSize;
     const headHeight = size * 2;
     const bodyHeight = size;
     const bodyWidth = size * 1.2;
@@ -988,10 +988,9 @@ function drawGoomba(gx, gy) {
     const mouthWidth = size * 0.8;
     const mouthHeight = size * 0.15;
 
-
     // Draw the body (a rectangle)
     ctx.fillStyle = "#f1e0c6";
-    ctx.fillRect(x - bodyWidth / 2, y + headHeight - (headHeight/8), bodyWidth * 1.5, bodyHeight * 1.2);
+    ctx.fillRect(x - bodyWidth / 2, y + headHeight - (headHeight / 8), bodyWidth * 1.5, bodyHeight * 1.2);
 
     // Draw the head (a hexagon)
     ctx.fillStyle = "#b5651d";
@@ -1008,10 +1007,10 @@ function drawGoomba(gx, gy) {
     // Draw the feet (two circles)
     ctx.fillStyle = "#8b4513";
     ctx.beginPath();
-    ctx.arc(x - size * 1, y + headHeight + bodyHeight + footRadius - (headHeight/2), footRadius, 0, Math.PI * 2);
+    ctx.arc(x - size * 1, y + headHeight + bodyHeight + footRadius - (headHeight / 2), footRadius, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + size * 1, y + headHeight + bodyHeight + footRadius - (headHeight/2), footRadius, 0, Math.PI * 2);
+    ctx.arc(x + size * 1, y + headHeight + bodyHeight + footRadius - (headHeight / 2), footRadius, 0, Math.PI * 2);
     ctx.fill();
 
     // Draw the eyes (two circles and black pupils)
@@ -1039,6 +1038,39 @@ function drawGoomba(gx, gy) {
     // Draw the mouth (a rectangle)
     ctx.fillStyle = "#000000";
     ctx.fillRect(x - mouthWidth / 2, y + headHeight * 0.8, mouthWidth, mouthHeight);
+
+    // Calculate bounding box coordinates
+    const boundingBoxX = x - size * 1.5;
+    const boundingBoxY = y;
+    const boundingBoxWidth = size * 3;
+    const boundingBoxHeight = headHeight * 1.25 + bodyHeight + footRadius * 2;
+
+    // Draw bounding box
+    ctx.strokeStyle = "#FF0000"; // Red color for bounding box
+    ctx.lineWidth = 2; // Set the line width for the bounding box
+    ctx.strokeRect(boundingBoxX, boundingBoxY, boundingBoxWidth, boundingBoxHeight);
+}
+
+// Function to check if a point collides with the bounding box
+function isPointInGoombaBoundingBox(px, py, gx, gy) {
+    let x = gx * gridSize;
+    let y = gy * gridSize;
+    let size = gridSize;
+    const headHeight = size * 2;
+    const bodyHeight = size;
+    const footRadius = size * 0.6;
+
+    const boundingBoxX = x - size * 1.5;
+    const boundingBoxY = y;
+    const boundingBoxWidth = size * 3;
+    const boundingBoxHeight = headHeight * 1.25 + bodyHeight + footRadius * 2;
+
+    return (
+        px >= boundingBoxX &&
+        px <= boundingBoxX + boundingBoxWidth &&
+        py >= boundingBoxY &&
+        py <= boundingBoxY + boundingBoxHeight
+    );
 }
 function getBoundingBox(polygon) {
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
