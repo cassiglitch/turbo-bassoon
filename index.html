@@ -1072,6 +1072,9 @@ function isPointInGoombaBoundingBox(px, py, gx, gy) {
         py <= boundingBoxY + boundingBoxHeight
     );
 }
+let GoombaCollision
+
+
 function getBoundingBox(polygon) {
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     
@@ -2250,6 +2253,22 @@ const checkCollisions = (obstacles, isDynamic) => {
         });
     });
 };
+goombas.forEach((goomba,index) => {
+GoombaCollision = isPointInGoombaBoundingBox(snake[0].x,snake[0].y, goomba.x, goomba.y)
+    if (GoombaCollision === true && direction !== 'down'){
+const numSegmentsToRemove = Math.ceil(snake.length * lives);
+        if (snake.length > numSegmentsToRemove) {
+            snake.splice(0, numSegmentsToRemove);
+            lives = (lives * 2);
+            livecount = livecount - 1;
+            HaHaNoCollision(10)
+    } else {
+            livecount = livecount - 1;
+            restartGame(); // End the game if segments (lives) run out
+            return;
+        }              
+}
+})
 
 // Static obstacles
 checkCollisions(obstacles, false);
