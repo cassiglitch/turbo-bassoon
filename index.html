@@ -2748,7 +2748,7 @@ if (score >= maxscore / 2) {
             }
     }
 
-if (reflector.length === 12 && kamek.length === 0 && kamekappears === false){
+if (reflector.length === 12 && kamek.length === 0 && kamekappears === false && firelord.length ===0) {
     let kamekX2 = Math.floor(Math.random() * (canvas.width / gridSize));
     let kamekY2 = Math.floor(Math.random() * (canvas.height / gridSize));
     isPaused = true
@@ -2900,7 +2900,7 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
     otype = rare[randomIndex2];
             otype.push({x:x, y:y})
 
-        }else if (randomValue < 0.07){
+        }else if (randomValue < 0.07 && kamek.length === 0){
 firelord.push({x:x,y:y})
 }
     }
