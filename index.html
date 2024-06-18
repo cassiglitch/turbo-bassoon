@@ -2892,14 +2892,15 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
 const rare = [obstacles, mirrors, reflector, reflector]; // Possible directions    
 const randomIndex2 = Math.floor(Math.random() * rare.length);
     otype = rare[randomIndex2];
-}
             otype.push({x:x, y:y})
 
-        }
+        }else if (randomValue < 0.07){
+firelord.push({x:x,y:y})
+}
     }
 }
 
-
+}
         function restartGame() {
             cancelEffects()
             pauseGame();
