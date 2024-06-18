@@ -130,7 +130,7 @@
         let track = []
 let thwomps = []
 let pX = 0;
-let firelord = [{x:2,y:2}]
+let firelord = []
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -154,7 +154,7 @@ let sideshield = 6
 let magictype = 'bolt'
         let lava = []
         let lavacolor = '#f14e2380'
-
+spawnObstacle()
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
