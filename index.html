@@ -131,6 +131,7 @@
 let thwomps = []
 let pX = 0;
 let firelord = []
+     let lightninglord = [{x:2,y:2}]
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -154,6 +155,9 @@ let sideshield = 6
 let magictype = 'bolt'
         let lava = []
         let lavacolor = '#f14e2380'
+        let electric = []
+        let icecolor = '#77A0F280'
+        let electriccolor = '#FFBF3C80'
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -168,7 +172,20 @@ function addLavaArea(x, y, size, countdown) {
     }
     
 }
+function lightningArea(x, y, size, countdown) {
+    let offset = Math.floor(size / 2);
 
+    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+    let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
+    let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
+    
+    for (let i = -offset; i <= offset; i++) {
+        for (let j = -offset; j <= offset; j++) {
+            electric.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
+        }
+    }
+    
+}
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -1231,7 +1248,81 @@ ctx.strokeStyle = 'orange';
     return boundingBox;
 }
 
+function drawLightningLord(x, y) {
+    // Scale the coordinates by gridSize
+    x = x * gridSize;
+    y = y * gridSize;
 
+    // Draw the body (a red pentagon)
+    drawFlatPolygon(x, y, gridSize, 5, electriccolor);
+
+    // Draw the head (an orange triangle) connected to the body
+    drawFlatPolygon(x, y - gridSize * 0.8, gridSize, 3, 'blue');
+
+    // Draw the crown (a yellow pentagon) on the head
+    
+    // Draw the eyes (two white circles) on the head
+    let eyeRadius = gridSize * 0.2;
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(x - gridSize * 0.2, y - gridSize, eyeRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.2, y - gridSize, eyeRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw the pupils (two black circles)
+    let pupilRadius = gridSize * 0.1;
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(x - gridSize * 0.2, y - gridSize, pupilRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.2, y - gridSize, pupilRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+let mouthWidth = gridSize * 0.8;
+    let mouthHeight = gridSize * 0.15;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x, y, mouthWidth, mouthHeight);
+
+
+    ctx.fillStyle = 'black';
+    
+ctx.fillRect(x - mouthWidth / 2, y + gridSize * 0.8, mouthWidth, mouthHeight);
+    
+    // Draw the robe (a black rectangle) covering the lower part of the body
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x - gridSize * 0.7, y, gridSize * 1.4, gridSize);
+
+ctx.strokeStyle = electriccolor
+    ctx.lineWidth = gridSize * 0.1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + gridSize);
+    ctx.stroke();
+        
+    // Draw the arms (small black rectangles) connected to the body
+    let armWidth = gridSize * 0.2;
+    let armHeight = gridSize * 0.6;
+    ctx.fillRect(x - gridSize * 0.9, y - gridSize * 0.2, armWidth, armHeight);
+    ctx.fillRect(x + gridSize * 0.7, y - gridSize * 0.2, armWidth, armHeight);
+
+    // Draw the feet (black rectangles) touching the body and robe
+    let footWidth = gridSize * 0.4;
+    let footHeight = gridSize * 0.4;
+    ctx.fillRect(x - gridSize * 0.5, y + gridSize * 0.8, footWidth, footHeight);
+    ctx.fillRect(x + gridSize * 0.1, y + gridSize * 0.8, footWidth, footHeight);
+
+    // Bounding box calculation
+    let boundingBox = {
+        xMin: x - gridSize * 0.9,
+        yMin: y - gridSize * 1.4,
+        xMax: x + gridSize * 0.9,
+        yMax: y + gridSize * 1.2
+    };
+
+    
+
+
+    return boundingBox;
+}
 
 // Collision detection function
 function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
@@ -1240,9 +1331,48 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
 }
 
         let langle = 0
+        let lightningmagic = 0
+        let lightninglordInMotion = false;
+let lightningLordBoundingBox = drawLightningLord(5, 5);
+function manageLightningLord(){
+if (lightninglord.length !== 0){
+lightningArea(lightninglord[0].x,lightninglord[0].y,2,1)
+
+    if (lightninglordInMotion === false){
+    const targetX = snake[0].x * gridSize;
+    const targetY = snake[0].y * gridSize;
+     langle = Math.atan2(targetY - lightninglord[0].y * gridSize, targetX - lightninglord[0].x * gridSize);
+    }
+    let velocityX = Math.cos(langle);
+    let velocityY = Math.sin(langle);
+
+    if (lightninglord.length > 1) {
+        lightninglord.length = 1;
+    }
+if (lightninglordInMotion === false){
+    const magic = ['launch'];
+    const randomIndex = Math.floor(Math.random() * magic.length);
+    lightningmagic = magic[randomIndex];
+}
+    if (lightningmagic === 'launch') {
+        lightninglord[0].x += velocityX;
+        lightninglord[0].y += velocityY;
+lightninglordInMotion = true;
+        lightningLordBoundingBox = drawLightningLord(lightninglord[0].x,lightninglord[0].y);
+
+        // Check if the FireLord's bounding box touches any edge of the canvas
+        if (lightningLordBoundingBox.xMin < 0 || lightningLordBoundingBox.yMin < 0 ||
+            lightningLordBoundingBox.xMax > canvas.width || lightningLordBoundingBox.yMax > canvas.height) {
+            // Stop the FireLord
+            lightninglordInMotion = false;
+        }
+}
+}
+}
+        
         let firelordmagic = 0
         let firelordInMotion = false;
-let fireLordBoundingBox = drawFireLord(5, 5, gridSize);
+let fireLordBoundingBox = drawFireLord(5, 5);
 function manageFireLord(){
 if (firelord.length !== 0){
 addLavaArea(firelord[0].x,firelord[0].y,2,2)
@@ -1259,7 +1389,7 @@ addLavaArea(firelord[0].x,firelord[0].y,2,2)
         firelord.length = 1;
     }
 if (firelordInMotion === false){
-    const magic = ['launch','bolt'];
+    const magic = ['launch'];
     const randomIndex = Math.floor(Math.random() * magic.length);
     firelordmagic = magic[randomIndex];
 }
@@ -1275,10 +1405,7 @@ firelordInMotion = true;
             // Stop the FireLord
             firelordInMotion = false;
         }
-}else if(firelordmagic === 'bolt'&& firelordInMotion === false){
-        flaming = true
-shootWaveOfProjectiles(firelord[0].x * gridSize, firelord[0].y * gridSize, 1, 1, 0.5, 'orange', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true,firelord);
-    }
+}
 }
 }
 function getDirectionToSnakeHead(x, y, snake) {
@@ -1575,7 +1702,6 @@ mirrors.forEach((mirror) => {
         
 
 function createExplosion(ctx, x, y, color, obstacles, dynamicObstacles, gridSize, explode) {
-    addLavaArea(x,y, 3, 10)
     ctx.beginPath();
     ctx.arc(x, y, explode, 0, Math.PI * 2);
     ctx.fillStyle = color;
@@ -1829,6 +1955,11 @@ let isfirelordhit = isCollidingWithFireLord(fireLordBoundingBox, x, y)
 if (isfirelordhit === true) {
 firelord = []
 }
+
+let islightninglordhit = isCollidingWithFireLord(lightningLordBoundingBox, x, y)
+if (islightninglordhit === true) {
+lightninglord = []
+}
             
             timezone.forEach((obstacle, index) => {
                 if (x >= obstacle.x * gridSize && x <= (obstacle.x + 1) * gridSize &&
@@ -2006,10 +2137,17 @@ timezone.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gr
 ctx.fillStyle = lavacolor;
 lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+ctx.fillStyle = electriccolor;
+electric.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+        
 firelord.forEach((firelord) =>{
 drawFireLord(firelord.x, firelord.y)
 })
-    
+
+lightninglord.forEach((firelord) =>{
+drawLightningLord(firelord.x, firelord.y)
+})
+
 ctx.fillStyle = wellcolor;
   wells.forEach((well) => {
     const pulse = Math.sin(Date.now() / 200) * 5; // Adjust pulsating effect
@@ -2179,6 +2317,9 @@ function HaHaNoCollision(duration) {
             if (!isPaused && firelord.length !== 0){
             manageFireLord()
             }
+if (!isPaused && lightninglord.length !== 0){
+            manageLightningLord()
+}
             lavacoords.forEach((coords, index) => {
             addLavaArea(coords.x, coords.y, 4,4)
             lavacoords.splice(index,1)
@@ -2190,6 +2331,16 @@ function HaHaNoCollision(duration) {
         }
         if (lavaElement.countdown <= 0) {
             lava.splice(index, 1);
+        }
+    }
+
+for (let index = electric.length - 1; index >= 0; index--) {
+        let lightningElement = electric[index];
+        if (lightningElement.countdown > 0) {
+            lightningElement.countdown -= 0.1;
+        }
+        if (lightningElement.countdown <= 0) {
+            electric.splice(index, 1);
         }
     }
             
@@ -2288,6 +2439,12 @@ checkCollisions(wells, false);
 // Dynamic obstacles
 checkCollisions(dynamicObstacles, true);
 checkCollisions(thwomps, true);
+
+if(kamek.length === 0){
+isParalyzed = electric.some((electric) => {
+    return electric.x === head.x && electric.y === head.y;
+});
+}
             
             // Check if Snake hits obstacles
             if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
@@ -2887,7 +3044,12 @@ const id = Math.random() < 0.5 ? 1 : 2;
         formrandomshape(4)            
     } else if (randomValue < 0.4){
             thwomps.push({ x: x, y: 0, state: 1 });
-        } else {
+        }else if (randomValue < 0.2 && kamek.length === 0){
+const lord = [firelord,lightninglord]; // Possible directions    
+const randomIndex2 = Math.floor(Math.random() * lord.length);
+let  lords = lord[randomIndex2];
+            lords.push({x:x, y:y})
+} else {
            let otype = 0
 if (controltype === 'arrow'){
 const rare = [obstacles, mirrors, wells, reflector, reflector]; // Possible directions
@@ -2899,9 +3061,7 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
     otype = rare[randomIndex2];
             otype.push({x:x, y:y})
 
-        }else if (randomValue < 0.07 && kamek.length === 0){
-firelord.push({x:x,y:y})
-}
+        }
     }
 }
 
