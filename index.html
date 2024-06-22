@@ -235,7 +235,11 @@ function kamekUpdate(){
     kamek.length = 1;
 }
     if (kamek.length !== 0){
-        applyStatus(1000, 'magic')
+        if (magictype === 'firelaunch' || magictype === 'icelaunch' ||magictype === 'earthlaunch' ||magictype === 'lightninglaunch' ){
+        applyStatus(100, 'magic')
+        }else{
+applyStatus(1000, 'magic')
+        }
 if (kamek[0].health === undefined){
     kamek[0].health = 100;
 }
@@ -356,8 +360,8 @@ kamekInMotion = true;
 kamek[0].x += velocityX;
         kamek[0].y += velocityY;
             }
-    if (kamek[0].x < 0 || kamek[0].y < 0 ||
-            kamek[0].x > canvas.width || kamek[0].y > canvas.height) {
+    if (kamek[0].x === 0 || kamek[0].y === 0 ||
+            kamek[0].x === canvas.width || kamek[0].y === canvas.height) {
             // Stop the FireLord
             kamekInMotion = false;
         }
