@@ -344,7 +344,9 @@ if (spawner !== goombas){
     spawnGoombas(x, y)
         }
         }else if (magictype === 'firelaunch'){
-addLavaArea(kamek[0].x,kamek[0].y,2,2)
+            let gridOffset = ((2*gridSize) + (gridSize / 2))/2
+            // Call the function with desired parameters
+addLavaArea(kamek[0].x,kamek[0].y + gridOffset,2,2)
 
     if (kamekInMotion === false){
     const targetX = snake[0].x * gridSize;
