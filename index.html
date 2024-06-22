@@ -266,7 +266,7 @@ let kamekInMotion = false
 function kamekMagic() {
     if (!isPaused && !kamekInMotion) {
         // Determine the type of magic
-        if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false && kameksecondphasesctive === false) {
+        if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false && kameksecondphasesctive === false && sideshield > 2) {
             const magic = ['bolt', 'status', 'obstacle'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
