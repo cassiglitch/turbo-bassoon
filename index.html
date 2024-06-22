@@ -87,13 +87,15 @@ let isSlow = false
         let direction = 'right';
         let previousDirection = 'direction';
         let score = 0;
+        let kameksecondphasesctive = false
+        let defeatedSecondPhaseKamek = false
         let hascollided = false
         let isEating = false;
         let eatingAnimationFrames = 0;
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = []
+        let kamek = [{x:2,y:2}]
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -155,7 +157,7 @@ let isTaxed = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
-let sideshield = 6
+let sideshield = 2
         let shield = false
 let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
@@ -257,24 +259,31 @@ if (kamek.length === 0){
     timezone = []
 }
 }
-        
+
+let kamekangle = 0
+let kamekInMotion = false
+
 function kamekMagic() {
-    if (!isPaused) {
+    if (!isPaused && !kamekInMotion) {
         // Determine the type of magic
-        if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false) {
+        if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false && kameksecondphasesctive === false) {
             const magic = ['bolt', 'status', 'obstacle'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
         } else if (sideshield <= 2){
             shield = false
             timezone = []
-            const magic = ['port', 'obstacle'];
-            const randomIndex = Math.floor(Math.random() * magic.length);
-            magictype = magic[randomIndex];
+            kameksecondphasesctive = true
         }else{
+if (kameksecondphasesctive === false){
             const magic = ['port', 'wall', 'obstacle'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
+        }else{
+const magic = ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglaunch', 'lightningshoot', 'earthlaunch', 'earthshoot'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            magictype = magic[randomIndex];
+}
         }
 
         // Perform the action based on the type of magic
@@ -328,6 +337,24 @@ if (spawner !== goombas){
         y = 6
     }
     spawnGoombas(x, y)
+        }
+        }else if (magictype === 'firelaunch'){
+addLavaArea(kamek[0].x,kamek[0].y,2,2)
+
+    if (kamekInMotion === false){
+    const targetX = snake[0].x * gridSize;
+    const targetY = snake[0].y * gridSize;
+     kamekangle = Math.atan2(targetY - kamek[0].y * gridSize, targetX - kamek[0].x * gridSize);
+    }
+    let velocityX = Math.cos(kamekangle);
+    let velocityY = Math.sin(kamekangle);
+    kamek[0].x += velocityX;
+        kamek[0].y += velocityY;
+kamekInMotion = true;
+    if (kamek[0].x < 0 || kamek[0].y < 0 ||
+            kamek[0].x > canvas.width || kamek[0].y > canvas.height) {
+            // Stop the FireLord
+            kamekInMotion = false;
         }
         }
     }
