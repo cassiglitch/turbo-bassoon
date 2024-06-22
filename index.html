@@ -352,6 +352,10 @@ addLavaArea(kamek[0].x,kamek[0].y,2,2)
     kamek[0].x += velocityX;
         kamek[0].y += velocityY;
 kamekInMotion = true;
+            if (kamekInMotion){
+kamek[0].x += velocityX;
+        kamek[0].y += velocityY;
+            }
     if (kamek[0].x < 0 || kamek[0].y < 0 ||
             kamek[0].x > canvas.width || kamek[0].y > canvas.height) {
             // Stop the FireLord
