@@ -264,7 +264,8 @@ let kamekangle = 0
 let kamekInMotion = false
 
 function kamekMagic() {
-    if (!isPaused && !kamekInMotion) {
+    if (!isPaused) {
+        if(!kamekInMotion){
         // Determine the type of magic
         if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false && kameksecondphasesctive === false && sideshield > 2) {
             const magic = ['bolt', 'status', 'obstacle'];
@@ -285,7 +286,7 @@ const magic = ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglau
             magictype = magic[randomIndex];
 }
         }
-
+        }
         // Perform the action based on the type of magic
         if (magictype === 'bolt') {
             enemyshootmagic();
