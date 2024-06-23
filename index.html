@@ -362,8 +362,8 @@ kamekInMotion = true;
 kamek[0].x += velocityX;
         kamek[0].y += velocityY;
             }
-    if (kamek[0].x === 0 || kamek[0].y === 0 ||
-            kamek[0].x === canvas.width/gridSize || kamek[0].y === canvas.height/gridSize) {
+    if (kamek[0].x >= 0 || kamek[0].y >= 0 ||
+            kamek[0].x >= canvas.width/gridSize || kamek[0].y >= canvas.height/gridSize) {
             // Stop the FireLord
             kamekInMotion = false;
         }
