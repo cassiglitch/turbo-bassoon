@@ -227,34 +227,40 @@ function iceArea(x, y, size, countdown) {
     
 }
 // Initialize an array to store coordinates
+// Initialize an array to store coordinates
 let coordinatesOfDisplay = [];
 
 // Select the element with the class name 'scoreDisplay'
 const scoreDisplay = document.querySelector('.scoreDisplay');
 
-// Function to calculate coordinates inside the bounding box
-function collectBoundingBoxCoordinates(element) {
+// Function to recursively collect coordinates of all child elements
+function collectElementCoordinates(element) {
   // Get the bounding rectangle of the element
   const rect = element.getBoundingClientRect();
 
-  // Iterate through all points inside the bounding box
-  for (let x = rect.left; x <= rect.right; x++) {
-    for (let y = rect.top; y <= rect.bottom; y++) {
-      coordinatesOfDisplay.push({ x: x, y: y });
-    }
-  }
+  // Calculate coordinates for each corner of the element's bounding box
+  const topLeft = { x: rect.left, y: rect.top };
+  const topRight = { x: rect.right, y: rect.top };
+  const bottomLeft = { x: rect.left, y: rect.bottom };
+  const bottomRight = { x: rect.right, y: rect.bottom };
+
+  // Push coordinates into the array
+  coordinatesOfDisplay.push(topLeft, topRight, bottomLeft, bottomRight);
 }
 
 // Check if the element exists in the DOM
 if (scoreDisplay) {
-  // Call function to collect coordinates inside the bounding box
-  collectBoundingBoxCoordinates(scoreDisplay);
+  // Call function to collect coordinates of the scoreDisplay element
+  collectElementCoordinates(scoreDisplay);
 
   // Log the array of coordinates
   console.log('Coordinates:', coordinates);
 } else {
   console.error('Element with class "scoreDisplay" not found.');
 }
+
+// Select the element with the class name 'scoreDisplay'
+
 
 
         
@@ -3692,7 +3698,7 @@ function animateExplosion() {
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
-collectBoundingBoxCoordinates(scoreDisplay);
+collectElementCoordinates(scoreDisplay)
             
 if (snake.length <= 1){
     restartGame()
