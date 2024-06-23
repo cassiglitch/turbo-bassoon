@@ -245,6 +245,7 @@ if (kamek[0].health === undefined){
 }
     }
 if (kamek.length !== 0){
+    if (kameksecondphasesctive === false){
     const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
       if (distance <= 5) {
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
@@ -258,7 +259,7 @@ if (kamek.length !== 0){
        generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone)
       }
       }
-}
+}}
 if (kamek.length === 0){
     timezone = []
 }
