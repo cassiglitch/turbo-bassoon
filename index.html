@@ -67,7 +67,7 @@ let isSlow = false
         let reflector = []
         let isFast = false
         let timezone = []
-        let mirrors = []
+        let mirrors = [{x:6,y:2}]
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -226,6 +226,36 @@ function iceArea(x, y, size, countdown) {
     }
     
 }
+// Initialize an array to store coordinates
+let coordinatesOfDisplay = [];
+
+// Select the element with the class name 'scoreDisplay'
+const scoreDisplay = document.querySelector('.scoreDisplay');
+
+// Function to calculate coordinates inside the bounding box
+function collectBoundingBoxCoordinates(element) {
+  // Get the bounding rectangle of the element
+  const rect = element.getBoundingClientRect();
+
+  // Iterate through all points inside the bounding box
+  for (let x = rect.left; x <= rect.right; x++) {
+    for (let y = rect.top; y <= rect.bottom; y++) {
+      coordinatesOfDisplay.push({ x: x, y: y });
+    }
+  }
+}
+
+// Check if the element exists in the DOM
+if (scoreDisplay) {
+  // Call function to collect coordinates inside the bounding box
+  collectBoundingBoxCoordinates(scoreDisplay);
+
+  // Log the array of coordinates
+  console.log('Coordinates:', coordinates);
+} else {
+  console.error('Element with class "scoreDisplay" not found.');
+}
+
 
         
 function kamekUpdate(){
@@ -3471,7 +3501,7 @@ function spawnObstacle() {
     const occupied = obstacles.some(obstacle => obstacle.x === x && obstacle.y === y) ||
                      mirrors.some(mirror => mirror.x === x && mirror.y === y) ||
                      dynamicObstacles.some(dynamic => dynamic.x === x && dynamic.y === y)||
-                    (food.x === x && food.y === y)
+                    (food.x === x && food.y === y) || coordinatesOfDisplay.some(coords => coords.x === x && coords.y === y)
 const randomValue = Math.random()
     if (!occupied) {
         if ((randomValue < 0.1) && esnake.length === 0){
@@ -3763,6 +3793,57 @@ obstacles.forEach((obstacle, obstacleIndex) => {
     }
   });
 });
+coordinatesOfDisplay.forEach((coords) => {
+obstacles.forEach((obstacle, obstacleIndex) => {
+if (coords.x === obstacle.x && coords.y === obstacle.y) {
+      obstacle.x += 1;
+      obstacle.y += 1;
+    }
+})
+})
+coordinatesOfDisplay.forEach((coords) => {
+mirrors.forEach((obstacle, obstacleIndex) => {
+if (coords.x === obstacle.x && coords.y === obstacle.y) {
+      obstacle.x += 1;
+      obstacle.y += 1;
+    }
+})
+})
+coordinatesOfDisplay.forEach((coords) => {
+reflector.forEach((obstacle, obstacleIndex) => {
+if (coords.x === obstacle.x && coords.y === obstacle.y) {
+      obstacle.x += 1;
+      obstacle.y += 1;
+    }
+})
+})
+coordinatesOfDisplay.forEach((coords) => {
+wells.forEach((obstacle, obstacleIndex) => {
+if (coords.x === obstacle.x && coords.y === obstacle.y) {
+      obstacle.x += 1;
+      obstacle.y += 1;
+    }
+})
+})
+
+coordinatesOfDisplay.forEach((coords) => {
+    dynamicObstacles.forEach(obstacle => {
+       if ((coords.x >= obstacle.x && coords.x < obstacle.x + 2) &&
+        (coords.y >= obstacle.y && coords.y < obstacle.y + 2)){
+     obstacle.x += 1;
+      obstacle.y += 1;
+       }
+       }) 
+})
+coordinatesOfDisplay.forEach((coords) => {
+    thwomps.forEach(obstacle => {
+       if ((coords.x >= obstacle.x && coords.x < obstacle.x + 2) &&
+        (coords.y >= obstacle.y && coords.y < obstacle.y + 2)){
+     obstacle.x += 1;
+      obstacle.y += 1;
+       }
+       }) 
+})
 }
 
 
