@@ -67,7 +67,7 @@ let isSlow = false
         let reflector = []
         let isFast = false
         let timezone = []
-        let mirrors = [{x:7,y:2}]
+        let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -226,39 +226,47 @@ function iceArea(x, y, size, countdown) {
     }
     
 }
-let coordinatesOfDisplay = [];
 
-// Select the element with the class name 'scoreDisplay'
-const scoreDisplay = document.querySelector('.scoreDisplay');
+function EditAndContrast(){
+var scoreDisplay = document.getElementById('scoreDisplay');
+var rect = scoreDisplay.getBoundingClientRect();
 
-// Function to recursively collect coordinates of all child elements
-function collectElementCoordinates(element) {
-  // Get the bounding rectangle of the element
-  const rect = element.getBoundingClientRect();
+// Create a canvas to temporarily hold the captured image
+var minicanvas = document.createElement('canvas');
+canvas.width = rect.width;
+canvas.height = rect.height;
+var minictx = minicanvas.getContext('2d');
 
-  // Calculate coordinates for each corner of the element's bounding box
-  const topLeft = { x: rect.left, y: rect.top };
-  const topRight = { x: rect.right, y: rect.top };
-  const bottomLeft = { x: rect.left, y: rect.bottom };
-  const bottomRight = { x: rect.right, y: rect.bottom };
+// Draw the element onto the canvas
+minictx.drawWindow(window, rect.left, rect.top, rect.width, rect.height, 'rgb(255,255,255)');
 
-  // Push coordinates into the array
-  coordinatesOfDisplay.push(topLeft, topRight, bottomLeft, bottomRight);
+// Step 2: Manipulate the captured image (contrast with the background)
+
+// Get the imageData of the captured element
+var imageData = minictx.getImageData(0, 0, canvas.width, canvas.height);
+var data = imageData.data;
+
+// Loop through each pixel and apply contrast effect
+for (var i = 0; i < data.length; i += 4) {
+    // Get the average value of the pixel's RGB components
+    var average = (data[i] + data[i + 1] + data[i + 2]) / 3;
+
+    // Set the pixel to contrast with the background
+    data[i] = 255 - data[i];         // Red component
+    data[i + 1] = 255 - data[i + 1]; // Green component
+    data[i + 2] = 255 - data[i + 2]; // Blue component
 }
 
-// Check if the element exists in the DOM
-if (scoreDisplay) {
-  // Call function to collect coordinates of the scoreDisplay element
-  collectElementCoordinates(scoreDisplay);
+// Put the manipulated imageData back onto the canvas
+minictx.putImageData(imageData, 0, 0);
 
-  // Log the array of coordinates
-  console.log('Coordinates:', coordinatesOfDisplay);
-} else {
-  console.error('Element with class "scoreDisplay" not found.');
+// Step 3: Render the manipulated image onto the main canvas
+
+// Assuming you have a main canvas element in your HTML
+
+// Draw the manipulated image onto the main canvas
+ctx.drawImage(minicanvas, rect.left, rect.top);
 }
-
-
-        
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -2607,8 +2615,7 @@ ctx.fillStyle = 'black';
     });
         // Draw Score
     const scoreDisplay = document.getElementById('scoreDisplay')
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}<br>Coordinates: ${coordinatesOfDisplay}`;
-
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
 }
 
@@ -3380,7 +3387,7 @@ if (score >= maxscore / 2) {
             }
     }
 
-if (reflector.length === 12 && kamek.length === 0 && kamekappears === false && firelord.length === 0 && icelord.length === 0 && earthlord.length === 0 && lightninglord.length === 0) {
+if (reflector.length === 12 && kamek.length === 0 && kamekappears === false && firelord.length ===0) {
     let kamekX2 = Math.floor(Math.random() * (canvas.width / gridSize));
     let kamekY2 = Math.floor(Math.random() * (canvas.height / gridSize));
     isPaused = true
@@ -3503,7 +3510,7 @@ function spawnObstacle() {
     const occupied = obstacles.some(obstacle => obstacle.x === x && obstacle.y === y) ||
                      mirrors.some(mirror => mirror.x === x && mirror.y === y) ||
                      dynamicObstacles.some(dynamic => dynamic.x === x && dynamic.y === y)||
-                    (food.x === x && food.y === y) || coordinatesOfDisplay.some(coords => coords.x === x && coords.y === y)
+                    (food.x === x && food.y === y)
 const randomValue = Math.random()
     if (!occupied) {
         if ((randomValue < 0.1) && esnake.length === 0){
@@ -3520,7 +3527,7 @@ const id = Math.random() < 0.5 ? 1 : 2;
         formrandomshape(4)            
     } else if (randomValue < 0.4){
             thwomps.push({ x: x, y: 0, state: 1 });
-        }else if (randomValue < 0.6 && kamek.length === 0){
+        }else if (randomValue < 0.2 && kamek.length === 0){
 const lord = [firelord,lightninglord,icelord,earthlord]; // Possible directions    
 const randomIndex2 = Math.floor(Math.random() * lord.length);
 let  lords = lord[randomIndex2];
@@ -3690,11 +3697,10 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
+            EditAndContrast()
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
-collectElementCoordinates(scoreDisplay)
-            
 if (snake.length <= 1){
     restartGame()
 }
@@ -3797,57 +3803,6 @@ obstacles.forEach((obstacle, obstacleIndex) => {
     }
   });
 });
-coordinatesOfDisplay.forEach((coords) => {
-obstacles.forEach((obstacle, obstacleIndex) => {
-if (coords.x === obstacle.x && coords.y === obstacle.y) {
-      obstacle.x += 1;
-      obstacle.y += 1;
-    }
-})
-})
-coordinatesOfDisplay.forEach((coords) => {
-mirrors.forEach((obstacle, obstacleIndex) => {
-if (coords.x === obstacle.x && coords.y === obstacle.y) {
-      obstacle.x += 1;
-      obstacle.y += 1;
-    }
-})
-})
-coordinatesOfDisplay.forEach((coords) => {
-reflector.forEach((obstacle, obstacleIndex) => {
-if (coords.x === obstacle.x && coords.y === obstacle.y) {
-      obstacle.x += 1;
-      obstacle.y += 1;
-    }
-})
-})
-coordinatesOfDisplay.forEach((coords) => {
-wells.forEach((obstacle, obstacleIndex) => {
-if (coords.x === obstacle.x && coords.y === obstacle.y) {
-      obstacle.x += 1;
-      obstacle.y += 1;
-    }
-})
-})
-
-coordinatesOfDisplay.forEach((coords) => {
-    dynamicObstacles.forEach(obstacle => {
-       if ((coords.x >= obstacle.x && coords.x < obstacle.x + 2) &&
-        (coords.y >= obstacle.y && coords.y < obstacle.y + 2)){
-     obstacle.x += 1;
-      obstacle.y += 1;
-       }
-       }) 
-})
-coordinatesOfDisplay.forEach((coords) => {
-    thwomps.forEach(obstacle => {
-       if ((coords.x >= obstacle.x && coords.x < obstacle.x + 2) &&
-        (coords.y >= obstacle.y && coords.y < obstacle.y + 2)){
-     obstacle.x += 1;
-      obstacle.y += 1;
-       }
-       }) 
-})
 }
 
 
@@ -4024,90 +3979,6 @@ canvas.addEventListener('touchend', PauseHoldEnd);
 function PauseHoldEnd() {
     touchStartTime = null; // Reset the touch start time
 }
-    document.addEventListener('DOMContentLoaded', function() {
-      const scoreDisplay = document.getElementById('scoreDisplay');
-      
-
-      // Get the computed style of the scoreDisplay element
-      const computedStyle = window.getComputedStyle(scoreDisplay);
-      const width = parseInt(computedStyle.width, 10);
-      const height = parseInt(computedStyle.height, 10);
-
-      // Set canvas dimensions
-      canvas.width = width;
-      canvas.height = height;
-
-      // Draw the scoreDisplay element onto the canvas
-      ctx.font = computedStyle.fontSize + ' ' + computedStyle.fontFamily;
-      ctx.textBaseline = 'top';
-
-      // Create a temporary div to measure text width
-      const tempDiv = document.createElement('div');
-      tempDiv.style.font = computedStyle.font;
-      tempDiv.style.position = 'absolute';
-      tempDiv.style.visibility = 'hidden';
-      document.body.appendChild(tempDiv);
-
-      // Draw each character separately to analyze background
-      let x = 0;
-      const text = scoreDisplay.textContent;
-      scoreDisplay.textContent = '';
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        tempDiv.textContent = char;
-        const charWidth = tempDiv.clientWidth;
-
-        // Draw character on canvas
-        ctx.fillStyle = computedStyle.backgroundColor; // Draw background color
-        ctx.fillRect(x, 0, charWidth, height);
-        ctx.fillStyle = '#000000'; // Draw text in black initially
-        ctx.fillText(char, x, 0);
-
-        // Get image data for the character area
-        const imageData = ctx.getImageData(x, 0, charWidth, height);
-        const data = imageData.data;
-
-        // Calculate average luminance
-        let r, g, b, luminance;
-        let totalLuminance = 0;
-        for (let j = 0; j < data.length; j += 4) {
-          r = data[j] / 255;
-          g = data[j + 1] / 255;
-          b = data[j + 2] / 255;
-
-          r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
-          g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
-          b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
-
-          luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-          totalLuminance += luminance;
-        }
-
-        totalLuminance /= data.length / 4;
-        const textColor = totalLuminance > 0.5 ? '#000000' : '#FFFFFF';
-
-        // Draw the character again with the correct text color
-        ctx.fillStyle = computedStyle.backgroundColor; // Redraw background color
-        ctx.fillRect(x, 0, charWidth, height);
-        ctx.fillStyle = textColor; // Set text color based on luminance
-        ctx.fillText(char, x, 0);
-
-        // Create a span for the character and set its style
-        const span = document.createElement('span');
-        span.textContent = char;
-        span.style.position = 'absolute';
-        span.style.left = x + 'px';
-        span.style.top = '0';
-        span.style.color = textColor;
-        scoreDisplay.appendChild(span);
-
-        x += charWidth;
-      }
-
-      // Clean up temporary div
-      document.body.removeChild(tempDiv);
-    });
-
     </script>
 </body>
 </html>
