@@ -233,8 +233,8 @@ var rect = scoreDisplay.getBoundingClientRect();
 
 // Create a canvas to temporarily hold the captured image
 var minicanvas = document.createElement('canvas');
-canvas.width = rect.width;
-canvas.height = rect.height;
+minicanvas.width = rect.width;
+minicanvas.height = rect.height;
 var minictx = minicanvas.getContext('2d');
 
 // Draw the element onto the canvas
