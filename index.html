@@ -87,15 +87,13 @@ let isSlow = false
         let direction = 'right';
         let previousDirection = 'direction';
         let score = 0;
-        let kameksecondphasesctive = true
-        let defeatedSecondPhaseKamek = false
         let hascollided = false
         let isEating = false;
         let eatingAnimationFrames = 0;
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = [{x:2,y:2}]
+        let kamek = []
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -157,9 +155,9 @@ let isTaxed = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
-let sideshield = 2
+let sideshield = 6
         let shield = false
-let magictype = 'firelaunch'
+let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
         let lava = []
         let lavacolor = '#f14e2380'
@@ -230,158 +228,107 @@ function iceArea(x, y, size, countdown) {
 }
 
         
-function kamekUpdate() {
-    if (kamek.length > 1) {
-        kamek.length = 1;
-    }
-
-    if (kamek.length !== 0) {
-        if (['firelaunch', 'icelaunch', 'earthlaunch', 'lightninglaunch'].includes(magictype)) {
-            applyStatus(250, 'magic');
-        } else {
-            applyStatus(1000, 'magic');
-        }
-
-        if (kamek[0].health === undefined) {
-            kamek[0].health = 100;
-        }
-    }
-
-    if (sideshield <= 2) {
-        shield = false;
-        timezone = [];
-        kameksecondphasesctive = true;
-    }
-
-    if (kamek.length !== 0) {
-        if (!kameksecondphasesctive) {
-            const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
-            if (distance <= 5) {
-                teleportKamek();
-            }
-        }
-    } else {
-        timezone = [];
-    }
+function kamekUpdate(){
+            if (kamek.length > 1) {
+    kamek.length = 1;
 }
-
-function teleportKamek() {
+    if (kamek.length !== 0){
+        applyStatus(1000, 'magic')
+if (kamek[0].health === undefined){
+    kamek[0].health = 100;
+}
+    }
+if (kamek.length !== 0){
+    const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
+      if (distance <= 5) {
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     kamek[0].x = randomX;
     kamek[0].y = randomY;
-    timezone = [];
-    kamekcanteleport = true;
-
-    if (shield) {
-        timezone = [];
-        generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone);
-    }
+        timezone = []
+    kamekcanteleport = true
+      if (shield === true){
+       timezone = []
+       generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone)
+      }
+      }
 }
-
-let kamekangle = 0;
-let kamekInMotion = false;
-let velocityX = Math.cos(kamekangle);
-let velocityY = Math.sin(kamekangle);
-
+if (kamek.length === 0){
+    timezone = []
+}
+}
+        
 function kamekMagic() {
-    if (!isPaused && !kamekInMotion) {
-        determineMagicType();
-        performMagicAction();
-    }
-}
-
-function determineMagicType() {
-    const magic = kameksecondphasesctive ? 
-        ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglaunch', 'lightningshoot', 'earthlaunch', 'earthshoot'] :
-        (Math.random() <= 0.2 && !kamekcanteleport && !isParalyzed && sideshield > 2) ? 
-        ['bolt', 'status', 'obstacle'] : 
-        ['port', 'wall', 'obstacle'];
-    
-    const randomIndex = Math.floor(Math.random() * magic.length);
-    magictype = magic[randomIndex];
-}
-
-function performMagicAction() {
-    switch (magictype) {
-        case 'bolt':
-            enemyshootmagic();
-            break;
-        case 'port':
-            if (kamekcanteleport) {
-                teleportKamek();
-            }
-            break;
-        case 'wall':
-            generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone);
-            shield = true;
-            kamekcanteleport = false;
-            break;
-        case 'status':
-            applyStatusEffect();
-            break;
-        case 'obstacle':
-            spawnEnemird();
-            break;
-        case 'firelaunch':
-            launchFire();
-            break;
-        default:
-            break;
-    }
-}
-
-function applyStatusEffect() {
-    const status = ['paralyzed'];
-    const randomIndex = Math.floor(Math.random() * status.length);
-    const magicstatus = status[randomIndex];
-
-    if (magicstatus === 'paralyzed') {
-        isParalyzed = true;
-        setTimeout(turnoffpara, 1000);
-    }
-}
-
-function spawnEnemird() {
-    const obstacles2 = [turrets, goombas];
-    const randomIndex = Math.floor(Math.random() * obstacles2.length);
-    const spawner = obstacles2[randomIndex];
-    const x = Math.floor(Math.random() * (canvas.width / gridSize));
-    let y = Math.floor(Math.random() * (canvas.height / gridSize));
-
-    if (spawner !== goombas) {
-        if (spawner === turrets && turrets.length < 5) {
-            spawnTurrets(x, y);
-        } else {
-            spawner.push({x, y});
+    if (!isPaused) {
+        // Determine the type of magic
+        if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false) {
+            const magic = ['bolt', 'status', 'obstacle'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            magictype = magic[randomIndex];
+        } else if (sideshield <= 2){
+            shield = false
+            timezone = []
+            const magic = ['port', 'obstacle'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            magictype = magic[randomIndex];
+        }else{
+            const magic = ['port', 'wall', 'obstacle'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            magictype = magic[randomIndex];
         }
-    } else {
-        y -= 6;
-        if (y < 0) y = 6;
-        spawnGoombas(x, y);
+
+        // Perform the action based on the type of magic
+        if (magictype === 'bolt') {
+            enemyshootmagic();
+        } else if (magictype === 'port' && kamekcanteleport === true) {
+            const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+            const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+            kamek[0].x = randomX;
+            kamek[0].y = randomY;
+            timezone = [];
+        } else if (magictype === 'wall') {
+            generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone);
+            shield = true
+            kamekcanteleport = false;
+        } else if (magictype === 'status') {
+            const status = ['paralyzed'];
+            const randomIndex = Math.floor(Math.random() * status.length);
+            const magicstatus = status[randomIndex];
+            
+           if (magicstatus === 'paralyzed') {
+                isParalyzed = true;
+                setTimeout(turnoffpara, 1000);
+            }
+        }else if (magictype === 'obstacle'){
+// Assume obstacles and mirrors are defined arrays
+const obstacles2 = [turrets, goombas];
+
+// Generate a random index to select either the obstacles or mirrors array
+const randomIndex = Math.floor(Math.random() * obstacles2.length);
+
+// Select the array based on the random index
+const spawner = obstacles2[randomIndex];
+
+// Calculate random coordinates within the grid
+const x = Math.floor(Math.random() * (canvas.width / gridSize));
+let y = Math.floor(Math.random() * (canvas.height / gridSize));
+
+// Add the new obstacle or mirror at the random coordinates
+if (spawner !== goombas){
+    if (spawner === turrets){
+        if (turrets.length < 5){
+        spawnTurrets(x,y)
+        }
+    }else{
+        spawner.push({x:x,y:y})
+        }
+}else if(spawner === goombas){
+    y -= 6
+    if(y < 0){
+        y = 6
     }
-}
-
-function launchFire() {
-    let gridOffset = 3;
-    addLavaArea(kamek[0].x, kamek[0].y + gridOffset, 2, 2);
-
-    if (!kamekInMotion) {
-        const targetX = snake[0].x * gridSize;
-        const targetY = snake[0].y * gridSize;
-        kamekangle = Math.atan2(targetY - kamek[0].y * gridSize, targetX - kamek[0].x * gridSize);
-        velocityX = Math.cos(kamekangle);
-        velocityY = Math.sin(kamekangle);
-        kamekInMotion = true;
-    }
-
-    if (kamekInMotion) {
-        kamek[0].x += velocityX;
-        kamek[0].y += velocityY;
-
-        if (kamek[0].x <= 0 || kamek[0].y <= 0 || 
-            kamek[0].x >= canvas.width / gridSize || kamek[0].y >= canvas.height / gridSize) {
-            kamekInMotion = false;
+    spawnGoombas(x, y)
+        }
         }
     }
 }
@@ -1890,7 +1837,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 ctx.clearRect(projectile.x - 6, projectile.y - 6, 12, 12);
 
                 if (increase === false || projectile.count <= 5) {
-                    if (projectile.homing && projectile.shooter === kamek) {
+                    if (projectile.homing && flaming === false && projectile.shooter === kamek) {
                         // Adjust velocity to home in on the target
                         const targetX = snake[0].x * gridSize;
                         const targetY = snake[0].y * gridSize;
@@ -3992,6 +3939,45 @@ canvas.addEventListener('touchend', PauseHoldEnd);
 function PauseHoldEnd() {
     touchStartTime = null; // Reset the touch start time
 }
+document.addEventListener('DOMContentLoaded', function() {
+  const scoreDisplay = document.querySelector('.scoreDisplay');
+  const text = scoreDisplay.textContent;
+  scoreDisplay.textContent = '';
+
+  // Function to convert RGB to luminance
+  function getLuminance(rgb) {
+    const [r, g, b] = rgb.match(/\d+/g).map(Number).map((c) => {
+      c /= 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  // Function to get contrast color (black or white)
+  function getContrastColor(bgColor) {
+    const luminance = getLuminance(bgColor);
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  }
+
+  // Create span elements for each character
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.textContent = text[i];
+    scoreDisplay.appendChild(span);
+
+    // Temporarily set the span's position
+    span.style.position = 'static';
+  }
+
+  // Set the contrast color for each span
+  const spans = scoreDisplay.querySelectorAll('span');
+  spans.forEach(span => {
+    const bgColor = window.getComputedStyle(span).backgroundColor;
+    span.style.color = getContrastColor(bgColor);
+    span.style.position = 'absolute';
+  });
+});
+
     </script>
 </body>
 </html>
