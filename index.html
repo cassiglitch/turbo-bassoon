@@ -344,32 +344,35 @@ if (spawner !== goombas){
     }
     spawnGoombas(x, y)
         }
-        }else if (magictype === 'firelaunch'){
-            let gridOffset =3
-            // Call the function with desired parameters
-addLavaArea(kamek[0].x,kamek[0].y + gridOffset,2,2)
-    if (kamekInMotion === false){
-    const targetX = snake[0].x * gridSize;
-    const targetY = snake[0].y * gridSize;
-     kamekangle = Math.atan2(targetY - kamek[0].y * gridSize, targetX - kamek[0].x * gridSize);
+        }if (magictype === 'firelaunch') {
+    let gridOffset = 3;
+
+    // Call the function with desired parameters
+    addLavaArea(kamek[0].x, kamek[0].y + gridOffset, 2, 2);
+
+    if (!kamekInMotion) {
+        const targetX = snake[0].x * gridSize;
+        const targetY = snake[0].y * gridSize;
+        kamekangle = Math.atan2(targetY - kamek[0].y * gridSize, targetX - kamek[0].x * gridSize);
         velocityX = Math.cos(kamekangle);
-     velocityY = Math.sin(kamekangle);
+        velocityY = Math.sin(kamekangle);
+        kamekInMotion = true;
     }
-    kamek[0].x += velocityX;
+
+    if (kamekInMotion) {
+        kamek[0].x += velocityX;
         kamek[0].y += velocityY;
-kamekInMotion = true;
-            if (kamekInMotion){
-kamek[0].x += velocityX;
-        kamek[0].y += velocityY;
-            }
-    if (kamek[0].x <= 0 || kamek[0].y <= 0 ||
-            kamek[0].x >= canvas.width/gridSize || kamek[0].y >= canvas.height/gridSize) {
-            // Stop the FireLord
+
+        // Check boundaries
+        if (kamek[0].x <= 0 || kamek[0].y <= 0 || 
+            kamek[0].x >= canvas.width / gridSize || kamek[0].y >= canvas.height / gridSize) {
             kamekInMotion = false;
-        }
         }
     }
 }
+
+        }
+    }
 
 function cancelEffects(){
     isConfused = false
