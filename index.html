@@ -243,7 +243,7 @@ minictx.drawWindow(window, rect.left, rect.top, rect.width, rect.height, 'rgb(25
 // Step 2: Manipulate the captured image (contrast with the background)
 
 // Get the imageData of the captured element
-var imageData = minictx.getImageData(0, 0, canvas.width, canvas.height);
+var imageData = minictx.getImageData(0, 0, minicanvas.width, minicanvas.height);
 var data = imageData.data;
 
 // Loop through each pixel and apply contrast effect
