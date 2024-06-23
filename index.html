@@ -230,127 +230,140 @@ function iceArea(x, y, size, countdown) {
 }
 
         
-function kamekUpdate(){
-            if (kamek.length > 1) {
-    kamek.length = 1;
-}
-    if (kamek.length !== 0){
-        if (magictype === 'firelaunch' || magictype === 'icelaunch' ||magictype === 'earthlaunch' ||magictype === 'lightninglaunch' ){
-        applyStatus(250, 'magic')
-        }else{
-applyStatus(1000, 'magic')
-        }
-if (kamek[0].health === undefined){
-    kamek[0].health = 100;
-}
+function kamekUpdate() {
+    if (kamek.length > 1) {
+        kamek.length = 1;
     }
 
- if (sideshield <= 2){
-            shield = false
-            timezone = []
-            kameksecondphasesctive = true
- }
-if (kamek.length !== 0){
-    if (kameksecondphasesctive === false){
-    const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
-      if (distance <= 5) {
+    if (kamek.length !== 0) {
+        if (['firelaunch', 'icelaunch', 'earthlaunch', 'lightninglaunch'].includes(magictype)) {
+            applyStatus(250, 'magic');
+        } else {
+            applyStatus(1000, 'magic');
+        }
+
+        if (kamek[0].health === undefined) {
+            kamek[0].health = 100;
+        }
+    }
+
+    if (sideshield <= 2) {
+        shield = false;
+        timezone = [];
+        kameksecondphasesctive = true;
+    }
+
+    if (kamek.length !== 0) {
+        if (!kameksecondphasesctive) {
+            const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
+            if (distance <= 5) {
+                teleportKamek();
+            }
+        }
+    } else {
+        timezone = [];
+    }
+}
+
+function teleportKamek() {
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     kamek[0].x = randomX;
     kamek[0].y = randomY;
-        timezone = []
-    kamekcanteleport = true
-      if (shield === true){
-       timezone = []
-       generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone)
-      }
-      }
-}}
-if (kamek.length === 0){
-    timezone = []
-}
-}
+    timezone = [];
+    kamekcanteleport = true;
 
-let kamekangle = 0
-let kamekInMotion = false
-let velocityX = Math.cos(kamekangle);
-    let velocityY = Math.sin(kamekangle);
-function kamekMagic() {
-    if (!isPaused) {
-        if(!kamekInMotion){
-            if (kameksecondphasesctive === false){
-        // Determine the type of magic
-        if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false && kameksecondphasesctive === false && sideshield > 2) {
-            const magic = ['bolt', 'status', 'obstacle'];
-            const randomIndex = Math.floor(Math.random() * magic.length);
-            magictype = magic[randomIndex];
-        }else{
-
-            const magic = ['port', 'wall', 'obstacle'];
-            const randomIndex = Math.floor(Math.random() * magic.length);
-            magictype = magic[randomIndex];
-        }
-        }else{
-const magic = ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglaunch', 'lightningshoot', 'earthlaunch', 'earthshoot'];
-            const randomIndex = Math.floor(Math.random() * magic.length);
-            magictype = magic[randomIndex];
-}
-        // Perform the action based on the type of magic
-        if (magictype === 'bolt') {
-            enemyshootmagic();
-        } else if (magictype === 'port' && kamekcanteleport === true) {
-            const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
-            const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
-            kamek[0].x = randomX;
-            kamek[0].y = randomY;
-            timezone = [];
-        } else if (magictype === 'wall') {
-            generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone);
-            shield = true
-            kamekcanteleport = false;
-        } else if (magictype === 'status') {
-            const status = ['paralyzed'];
-            const randomIndex = Math.floor(Math.random() * status.length);
-            const magicstatus = status[randomIndex];
-            
-           if (magicstatus === 'paralyzed') {
-                isParalyzed = true;
-                setTimeout(turnoffpara, 1000);
-            }
-        }else if (magictype === 'obstacle'){
-// Assume obstacles and mirrors are defined arrays
-const obstacles2 = [turrets, goombas];
-
-// Generate a random index to select either the obstacles or mirrors array
-const randomIndex = Math.floor(Math.random() * obstacles2.length);
-
-// Select the array based on the random index
-const spawner = obstacles2[randomIndex];
-
-// Calculate random coordinates within the grid
-const x = Math.floor(Math.random() * (canvas.width / gridSize));
-let y = Math.floor(Math.random() * (canvas.height / gridSize));
-
-// Add the new obstacle or mirror at the random coordinates
-if (spawner !== goombas){
-    if (spawner === turrets){
-        if (turrets.length < 5){
-        spawnTurrets(x,y)
-        }
-    }else{
-        spawner.push({x:x,y:y})
-        }
-}else if(spawner === goombas){
-    y -= 6
-    if(y < 0){
-        y = 6
+    if (shield) {
+        timezone = [];
+        generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone);
     }
-    spawnGoombas(x, y)
-        }
-        }if (magictype === 'firelaunch') {
-    let gridOffset = 3;
+}
 
-    // Call the function with desired parameters
+let kamekangle = 0;
+let kamekInMotion = false;
+let velocityX = Math.cos(kamekangle);
+let velocityY = Math.sin(kamekangle);
+
+function kamekMagic() {
+    if (!isPaused && !kamekInMotion) {
+        determineMagicType();
+        performMagicAction();
+    }
+}
+
+function determineMagicType() {
+    const magic = kameksecondphasesctive ? 
+        ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglaunch', 'lightningshoot', 'earthlaunch', 'earthshoot'] :
+        (Math.random() <= 0.2 && !kamekcanteleport && !isParalyzed && sideshield > 2) ? 
+        ['bolt', 'status', 'obstacle'] : 
+        ['port', 'wall', 'obstacle'];
+    
+    const randomIndex = Math.floor(Math.random() * magic.length);
+    magictype = magic[randomIndex];
+}
+
+function performMagicAction() {
+    switch (magictype) {
+        case 'bolt':
+            enemyshootmagic();
+            break;
+        case 'port':
+            if (kamekcanteleport) {
+                teleportKamek();
+            }
+            break;
+        case 'wall':
+            generatePolygonCoordinates(kamek[0].x, kamek[0].y, 5, sideshield, timezone);
+            shield = true;
+            kamekcanteleport = false;
+            break;
+        case 'status':
+            applyStatusEffect();
+            break;
+        case 'obstacle':
+            spawnEnemird();
+            break;
+        case 'firelaunch':
+            launchFire();
+            break;
+        default:
+            break;
+    }
+}
+
+function applyStatusEffect() {
+    const status = ['paralyzed'];
+    const randomIndex = Math.floor(Math.random() * status.length);
+    const magicstatus = status[randomIndex];
+
+    if (magicstatus === 'paralyzed') {
+        isParalyzed = true;
+        setTimeout(turnoffpara, 1000);
+    }
+}
+
+function spawnEnemird() {
+    const obstacles2 = [turrets, goombas];
+    const randomIndex = Math.floor(Math.random() * obstacles2.length);
+    const spawner = obstacles2[randomIndex];
+    const x = Math.floor(Math.random() * (canvas.width / gridSize));
+    let y = Math.floor(Math.random() * (canvas.height / gridSize));
+
+    if (spawner !== goombas) {
+        if (spawner === turrets && turrets.length < 5) {
+            spawnTurrets(x, y);
+        } else {
+            spawner.push({x, y});
+        }
+    } else {
+        y -= 6;
+        if (y < 0) y = 6;
+        spawnGoombas(x, y);
+    }
+}
+
+function launchFire() {
+    let gridOffset = 3;
     addLavaArea(kamek[0].x, kamek[0].y + gridOffset, 2, 2);
 
     if (!kamekInMotion) {
@@ -366,14 +379,9 @@ if (spawner !== goombas){
         kamek[0].x += velocityX;
         kamek[0].y += velocityY;
 
-        // Check boundaries
         if (kamek[0].x <= 0 || kamek[0].y <= 0 || 
             kamek[0].x >= canvas.width / gridSize || kamek[0].y >= canvas.height / gridSize) {
             kamekInMotion = false;
-        }
-    }
-}
-
         }
     }
 }
