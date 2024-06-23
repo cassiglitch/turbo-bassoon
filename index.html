@@ -244,6 +244,12 @@ if (kamek[0].health === undefined){
     kamek[0].health = 100;
 }
     }
+
+ if (sideshield <= 2){
+            shield = false
+            timezone = []
+            kameksecondphasesctive = true
+ }
 if (kamek.length !== 0){
     if (kameksecondphasesctive === false){
     const distance = Math.abs(snake[0].x - kamek[0].x) + Math.abs(snake[0].y - kamek[0].y);
@@ -278,16 +284,11 @@ function kamekMagic() {
             const magic = ['bolt', 'status', 'obstacle'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
-        } else if (sideshield <= 2){
-            shield = false
-            timezone = []
-            kameksecondphasesctive = true
         }else{
-if (kameksecondphasesctive === false){
+
             const magic = ['port', 'wall', 'obstacle'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
-        }
         }
         }else{
 const magic = ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglaunch', 'lightningshoot', 'earthlaunch', 'earthshoot'];
