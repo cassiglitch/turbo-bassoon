@@ -53,7 +53,7 @@
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/tinycolor2@1.4.2/dist/tinycolor-min.js"></script>
-    <div id="scoreDisplay">Score: 0</div>
+    <div id="scoreDisplay">Score: 0 <br> Lives: 2</div>
     <canvas id="snakeCanvas"></canvas>
         <div id="victoryMessage"></div>
     <script>
@@ -227,46 +227,45 @@ function iceArea(x, y, size, countdown) {
     
 }
 
-function EditAndContrast(){
-var scoreDisplay = document.getElementById('scoreDisplay');
-var rect = scoreDisplay.getBoundingClientRect();
+function editAndContrast() {
+    var scoreDisplay = document.getElementById('scoreDisplay');
+    var rect = scoreDisplay.getBoundingClientRect();
 
-// Create a canvas to temporarily hold the captured image
-var minicanvas = document.createElement('canvas');
-minicanvas.width = rect.width;
-minicanvas.height = rect.height;
-var minictx = minicanvas.getContext('2d');
+    // Create a canvas to temporarily hold the captured image
+    var minicanvas = document.createElement('canvas');
+    minicanvas.width = rect.width;
+    minicanvas.height = rect.height;
+    var minictx = minicanvas.getContext('2d');
 
-// Draw the element onto the canvas
-minictx.drawWindow(window, rect.left, rect.top, rect.width, rect.height, 'rgb(255,255,255)');
+    // Draw the element onto the canvas
+    minictx.drawImage(scoreDisplay, 0, 0, rect.width, rect.height);
 
-// Step 2: Manipulate the captured image (contrast with the background)
+    // Get the imageData of the captured element
+    var imageData = minictx.getImageData(0, 0, minicanvas.width, minicanvas.height);
+    var data = imageData.data;
 
-// Get the imageData of the captured element
-var imageData = minictx.getImageData(0, 0, minicanvas.width, minicanvas.height);
-var data = imageData.data;
+    // Loop through each pixel and apply contrast effect
+    for (var i = 0; i < data.length; i += 4) {
+        // Calculate average luminance
+        var average = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        
+        // Increase or decrease contrast
+        for (var j = 0; j < 3; j++) {
+            if (data[i + j] < average) {
+                data[i + j] -= 20;  // Decrease brightness
+            } else {
+                data[i + j] += 20;  // Increase brightness
+            }
+        }
+    }
 
-// Loop through each pixel and apply contrast effect
-for (var i = 0; i < data.length; i += 4) {
-    // Get the average value of the pixel's RGB components
-    var average = (data[i] + data[i + 1] + data[i + 2]) / 3;
+    // Put the manipulated imageData back onto the canvas
+    minictx.putImageData(imageData, 0, 0);
 
-    // Set the pixel to contrast with the background
-    data[i] = 255 - data[i];         // Red component
-    data[i + 1] = 255 - data[i + 1]; // Green component
-    data[i + 2] = 255 - data[i + 2]; // Blue component
+    // Draw the manipulated image onto the main canvas
+    ctx.drawImage(minicanvas, rect.left, rect.top);
 }
 
-// Put the manipulated imageData back onto the canvas
-minictx.putImageData(imageData, 0, 0);
-
-// Step 3: Render the manipulated image onto the main canvas
-
-// Assuming you have a main canvas element in your HTML
-
-// Draw the manipulated image onto the main canvas
-ctx.drawImage(minicanvas, rect.left, rect.top);
-}
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -3697,6 +3696,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
+            editAndContrast() 
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
