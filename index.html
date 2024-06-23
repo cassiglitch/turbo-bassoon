@@ -272,6 +272,7 @@ let velocityX = Math.cos(kamekangle);
 function kamekMagic() {
     if (!isPaused) {
         if(!kamekInMotion){
+            if (kameksecondphasesctive === false){
         // Determine the type of magic
         if ((Math.random() <= 0.2 && kamekcanteleport === false) && isParalyzed === false && kameksecondphasesctive === false && sideshield > 2) {
             const magic = ['bolt', 'status', 'obstacle'];
@@ -286,13 +287,13 @@ if (kameksecondphasesctive === false){
             const magic = ['port', 'wall', 'obstacle'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
+        }
+        }
         }else{
 const magic = ['firelaunch', 'fireshoot', 'icelaunch', 'iceshoot', 'lightninglaunch', 'lightningshoot', 'earthlaunch', 'earthshoot'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             magictype = magic[randomIndex];
 }
-        }
-        }
         // Perform the action based on the type of magic
         if (magictype === 'bolt') {
             enemyshootmagic();
@@ -374,6 +375,7 @@ if (spawner !== goombas){
 
         }
     }
+}
 
 function cancelEffects(){
     isConfused = false
