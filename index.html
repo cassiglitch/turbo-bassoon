@@ -344,7 +344,7 @@ if (spawner !== goombas){
     spawnGoombas(x, y)
         }
         }else if (magictype === 'firelaunch'){
-            let gridOffset = ((2*gridSize) + (gridSize / 2))/2
+            let gridOffset =5
             // Call the function with desired parameters
 addLavaArea(kamek[0].x,kamek[0].y + gridOffset,2,2)
 
@@ -363,7 +363,7 @@ kamek[0].x += velocityX;
         kamek[0].y += velocityY;
             }
     if (kamek[0].x === 0 || kamek[0].y === 0 ||
-            kamek[0].x === canvas.width || kamek[0].y === canvas.height) {
+            kamek[0].x === canvas.width/gridSize || kamek[0].y === canvas.height/gridSize) {
             // Stop the FireLord
             kamekInMotion = false;
         }
