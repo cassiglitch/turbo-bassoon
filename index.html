@@ -3939,44 +3939,90 @@ canvas.addEventListener('touchend', PauseHoldEnd);
 function PauseHoldEnd() {
     touchStartTime = null; // Reset the touch start time
 }
-document.addEventListener('DOMContentLoaded', function() {
-  const scoreDisplay = document.querySelector('.scoreDisplay');
-  const text = scoreDisplay.textContent;
-  scoreDisplay.textContent = '';
+    document.addEventListener('DOMContentLoaded', function() {
+      const scoreDisplay = document.getElementById('scoreDisplay');
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
 
-  // Function to convert RGB to luminance
-  function getLuminance(rgb) {
-    const [r, g, b] = rgb.match(/\d+/g).map(Number).map((c) => {
-      c /= 255;
-      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      // Get the computed style of the scoreDisplay element
+      const computedStyle = window.getComputedStyle(scoreDisplay);
+      const width = parseInt(computedStyle.width, 10);
+      const height = parseInt(computedStyle.height, 10);
+
+      // Set canvas dimensions
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw the scoreDisplay element onto the canvas
+      ctx.font = computedStyle.fontSize + ' ' + computedStyle.fontFamily;
+      ctx.textBaseline = 'top';
+
+      // Create a temporary div to measure text width
+      const tempDiv = document.createElement('div');
+      tempDiv.style.font = computedStyle.font;
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.visibility = 'hidden';
+      document.body.appendChild(tempDiv);
+
+      // Draw each character separately to analyze background
+      let x = 0;
+      const text = scoreDisplay.textContent;
+      scoreDisplay.textContent = '';
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        tempDiv.textContent = char;
+        const charWidth = tempDiv.clientWidth;
+
+        // Draw character on canvas
+        ctx.fillStyle = computedStyle.backgroundColor; // Draw background color
+        ctx.fillRect(x, 0, charWidth, height);
+        ctx.fillStyle = '#000000'; // Draw text in black initially
+        ctx.fillText(char, x, 0);
+
+        // Get image data for the character area
+        const imageData = ctx.getImageData(x, 0, charWidth, height);
+        const data = imageData.data;
+
+        // Calculate average luminance
+        let r, g, b, luminance;
+        let totalLuminance = 0;
+        for (let j = 0; j < data.length; j += 4) {
+          r = data[j] / 255;
+          g = data[j + 1] / 255;
+          b = data[j + 2] / 255;
+
+          r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+          g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+          b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+
+          luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          totalLuminance += luminance;
+        }
+
+        totalLuminance /= data.length / 4;
+        const textColor = totalLuminance > 0.5 ? '#000000' : '#FFFFFF';
+
+        // Draw the character again with the correct text color
+        ctx.fillStyle = computedStyle.backgroundColor; // Redraw background color
+        ctx.fillRect(x, 0, charWidth, height);
+        ctx.fillStyle = textColor; // Set text color based on luminance
+        ctx.fillText(char, x, 0);
+
+        // Create a span for the character and set its style
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.style.position = 'absolute';
+        span.style.left = x + 'px';
+        span.style.top = '0';
+        span.style.color = textColor;
+        scoreDisplay.appendChild(span);
+
+        x += charWidth;
+      }
+
+      // Clean up temporary div
+      document.body.removeChild(tempDiv);
     });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  }
-
-  // Function to get contrast color (black or white)
-  function getContrastColor(bgColor) {
-    const luminance = getLuminance(bgColor);
-    return luminance > 0.5 ? '#000000' : '#FFFFFF';
-  }
-
-  // Create span elements for each character
-  for (let i = 0; i < text.length; i++) {
-    const span = document.createElement('span');
-    span.textContent = text[i];
-    scoreDisplay.appendChild(span);
-
-    // Temporarily set the span's position
-    span.style.position = 'static';
-  }
-
-  // Set the contrast color for each span
-  const spans = scoreDisplay.querySelectorAll('span');
-  spans.forEach(span => {
-    const bgColor = window.getComputedStyle(span).backgroundColor;
-    span.style.color = getContrastColor(bgColor);
-    span.style.position = 'absolute';
-  });
-});
 
     </script>
 </body>
