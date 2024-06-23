@@ -3692,6 +3692,8 @@ function animateExplosion() {
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
+collectBoundingBoxCoordinates(scoreDisplay);
+            
 if (snake.length <= 1){
     restartGame()
 }
