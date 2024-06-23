@@ -3348,7 +3348,7 @@ if (score >= maxscore / 2) {
             }
     }
 
-if (reflector.length === 12 && kamek.length === 0 && kamekappears === false && firelord.length ===0) {
+if (reflector.length === 12 && kamek.length === 0 && kamekappears === false && firelord.length === 0 && icelord.length === 0 && earthlord.length === 0 && lightninglord.length === 0) {
     let kamekX2 = Math.floor(Math.random() * (canvas.width / gridSize));
     let kamekY2 = Math.floor(Math.random() * (canvas.height / gridSize));
     isPaused = true
@@ -3488,7 +3488,7 @@ const id = Math.random() < 0.5 ? 1 : 2;
         formrandomshape(4)            
     } else if (randomValue < 0.4){
             thwomps.push({ x: x, y: 0, state: 1 });
-        }else if (randomValue < 0.2 && kamek.length === 0){
+        }else if (randomValue < 0.6 && kamek.length === 0){
 const lord = [firelord,lightninglord,icelord,earthlord]; // Possible directions    
 const randomIndex2 = Math.floor(Math.random() * lord.length);
 let  lords = lord[randomIndex2];
