@@ -227,44 +227,9 @@ function iceArea(x, y, size, countdown) {
     
 }
 
-function editAndContrast() {
-    var scoreDisplay = document.getElementById('scoreDisplay');
-    var rect = scoreDisplay.getBoundingClientRect();
-
-    // Create a canvas to temporarily hold the captured image
-    var minicanvas = document.createElement('canvas');
-    minicanvas.width = rect.width;
-    minicanvas.height = rect.height;
-    var minictx = minicanvas.getContext('2d');
-
-    // Draw the element onto the canvas
-    minictx.drawImage(scoreDisplay, 0, 0, rect.width, rect.height);
-
-    // Get the imageData of the captured element
-    var imageData = minictx.getImageData(0, 0, minicanvas.width, minicanvas.height);
-    var data = imageData.data;
-
-    // Loop through each pixel and apply contrast effect
-    for (var i = 0; i < data.length; i += 4) {
-        // Calculate average luminance
-        var average = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        
-        // Increase or decrease contrast
-        for (var j = 0; j < 3; j++) {
-            if (data[i + j] < average) {
-                data[i + j] -= 20;  // Decrease brightness
-            } else {
-                data[i + j] += 20;  // Increase brightness
-            }
-        }
-    }
 
     // Put the manipulated imageData back onto the canvas
-    minictx.putImageData(imageData, 0, 0);
 
-    // Draw the manipulated image onto the main canvas
-    ctx.drawImage(minicanvas, rect.left, rect.top);
-}
 
 function kamekUpdate(){
             if (kamek.length > 1) {
@@ -3696,7 +3661,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-            editAndContrast() 
+            
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
