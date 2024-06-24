@@ -1840,6 +1840,7 @@ function getDirectionToSnakeHead(x, y, snake) {
         let iskamekdead = false
 function kamekDeath(){
     isPaused = true
+    if (iskamekdead === false){
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     const randomX2 = Math.floor(Math.random() * (canvas.width / gridSize));
@@ -1848,7 +1849,8 @@ function kamekDeath(){
     const randomY3 = Math.floor(Math.random() * (canvas.height / gridSize));
     const randomX4 = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY4 = Math.floor(Math.random() * (canvas.height / gridSize));
-    let gridOffset = ((2*gridSize) + (gridSize / 2))/2
+    }
+        let gridOffset = ((2*gridSize) + (gridSize / 2))/2
     if (iskamekdead === false){
     createPortalAnimation(randomX * gridSize, randomY * gridSize, 90, 2000);
     createPortalAnimation(randomX2 * gridSize, randomY2 * gridSize, 90, 2000);
