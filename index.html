@@ -67,7 +67,7 @@ let isSlow = false
         let reflector = []
         let isFast = false
         let timezone = []
-        let mirrors = [{x:7,y:0}]
+        let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -80,7 +80,7 @@ let isSlow = false
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
-        let obstacles = [];
+        let obstacles = []
         let kamekappears = false
         let firstControlSchemeSet = false;
         let dynamicObstacles = [];
@@ -93,7 +93,7 @@ let isSlow = false
         let isInvincible = false;
         let invincibilityDuration = 0;
         let isColliding = false;
-        let kamek = []
+        let kamek = [{x:2,y:2}]
         let collisionAnimationFrames = 10;
         let isPaused = false;
         let charging = false;
@@ -133,6 +133,7 @@ let isSlow = false
         let track = []
 let thwomps = []
 let pX = 0;
+let wellStrength = 4
 let firelord = []
      let lightninglord = []
         let icelord = []
@@ -155,7 +156,7 @@ let isTaxed = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
-let sideshield = 6
+let sideshield = 2
         let shield = false
 let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
@@ -167,6 +168,7 @@ let magictype = 'bolt'
         let electriccolor = '#CFFF0480'
         let earthcolor = '#BD978E'
         let earth = []
+        let wellWarning = []
         let isEarthed = false
         let scoreAreaArray = []
         let scorecolornoalpha = '#FF0000'
@@ -247,6 +249,47 @@ function scoreArea(x, y, size) {
     
 }
 
+function wellWarningArea(x, y, size) {
+    let offset = Math.floor(size / 2);
+
+    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+    let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
+    let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
+    
+    for (let i = -offset; i <= offset; i++) {
+        for (let j = -offset; j <= offset; j++) {
+            wellWarning.push({ x: Math.floor(x + i), y: Math.floor(y + j)});
+        }
+    }
+    
+}
+
+function removeDuplicatesWithSameCoordinates(arr) {
+    // Iterate through the array
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            // Check if both items have the same coordinates
+            if (arr[i].x === arr[j].x && arr[i].y === arr[j].y) {
+                // Remove one of the items (splice the array)
+                arr.splice(j, 1);
+                // Since we removed an element, adjust j to stay in sync with the array length
+                j--;
+            }
+        }
+    }
+    return arr;
+}
+
+function removeDuplicateWellWarnings() {
+removeDuplicatesWithSameCoordinates(wellWarning)
+        }
+
+function manageWellsWarningZone(){
+wells.forEach((well) => {
+wellWarningArea(well.x, well.y, 8)
+removeDuplicateWellWarnings()
+})
+}
 function getMiddleXCoordinate(element) {
   if (!(element instanceof Element)) {
     throw new Error("Invalid argument: element must be a DOM element.");
@@ -260,13 +303,13 @@ function getMiddleXCoordinate(element) {
 
   return middleX;
 }
+displaycheck()
 function displaycheck(){
 scoreAreaArray = []
 let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
-addLavaArea(3,3,4,3)
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -672,7 +715,7 @@ function ManageTurrets() {
   }
 }
 
-let wellStrength = 5
+
 function checkDistance(snake) {
     wells.forEach((well) => {
       const distance = Math.abs(snake[0].x - well.x) + Math.abs(snake[0].y - well.y);
@@ -1563,7 +1606,7 @@ function isCollidingWithFireLord(fireLordBoundingBox, pointX, pointY) {
            pointY >= fireLordBoundingBox.yMin && pointY <= fireLordBoundingBox.yMax;
 }
 
-        let langle = 0
+        let lightningangle = 0
         let lightningmagic = 0
         let lightninglordInMotion = false;
 let lightningLordBoundingBox = drawLightningLord(5, 5);
@@ -1574,10 +1617,10 @@ lightningArea(lightninglord[0].x,lightninglord[0].y,2,1)
     if (lightninglordInMotion === false){
     const targetX = snake[0].x * gridSize;
     const targetY = snake[0].y * gridSize;
-     langle = Math.atan2(targetY - lightninglord[0].y * gridSize, targetX - lightninglord[0].x * gridSize);
+     lightningangle = Math.atan2(targetY - lightninglord[0].y * gridSize, targetX - lightninglord[0].x * gridSize);
     }
-    let velocityX = Math.cos(langle);
-    let velocityY = Math.sin(langle);
+    let velocityX = Math.cos(lightningangle);
+    let velocityY = Math.sin(lightningangle);
 
     if (lightninglord.length > 1) {
         lightninglord.length = 1;
@@ -1734,7 +1777,7 @@ shootWaveOfProjectiles(icelord[0].x * gridSize, icelord[0].y * gridSize, 1, 1, 0
 }
 
         
-        
+        let fireangle = 0
         let firelordmagic = 0
         let firelordInMotion = false;
 let fireLordBoundingBox = drawFireLord(5, 5);
@@ -1745,10 +1788,10 @@ addLavaArea(firelord[0].x,firelord[0].y,2,2)
     if (firelordInMotion === false){
     const targetX = snake[0].x * gridSize;
     const targetY = snake[0].y * gridSize;
-     langle = Math.atan2(targetY - firelord[0].y * gridSize, targetX - firelord[0].x * gridSize);
+     fireangle = Math.atan2(targetY - firelord[0].y * gridSize, targetX - firelord[0].x * gridSize);
     }
-    let velocityX = Math.cos(langle);
-    let velocityY = Math.sin(langle);
+    let velocityX = Math.cos(fireangle);
+    let velocityY = Math.sin(fireangle);
 
     if (firelord.length > 1) {
         firelord.length = 1;
@@ -1796,7 +1839,19 @@ function getDirectionToSnakeHead(x, y, snake) {
 }
 function kamekDeath(){
     isPaused = true
+    const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
+    const randomX2 = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY2 = Math.floor(Math.random() * (canvas.height / gridSize));
+    const randomX3 = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY3 = Math.floor(Math.random() * (canvas.height / gridSize));
+    const randomX4 = Math.floor(Math.random() * (canvas.width / gridSize));
+    const randomY4 = Math.floor(Math.random() * (canvas.height / gridSize));
     let gridOffset = ((2*gridSize) + (gridSize / 2))/2
+    createPortalAnimation(randomX * gridSize, randomY * gridSize, 90, 2000);
+    createPortalAnimation(randomX2 * gridSize, randomY2 * gridSize, 90, 2000);
+    createPortalAnimation(randomX3 * gridSize, randomY3 * gridSize, 90, 2000);
+    createPortalAnimation(randomX4 * gridSize, randomY4 * gridSize, 90, 2000);
     turrets.forEach((turret, index) =>{
 createPortalAnimation(turret.x* gridSize, turret.y * gridSize, 30, 2000);
     })
@@ -1809,6 +1864,10 @@ createPortalAnimation(kamek[0].x* gridSize, (kamek[0].y * gridSize) + gridOffset
     kamek=[]
     turrets = []
     goombas = []
+    firelord.push({ x: randomX, y: randomY });
+    lightninglord.push({ x: randomX2, y: randomY2 });
+icelord.push({ x: randomX3, y: randomY3 });
+earthlord.push({ x: randomX4, y: randomY4 });
 }, 1100);
 setTimeout(() => {
     isPaused = false
@@ -1939,6 +1998,24 @@ firelord.forEach((firelord,findex) => {
 let firelordhit = isCollidingWithFireLord(fireLordBoundingBox, projectile.x, projectile.y)
 if (firelordhit === true){
     firelord.splice(findex,1)
+createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                        projectiles.splice(index, 1);
+}
+})
+
+earthlord.forEach((firelord,findex) => {
+let earthlordhit = isCollidingWithFireLord(earthLordBoundingBox, projectile.x, projectile.y)
+if (earthlordhit === true){
+    earthlord.splice(findex,1)
+createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                        projectiles.splice(index, 1);
+}
+})
+
+lightninglord.forEach((firelord,findex) => {
+let lightninglordhit = isCollidingWithFireLord(lightningLordBoundingBox, projectile.x, projectile.y)
+if (lightninglordhit === true){
+    lightninglord.splice(findex,1)
 createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
                         projectiles.splice(index, 1);
 }
@@ -2463,11 +2540,7 @@ function pauseGame() {
     isPaused = !isPaused; // Toggle the paused state
 }
 
-function EffectsareTouching(obstacle1, obstacle2) {
-      return (
-        Math.abs(obstacle1.x - obstacle2.x) <= 1 && Math.abs(obstacle1.y - obstacle2.y) <= 1
-      );
-    }
+
 
 function draw() {
     // Clear the canvas
@@ -2569,42 +2642,9 @@ electric.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gr
 ctx.fillStyle = icecolor;
 ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
     
-    
-    ctx.shadowColor = "red"; // Change this to the desired glow color
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.shadowBlur = 10; // Adjust this to control the blur effect
+ctx.fillStyle = lavacolor;
+lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
-    // Set the fill color for the lava
-    ctx.fillStyle = lavacolor;
-
-    // Draw each lava obstacle with the glow effect
-    lava.forEach(obstacle => {
-      // Determine which sides of the obstacle should not have glow effect
-      let removeLeftGlow = lava.some(other => EffectsareTouching({x: obstacle.x - 1, y: obstacle.y}, other));
-      let removeRightGlow = lava.some(other => EffectsareTouching({x: obstacle.x + 1, y: obstacle.y}, other));
-      let removeTopGlow = lava.some(other => EffectsareTouching({x: obstacle.x, y: obstacle.y - 1}, other));
-      let removeBottomGlow = lava.some(other => EffectsareTouching({x: obstacle.x, y: obstacle.y + 1}, other));
-
-      // Draw the obstacle with adjusted shadow settings
-      ctx.shadowColor = "red";
-      ctx.shadowBlur = 10;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-
-      if (!removeLeftGlow) {
-        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
-      }
-      if (!removeRightGlow) {
-        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
-      }
-      if (!removeTopGlow) {
-        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
-      }
-      if (!removeBottomGlow) {
-        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
-      }
-    });
 firelord.forEach((firelord) =>{
 drawFireLord(firelord.x, firelord.y)
 })
@@ -2622,9 +2662,10 @@ icelord.forEach((firelord) =>{
 drawIceLord(firelord.x, firelord.y)
 })
 
+if (isGravityWellActive === true) {
 ctx.fillStyle = scorecolor;
-scoreAreaArray.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
-
+wellWarning.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+}
 
 ctx.fillStyle = wellcolor;
   wells.forEach((well) => {
@@ -3759,6 +3800,7 @@ function animateExplosion() {
             update();
             draw();
             displaycheck()
+            manageWellsWarningZone()
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
