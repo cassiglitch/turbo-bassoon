@@ -2463,7 +2463,13 @@ function pauseGame() {
     isPaused = !isPaused; // Toggle the paused state
 }
 
-
+function EffectsareTouching(obstacle1, obstacle2) {
+      // Check if they are adjacent horizontally or vertically
+      return (
+        (Math.abs(obstacle1.x - obstacle2.x) === 1 && obstacle1.y === obstacle2.y) ||
+        (Math.abs(obstacle1.y - obstacle2.y) === 1 && obstacle1.x === obstacle2.x)
+      );
+    }
 
 function draw() {
     // Clear the canvas
@@ -2565,18 +2571,39 @@ electric.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gr
 ctx.fillStyle = icecolor;
 ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
     
-ctx.shadowColor = "red"; // Change this to the desired glow color
-ctx.shadowOffsetX = 0;
-ctx.shadowOffsetY = 0;
-ctx.shadowBlur = 10; // Adjust this to control the blur effect
+    ctx.shadowColor = "red"; // Change this to the desired glow color
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 10; // Adjust this to control the blur effect
 
-// Set the fill color for the lava
-ctx.fillStyle = lavacolor;
+    // Set the fill color for the lava
+    ctx.fillStyle = lavaColor;
 
-// Draw each lava obstacle with the glow effect
-lava.forEach(obstacle => {
-    ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
-});
+    // Draw each lava obstacle with the glow effect
+    lava.forEach(obstacle => {
+      // Reset shadow properties for each obstacle
+      ctx.shadowColor = "red";
+      ctx.shadowBlur = 10;
+
+      // Check adjacent obstacles to decide where to remove glow effect
+      lava.forEach(other => {
+        if (EffectsareTouching(obstacle, other)) {
+          // Remove shadow on the side where they touch
+          if (obstacle.x < other.x) {
+            ctx.shadowOffsetX = -10; // Adjust based on your shadow blur
+          } else if (obstacle.x > other.x) {
+            ctx.shadowOffsetX = 10;
+          }
+          if (obstacle.y < other.y) {
+            ctx.shadowOffsetY = -10;
+          } else if (obstacle.y > other.y) {
+            ctx.shadowOffsetY = 10;
+          }
+        }
+      });
+
+      // Draw the obstacle with adjusted shadow settings
+      ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);;
 
 firelord.forEach((firelord) =>{
 drawFireLord(firelord.x, firelord.y)
