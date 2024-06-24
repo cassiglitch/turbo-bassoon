@@ -2603,8 +2603,12 @@ ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSiz
       });
 
       // Draw the obstacle with adjusted shadow settings
-      ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);;
+      ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
 
+      // Reset shadow properties for the next obstacle
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+    });
 firelord.forEach((firelord) =>{
 drawFireLord(firelord.x, firelord.y)
 })
