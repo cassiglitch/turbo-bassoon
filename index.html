@@ -1837,6 +1837,7 @@ function getDirectionToSnakeHead(x, y, snake) {
 
     return direction;
 }
+        let iskamekdead = false
 function kamekDeath(){
     isPaused = true
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
@@ -1848,10 +1849,13 @@ function kamekDeath(){
     const randomX4 = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY4 = Math.floor(Math.random() * (canvas.height / gridSize));
     let gridOffset = ((2*gridSize) + (gridSize / 2))/2
+    if (iskamekdead === false){
     createPortalAnimation(randomX * gridSize, randomY * gridSize, 90, 2000);
     createPortalAnimation(randomX2 * gridSize, randomY2 * gridSize, 90, 2000);
     createPortalAnimation(randomX3 * gridSize, randomY3 * gridSize, 90, 2000);
     createPortalAnimation(randomX4 * gridSize, randomY4 * gridSize, 90, 2000);
+    iskamekdead = true
+    }
     turrets.forEach((turret, index) =>{
 createPortalAnimation(turret.x* gridSize, turret.y * gridSize, 30, 2000);
     })
@@ -1872,6 +1876,7 @@ earthlord.push({ x: randomX4, y: randomY4 });
 setTimeout(() => {
     isPaused = false
     kamekappears = false
+    iskamekdead = false
 }, 2000);
 }
         function addCoordsToArray(lavax,lavay){
