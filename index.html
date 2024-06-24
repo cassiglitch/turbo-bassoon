@@ -53,7 +53,7 @@
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/tinycolor2@1.4.2/dist/tinycolor-min.js"></script>
-    <div id="scoreDisplay">Score: 0 <br> Lives: 2</div>
+    <div id="scoreDisplay">Score: 0</div>
     <canvas id="snakeCanvas"></canvas>
         <div id="victoryMessage"></div>
     <script>
@@ -159,8 +159,8 @@ let sideshield = 6
         let shield = false
 let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
-        let lava = []
-        let lavacolor = '#f14e2380'
+        let lava = [{x:5,y:0}]
+        let lavacolor = '#ffa50080'
         let electric = []
         let ice =[]
         let icecolor = '#77A0F280'
@@ -168,6 +168,12 @@ let magictype = 'bolt'
         let earthcolor = '#BD978E'
         let earth = []
         let isEarthed = false
+        let scoreAreaArray = []
+        let scorecolornoalpha = '#FF0000'
+        let alphacolor = '4D'
+        const scorecolorarray = [scorecolornoalpha, alphacolor];
+const fruitString = scorecolorarray.join("");
+let scorecolor = fruitString
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -226,11 +232,40 @@ function iceArea(x, y, size, countdown) {
     }
     
 }
+function scoreArea(x, y, size) {
+    let offset = Math.floor(size / 2);
 
+    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+    let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
+    let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
+    
+    for (let i = -offset; i <= offset; i++) {
+        for (let j = -offset; j <= offset; j++) {
+            scoreAreaArray.push({ x: Math.floor(x + i), y: Math.floor(y + j)});
+        }
+    }
+    
+}
 
-    // Put the manipulated imageData back onto the canvas
+function getMiddleXCoordinate(element) {
+  if (!(element instanceof Element)) {
+    throw new Error("Invalid argument: element must be a DOM element.");
+  }
 
+  // Get the bounding rectangle of the element
+  const rect = element.getBoundingClientRect();
+  
+  // Calculate the middle X coordinate
+  const middleX = (rect.left + (rect.width / 2)) / gridSize;
 
+  return middleX;
+}
+function displaycheck(){
+scoreAreaArray = []
+let middleX = getMiddleXCoordinate(scoreDisplay)
+        
+scoreArea(middleX,1,4)
+}
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -2529,8 +2564,18 @@ electric.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gr
 ctx.fillStyle = icecolor;
 ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
     
+ctx.shadowColor = "red"; // Change this to the desired glow color
+ctx.shadowOffsetX = 0;
+ctx.shadowOffsetY = 0;
+ctx.shadowBlur = 10; // Adjust this to control the blur effect
+
+// Set the fill color for the lava
 ctx.fillStyle = lavacolor;
-lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+
+// Draw each lava obstacle with the glow effect
+lava.forEach(obstacle => {
+    ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
+});
 
 firelord.forEach((firelord) =>{
 drawFireLord(firelord.x, firelord.y)
@@ -2548,6 +2593,9 @@ drawEarthLord(firelord.x, firelord.y)
 icelord.forEach((firelord) =>{
 drawIceLord(firelord.x, firelord.y)
 })
+
+ctx.fillStyle = scorecolor;
+scoreAreaArray.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
 
 ctx.fillStyle = wellcolor;
@@ -2885,7 +2933,28 @@ isParalyzed = electric.some((electric) => {
 });
 }
 
+const checkIfInScoreArea = (obstacles, isDynamic) => {
+    obstacles.forEach((obstacle, index) => {
+        scoreAreaArray.forEach((lava) => {
+            if (
+                (isDynamic
+                    ? lava.x >= obstacle.x && lava.x < obstacle.x + 2 &&
+                      lava.y >= obstacle.y && lava.y < obstacle.y + 2
+                    : lava.x === obstacle.x && lava.y === obstacle.y)
+            ) {
+                obstacles.splice(index, 1);
+            }
+        });
+    });
+}
 
+    checkIfInScoreArea(obstacles, false);
+checkIfInScoreArea(mirrors, false);
+checkIfInScoreArea(wells, false);
+
+// Dynamic obstacles
+checkIfInScoreArea(dynamicObstacles, true);
+checkIfInScoreArea(thwomps, true);
             
             // Check if Snake hits obstacles
             if (!isInvincible && (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) ||
@@ -3661,7 +3730,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw();
-            
+            displaycheck()
             if (isGravityWellActive === true && wells.length !== 0){
             checkDistance(snake)
             }
