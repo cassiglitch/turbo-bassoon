@@ -2571,6 +2571,11 @@ electric.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gr
 ctx.fillStyle = icecolor;
 ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
     
+    
+    ctx.shadowColor = "red"; // Change this to the desired glow color
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 10; // Adjust this to control the blur effect
     // Set the fill color for the lava
     ctx.fillStyle = lavacolor;
 
