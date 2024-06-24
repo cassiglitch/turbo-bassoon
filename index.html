@@ -2464,10 +2464,8 @@ function pauseGame() {
 }
 
 function EffectsareTouching(obstacle1, obstacle2) {
-      // Check if they are adjacent horizontally or vertically
       return (
-        (Math.abs(obstacle1.x - obstacle2.x) === 1 && obstacle1.y === obstacle2.y) ||
-        (Math.abs(obstacle1.y - obstacle2.y) === 1 && obstacle1.x === obstacle2.x)
+        Math.abs(obstacle1.x - obstacle2.x) <= 1 && Math.abs(obstacle1.y - obstacle2.y) <= 1
       );
     }
 
@@ -2576,38 +2574,36 @@ ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSiz
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
     ctx.shadowBlur = 10; // Adjust this to control the blur effect
+
     // Set the fill color for the lava
-    ctx.fillStyle = lavacolor;
+    ctx.fillStyle = lavacoloe;
 
     // Draw each lava obstacle with the glow effect
     lava.forEach(obstacle => {
-      // Reset shadow properties for each obstacle
-      ctx.shadowColor = "red";
-      ctx.shadowBlur = 10;
-
-      // Check adjacent obstacles to decide where to remove glow effect
-      lava.forEach(other => {
-        if (EffectsareTouching(obstacle, other)) {
-          // Remove shadow on the side where they touch
-          if (obstacle.x < other.x) {
-            ctx.shadowOffsetX = -10; // Adjust based on your shadow blur
-          } else if (obstacle.x > other.x) {
-            ctx.shadowOffsetX = 10;
-          }
-          if (obstacle.y < other.y) {
-            ctx.shadowOffsetY = -10;
-          } else if (obstacle.y > other.y) {
-            ctx.shadowOffsetY = 10;
-          }
-        }
-      });
+      // Determine which sides of the obstacle should not have glow effect
+      let removeLeftGlow = lava.some(other => EffectsareTouching({x: obstacle.x - 1, y: obstacle.y}, other));
+      let removeRightGlow = lava.some(other => EffectsareTouching({x: obstacle.x + 1, y: obstacle.y}, other));
+      let removeTopGlow = lava.some(other => EffectsareTouching({x: obstacle.x, y: obstacle.y - 1}, other));
+      let removeBottomGlow = lava.some(other => EffectsareTouching({x: obstacle.x, y: obstacle.y + 1}, other));
 
       // Draw the obstacle with adjusted shadow settings
-      ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
-
-      // Reset shadow properties for the next obstacle
+      ctx.shadowColor = "red";
+      ctx.shadowBlur = 10;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
+
+      if (!removeLeftGlow) {
+        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
+      }
+      if (!removeRightGlow) {
+        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
+      }
+      if (!removeTopGlow) {
+        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
+      }
+      if (!removeBottomGlow) {
+        ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize);
+      }
     });
 firelord.forEach((firelord) =>{
 drawFireLord(firelord.x, firelord.y)
