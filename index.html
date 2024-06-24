@@ -67,7 +67,7 @@ let isSlow = false
         let reflector = []
         let isFast = false
         let timezone = []
-        let mirrors = []
+        let mirrors = [{x:7,y:0}]
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -159,7 +159,7 @@ let sideshield = 6
         let shield = false
 let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
-        let lava = [{x:5,y:0}]
+        let lava = []
         let lavacolor = '#ffa50080'
         let electric = []
         let ice =[]
@@ -266,6 +266,7 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
+addLavaArea(3,3,4,3)
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
