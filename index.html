@@ -160,7 +160,7 @@ let sideshield = 6
 let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
         let lava = []
-        let lavaColor = '#ffa50080'
+        let lavacolor = '#ffa50080'
         let electric = []
         let ice =[]
         let icecolor = '#77A0F280'
@@ -2576,7 +2576,7 @@ ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSiz
     ctx.shadowBlur = 10; // Adjust this to control the blur effect
 
     // Set the fill color for the lava
-    ctx.fillStyle = lavacoloe;
+    ctx.fillStyle = lavacolor;
 
     // Draw each lava obstacle with the glow effect
     lava.forEach(obstacle => {
