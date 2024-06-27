@@ -176,6 +176,39 @@ let magictype = 'bolt'
         const scorecolorarray = [scorecolornoalpha, alphacolor];
 const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
+        function extractGlobalFunctionNames() {
+    const functionNames = [];
+    for (let prop in window) {
+        if (typeof window[prop] === 'function') {
+            functionNames.push(prop);
+        }
+    }
+    return functionNames;
+}
+
+// Function to call a random function from the given list of functions
+function callRandomFunction(functionNames) {
+    if (functionNames.length === 0) {
+        console.error("No functions found to call");
+        return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * functionNames.length);
+    const randomFunctionName = functionNames[randomIndex];
+
+    if (typeof window[randomFunctionName] === "function") {
+        window[randomFunctionName]();
+    } else {
+        console.error(`Function ${randomFunctionName} is not defined`);
+    }
+}
+
+// Extract function names from the global scope
+const functionNames = extractGlobalFunctionNames();
+console.log("Extracted function names:", functionNames);
+
+// Call a random function from the extracted function names
+callRandomFunction(functionNames);
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
