@@ -156,7 +156,7 @@ let isTaxed = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
-let sideshield = 2
+let sideshield = 6
         let shield = false
 let magictype = 'bolt'
         let lightningboltcolor = '#d5ff03'
@@ -176,39 +176,6 @@ let magictype = 'bolt'
         const scorecolorarray = [scorecolornoalpha, alphacolor];
 const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
-        function extractGlobalFunctionNames() {
-    const functionNames = [];
-    for (let prop in window) {
-        if (typeof window[prop] === 'function') {
-            functionNames.push(prop);
-        }
-    }
-    return functionNames;
-}
-
-// Function to call a random function from the given list of functions
-function callRandomFunction(functionNames) {
-    if (functionNames.length === 0) {
-        console.error("No functions found to call");
-        return;
-    }
-
-    const randomIndex = Math.floor(Math.random() * functionNames.length);
-    const randomFunctionName = functionNames[randomIndex];
-
-    if (typeof window[randomFunctionName] === "function") {
-        window[randomFunctionName]();
-    } else {
-        console.error(`Function ${randomFunctionName} is not defined`);
-    }
-}
-
-// Extract function names from the global scope
-const functionNames = extractGlobalFunctionNames();
-console.log("Extracted function names:", functionNames);
-
-// Call a random function from the extracted function names
-callRandomFunction(functionNames);
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -461,7 +428,7 @@ function checkForEffects(){
         applyStatus(1000, 'confuse')
     }
     if (isBurned === true){
-        applyStatus(1500, 'burn')
+        applyStatus(800, 'burn')
     }
     if (isTaxed === true){
         applyStatus(900, 'taxes')
@@ -749,32 +716,37 @@ function ManageTurrets() {
 }
         let lordcanspawn = true
    let lords = [firelord, lightninglord, icelord, earthlord]; // Possible directions
-    function spawnLord(x,y) {
-        if (lords.length === 0) {
-            console.log("All lords have been spawned.");
-            return;
-        }
-        
-        const randomIndex = Math.floor(Math.random() * lords.length);
-        let selectedLord = lords[randomIndex];
-        if (lordcanspawn === true){
+
+
+
+ function spawnLord(x, y) {
+    if (lords.length === 0) {
+        console.log("All lords have been spawned.");
+        return;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * lords.length);
+    let selectedLord = lords[randomIndex];
+    
+    if (lordcanspawn === true) {
         // Spawn the lord at a random position
         selectedLord.push({ x: x, y: y });
-        lordcanspawn = false
-        }
-        // Check if the selected lord is empty after spawning
-        if (selectedLord.length === 0) {
-            // Remove the selected lord from the array
-            lords.splice(randomIndex, 1);
-            lordcanspawn = true
-        }
-        
-        console.log("Spawned:", selectedLord);
-        console.log("Remaining lords:", lords);
-        
-        // Continue spawning until all lords have been spawned
-        spawnLord(x,y);
+        lordcanspawn = false;
     }
+    
+    console.log("Spawned:", selectedLord);
+    console.log("Remaining lords:", lords);
+    
+    // Wait until selectedLord is empty before proceeding
+
+    
+    // Remove the selected lord from the array
+    lords.splice(randomIndex, 1);
+    lordcanspawn = true;
+
+    // Recursively call spawnLord if there are still lords to spawn
+}
+
 function checkDistance(snake) {
     wells.forEach((well) => {
       const distance = Math.abs(snake[0].x - well.x) + Math.abs(snake[0].y - well.y);
@@ -811,13 +783,10 @@ direction = 'down'
 function getenemycolor(enemytype){
 switch (enemytype) {
         case 'base':
-            return timespeed;
+            return  '#990147'
         case 'IRS':
             return 'lightgrey';
-    case 'welldelete':
-        return welldeleter
-    case 'coin':
-        return 'yellow'
+
        }
 }
 function venomreset(){
@@ -1897,26 +1866,18 @@ function getDirectionToSnakeHead(x, y, snake) {
     return direction;
 }
 let iskamekdead = false;
-
+let onlyoneportal = false
 function kamekDeath() {
     isPaused = true;
 
-    if (!iskamekdead) {
+    if (!onlyoneportal) {
         const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
         const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
-        const randomX2 = Math.floor(Math.random() * (canvas.width / gridSize));
-        const randomY2 = Math.floor(Math.random() * (canvas.height / gridSize));
-        const randomX3 = Math.floor(Math.random() * (canvas.width / gridSize));
-        const randomY3 = Math.floor(Math.random() * (canvas.height / gridSize));
-        const randomX4 = Math.floor(Math.random() * (canvas.width / gridSize));
-        const randomY4 = Math.floor(Math.random() * (canvas.height / gridSize));
         
         let gridOffset = ((2 * gridSize) + (gridSize / 2)) / 2;
 
         createPortalAnimation(randomX * gridSize, randomY * gridSize, 50, 2000);
-        createPortalAnimation(randomX2 * gridSize, randomY2 * gridSize, 50, 2000);
-        createPortalAnimation(randomX3 * gridSize, randomY3 * gridSize, 50, 2000);
-        createPortalAnimation(randomX4 * gridSize, randomY4 * gridSize, 50, 2000);
+    
 
         turrets.forEach((turret) => {
             createPortalAnimation(turret.x * gridSize, turret.y * gridSize, 30, 2000);
@@ -1928,17 +1889,17 @@ function kamekDeath() {
 
         createExplosion(ctx, kamek[0].x * gridSize, (kamek[0].y * gridSize) + gridOffset, 'green', obstacles, dynamicObstacles, gridSize, 90);
         createPortalAnimation(kamek[0].x * gridSize, (kamek[0].y * gridSize) + gridOffset, 100, 2000);
-
-        iskamekdead = true;
+onlyoneportal = true
+    
 
         setTimeout(() => {
             kamek = [];
             turrets = [];
             goombas = [];
-            firelord.push({ x: randomX, y: randomY });
-            lightninglord.push({ x: randomX2, y: randomY2 });
-            icelord.push({ x: randomX3, y: randomY3 });
-            earthlord.push({ x: randomX4, y: randomY4 });
+            timezone = []
+            iskamekdead = true;
+            startX = randomX * gridSize
+            startY = randomY * gridSize
         }, 1100);
 
         setTimeout(() => {
@@ -2572,7 +2533,7 @@ thwomps.forEach((obstacle, index) => {
         y
     );
 
-    if (collisionResult === true && sideshield >= 2) {
+    if (collisionResult === true && sideshield <= 2) {
         kamekDeath()
         }
     }}
@@ -3240,6 +3201,8 @@ projectiles.forEach((projectile, index) => { esnake.forEach((esnake, obstacleInd
                     gamefoods.push('teleport')
     // Teleport the snake to a random location
     cancelEffects()
+        score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     head.x = randomX;
@@ -3263,6 +3226,8 @@ HaHaNoCollision(100);
 
                 } else if (food.type === 'ice') {
                     cancelEffects()
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                     gamefoods.push('ice')
                     let pcolor = 'lightblue';
  if (freeze === false){                    
@@ -3275,6 +3240,8 @@ HaHaNoCollision(100);
  }
                 } else if (food.type === 'earth'){
                     cancelEffects()
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                     gamefoods.push('earth')
                     let x = getSnakeHeadX()
                     let y = getSnakeHeadY()
@@ -3282,6 +3249,8 @@ HaHaNoCollision(100);
                     shockwaveAnimation(x, y)
                 } else if (food.type === 'fire'){
                     cancelEffects()
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                     isBurned = true
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
@@ -3303,16 +3272,22 @@ HaHaNoCollision(100);
                 } else if (food.type === 'air'){
 cancelEffects()
     let pcolourr = 'lightgrey'
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3, false, 20, 1, false,snake)
                 }else if (food.type === 'morph'){
                 cancelEffects()
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2, false,snake)
                 }else if (food.type === 'breath'){
                     cancelEffects()
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
     let repeat = 30; // Initial size
     let timeInteger = 1;
     // Define a function for shooting projectiles with a delay
@@ -3342,6 +3317,8 @@ cancelEffects()
             }else if(food.type === 'slow') {
                     cancelEffects()
                     isSlow = true
+                    score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                       changeInterval(150)
                     
 // Set timeout to reset the interval back to 100ms after 6000 milliseconds
@@ -3352,6 +3329,8 @@ setTimeout(() => {
                 }else if(food.type === 'fast'){
                     cancelEffects()
                     isFast = true
+                        score += 1;
+                    snake.unshift({ ...snake[0], color: 'green' });
                     changeInterval(50)   
                 setTimeout(function() {
     changeInterval(100);
@@ -3730,8 +3709,22 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
             cancelEffects()
             pauseGame();
             shield = false
+            const numSegmentsToRemove2 = Math.ceil(reflector.length * 0.01);
+            if (reflector.length !== 0){
+        if (reflector.length > numSegmentsToRemove2) {
+            reflector.splice(0, numSegmentsToRemove2);
+        }
+            }
+            
+            const numSegmentsToRemovefrommirrorarray = Math.ceil(mirrors.length * 0.01);
+            if (mirrors.length !== 0){
+            if (mirrors.length > numSegmentsToRemovefrommirrorarray) {
+            mirrors.splice(0, numSegmentsToRemovefrommirrorarray);
+        }
+            }
             inverted = false
             turrets = []
+            lords = [firelord, lightninglord, icelord, earthlord]
             goombas = []
             TaxFormGot = false
             createParticles('red');
@@ -3779,6 +3772,8 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
 
         function declareVictory() {
             pauseGame()
+            reflector = []
+            mirrors = []
             createParticles('gold');
             animateExplosion();
             createParticles('green');
@@ -3875,7 +3870,7 @@ function animateExplosion() {
 }
 
 
-        function gameLoop() {
+                function gameLoop() {
             resizeCanvas(); // Resize the canvas on every game loop iteration
             resizeCanvasHeight();
             update();
@@ -3906,7 +3901,35 @@ changeInterval(150)
 }else if (currentInterval === 1.5 && isSlow === false && isEarthed === false){
 changeInterval(100)
 }
-    
+if (lords.length === 2 && firelord.length ===0&& icelord.length ===0 && lightninglord.length === 0 && earthlord.length === 0){
+const randomIndex = Math.floor(Math.random() * lords.length);
+    let selectedLord = lords[randomIndex];
+        selectedLord.push({ x: startX/gridSize, y: startY/gridSize });
+        
+    lords.splice(randomIndex, 1);
+}
+if (lords.length === 1 && firelord.length ===0&& icelord.length ===0 && lightninglord.length === 0 && earthlord.length === 0){
+const randomIndex = Math.floor(Math.random() * lords.length);
+    let selectedLord2 = lords[randomIndex];
+        selectedLord2.push({ x: startX/gridSize, y: startY/gridSize });
+        
+    lords.splice(randomIndex, 1);
+}
+if (lords.length === 3 && firelord.length ===0&& icelord.length ===0 && lightninglord.length === 0 && earthlord.length === 0){
+    lords = [firelord, lightninglord, icelord, earthlord]
+const randomIndex = Math.floor(Math.random() * lords.length);
+    let selectedLord3 = lords[randomIndex];
+        selectedLord3.push({ x: startX/gridSize, y: startY/gridSize });
+        
+    lords.splice(randomIndex, 1);
+}   
+            if (iskamekdead === true && firelord.length ===0&& icelord.length ===0 && lightninglord.length === 0 && earthlord.length === 0){
+const randomIndex = Math.floor(Math.random() * lords.length);
+    let selectedLord = lords[randomIndex];
+        selectedLord.push({ x: startX/gridSize, y: startY/gridSize });
+        
+    lords.splice(randomIndex, 1);
+}
 // Handle eating animation
             if (isEating) {
                 eatingAnimationFrames--;
