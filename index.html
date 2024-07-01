@@ -153,7 +153,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
-let GravityApplied = true
+let GravityApplied = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
@@ -375,7 +375,9 @@ if (kamek.length === 0){
     timezone = []
 }
 }
-        
+function toggleGravity(){
+GravityApplied = !GravityApplied
+}
 function kamekMagic() {
     if (!isPaused) {
         // Determine the type of magic
@@ -463,7 +465,7 @@ function checkForEffects(){
     if (isConfused === true){
         applyStatus(1000, 'confuse')
     }
-    if (isBurned === true){
+    if (isBurned === true && GravityApplied === false && isPaused === false){
         applyStatus(800, 'burn')
     }
     if (isTaxed === true){
@@ -472,7 +474,12 @@ function checkForEffects(){
     if (controltype === 'mobile'){
     applyStatus(1000, 'well')
     }
+    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0){
+    applyStatus(60000, 'gravity')
+    }else if (kamek.length !== 0 || firelord.length !== 0 || icelord.length !== 0 || lightninglord.length !== 0 || earthlord.length |== 0){
+GravityApplied = false
     }
+}
 function applyStatus(cooldown, effect){
     const currentTime = new Date().getTime();
 
@@ -503,6 +510,10 @@ if (effect === 'magic' && kamek.length !== 0){
     kamekMagic()
     effectApplied = currentTime
 }
+        if (effect === 'gravity') {
+toggleGravity()
+            effectApplied = currentTime
+        }
     }
 }
 document.addEventListener('keypress', function(event) {
