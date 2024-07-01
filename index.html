@@ -339,7 +339,7 @@ function applyGravity() {
   let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
   
   // If no element has reached the bottom and no segment is in the non-affected areas, apply gravity
-  if (!stopGravity && GravityApplied) {
+  if (!stopGravity && GravityApplied === true) {
     for (let i = 0; i < snake.length; i++) {
       snake[i].y += 1;
     }
@@ -375,9 +375,7 @@ if (kamek.length === 0){
     timezone = []
 }
 }
-function toggleGravity(){
-GravityApplied = !GravityApplied
-}
+
 function kamekMagic() {
     if (!isPaused) {
         // Determine the type of magic
@@ -511,7 +509,7 @@ if (effect === 'magic' && kamek.length !== 0){
     effectApplied = currentTime
 }
         if (effect === 'gravity') {
-toggleGravity()
+GravityApplied = !GravityApplied
             effectApplied = currentTime
         }
     }
