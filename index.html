@@ -472,12 +472,6 @@ function checkForEffects(){
     if (controltype === 'mobile'){
     applyStatus(1000, 'well')
     }
-    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
-    applyStatus(5000, 'gravity');
-} else {
-    GravityApplied = false;
-}
-
 }
 function applyStatus(cooldown, effect){
     const currentTime = new Date().getTime();
@@ -509,9 +503,8 @@ if (effect === 'magic' && kamek.length !== 0){
     kamekMagic()
     effectApplied = currentTime
 }
-        if (effect === 'gravity') {
-
-GravityApplied = !GravityApplied
+        if (effect === 'gravity' && kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
+    GravityApplied = !GravityApplied;
             effectApplied = currentTime
         }
     }
@@ -3928,6 +3921,12 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw()
+                        if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
+    applyStatus(5000, 'gravity');
+} else {
+    GravityApplied = false;
+}
+
             applyGravity()
             displaycheck()
             manageWellsWarningZone()
