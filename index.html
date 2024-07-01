@@ -118,7 +118,7 @@ let isSlow = false
         let symbiote = [];
         let controlsinverted = false
         let hasBeenTaxed = false
-        let laserTimer = 45
+        let laserTimer = 35
         let controltype = 'set'
         let goombas = []
         let magic = []
@@ -186,7 +186,7 @@ function checkAndToggleGravity() {
     }
 }
 
-setInterval(checkAndToggleGravity, 5000);
+setInterval(checkAndToggleGravity, 30000);
         
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
