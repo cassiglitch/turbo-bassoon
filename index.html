@@ -311,13 +311,34 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
+function shouldStopGravity() {
+  const maxY = (canvas.height / gridSize) - 1;
+  const maxX = (canvas.width / gridSize);
+
+  // Check if any segment of the snake is in the non-affected areas
+  for (let segment of snake) {
+    if (segment.x === 0 || segment.x === maxX || segment.y === 0) {
+      return true;
+    }
+  }
+
+  // Check if the last segment of the snake is in the non-affected areas
+  let lastSegment = snake[snake.length - 1];
+  if (lastSegment.y === maxY) {
+    return true;
+  }
+
+  return false;
+}
+
+// Function to apply gravity to the snake
 function applyGravity() {
   const maxY = (canvas.height / gridSize) - 1;
   
   // Check if any element of the snake has reached the bottom
-  let stopGravity = snake.some(segment => segment.y === maxY);
+  let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
   
-  // If no element has reached the bottom, apply gravity
+  // If no element has reached the bottom and no segment is in the non-affected areas, apply gravity
   if (!stopGravity && GravityApplied) {
     for (let i = 0; i < snake.length; i++) {
       snake[i].y += 1;
