@@ -472,11 +472,12 @@ function checkForEffects(){
     if (controltype === 'mobile'){
     applyStatus(1000, 'well')
     }
-    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0){
-    applyStatus(5000, 'gravity')
-    }else if (kamek.length !== 0 || firelord.length !== 0 || icelord.length !== 0 || lightninglord.length !== 0 || earthlord.length !== 0){
-GravityApplied = false
-    }
+    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
+    applyStatus(5000, 'gravity');
+} else {
+    GravityApplied = false;
+}
+
 }
 function applyStatus(cooldown, effect){
     const currentTime = new Date().getTime();
@@ -509,11 +510,8 @@ if (effect === 'magic' && kamek.length !== 0){
     effectApplied = currentTime
 }
         if (effect === 'gravity') {
-if (GravityApplied === true){
-GravityApplied = false
-}else {
-GravityApplied = true
-}
+
+GravityApplied = !GravityApplied
             effectApplied = currentTime
         }
     }
