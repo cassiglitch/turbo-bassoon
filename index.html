@@ -153,6 +153,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
+let GravityApplied = true
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
@@ -310,6 +311,20 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
+function applyGravity() {
+  const maxY = (canvas.height / gridSize) - 1;
+  
+  // Check if any element of the snake has reached the bottom
+  let stopGravity = snake.some(segment => segment.y === maxY);
+  
+  // If no element has reached the bottom, apply gravity
+  if (!stopGravity && GravityApplied) {
+    for (let i = 0; i < snake.length; i++) {
+      snake[i].y += 1;
+    }
+  }
+}
+
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
@@ -3880,7 +3895,8 @@ function animateExplosion() {
             resizeCanvas(); // Resize the canvas on every game loop iteration
             resizeCanvasHeight();
             update();
-            draw();
+            draw()
+            applyGravity()
             displaycheck()
             manageWellsWarningZone()
             if (isGravityWellActive === true && wells.length !== 0){
