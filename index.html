@@ -509,7 +509,11 @@ if (effect === 'magic' && kamek.length !== 0){
     effectApplied = currentTime
 }
         if (effect === 'gravity') {
-GravityApplied = !GravityApplied
+if (GravityApplied === true){
+GravityApplied = false
+}else {
+GravityApplied = true
+}
             effectApplied = currentTime
         }
     }
