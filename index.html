@@ -177,6 +177,17 @@ let magictype = 'bolt'
         const scorecolorarray = [scorecolornoalpha, alphacolor];
 const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
+
+function checkAndToggleGravity() {
+    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) 
+        GravityApplied = !GravityApplied;
+    } else {
+        GravityApplied = false;
+    }
+}
+
+setInterval(checkAndToggleGravity, 5000);
+        
 function addLavaArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
