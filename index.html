@@ -313,7 +313,7 @@ scoreArea(middleX,1,4)
 }
 function shouldStopGravity() {
   const maxY = (canvas.height / gridSize) - 1;
-  const maxX = (canvas.width / gridSize);
+  const maxX = (canvas.width / gridSize) - 1
 
   // Check if any segment of the snake is in the non-affected areas
   for (let segment of snake) {
