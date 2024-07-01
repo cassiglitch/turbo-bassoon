@@ -180,7 +180,7 @@ const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
 
 function checkAndToggleGravity() {
-    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) { 
+    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused) { 
         GravityApplied = !GravityApplied;
     } else {
         GravityApplied = false;
@@ -3586,7 +3586,7 @@ goombas.forEach((obstacle, index) => {
 }}
 
     // Randomize the direction
-    const types = ['magnet', 'wave']; // Possible directions
+    const types = ['magnet']; // Possible directions
     const randomIndex = Math.floor(Math.random() * types.length);
     type = types[randomIndex];
 
@@ -3794,6 +3794,7 @@ const randomIndex2 = Math.floor(Math.random() * rare.length);
             thwomps = []
             snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
             obstacles = [];
+            gravityApplied = false
             gamefoods = [];
             dynamicObstacles = [];
             score = 0;
