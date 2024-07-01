@@ -153,7 +153,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
-let GravityApplied = true
+let GravityApplied = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
@@ -474,7 +474,7 @@ function checkForEffects(){
     }
     if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0){
     applyStatus(60000, 'gravity')
-    }else if (kamek.length !== 0 || firelord.length !== 0 || icelord.length !== 0 || lightninglord.length !== 0 || earthlord.length |== 0){
+    }else if (kamek.length !== 0 || firelord.length !== 0 || icelord.length !== 0 || lightninglord.length !== 0 || earthlord.length !== 0){
 GravityApplied = false
     }
 }
