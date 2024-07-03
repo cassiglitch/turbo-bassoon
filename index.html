@@ -325,7 +325,7 @@ scoreArea(middleX,1,4)
 }
 function shouldStopGravity() {
   const maxY = (canvas.height / gridSize) - 1;
-  const maxX = (canvas.width / gridSize) - 1
+  const maxX = (canvas.width / gridSize) - 1;
 
   // Check if any segment of the snake is in the non-affected areas
   for (let segment of snake) {
@@ -343,35 +343,63 @@ function shouldStopGravity() {
   return false;
 }
 
+// Function to check for collision and wrap around obstacles
+function handleCollision(segment) {
+  const walls = mirrors.concat(obstacles, reflector);
+  
+  for (let wall of walls) {
+    if (segment.x === wall.x && segment.y === wall.y) {
+      // Wrap around logic: move the segment to the opposite side of the obstacle
+      if (segment.y === wall.y) {
+        if (segment.x < wall.x) {
+          segment.x = wall.x + 1;
+        } else {
+          segment.x = wall.x - 1;
+        }
+      } else if (segment.x === wall.x) {
+        if (segment.y < wall.y) {
+          segment.y = wall.y + 1;
+        } else {
+          segment.y = wall.y - 1;
+        }
+      }
+      return true; // Collision handled
+    }
+  }
+  return false; // No collision
+}
+
 // Function to apply gravity to the snake
 function applyGravity() {
   const maxY = (canvas.height / gridSize) - 1;
-  
+
   // Check if any element of the snake has reached the bottom
   let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
-  
+
   // If no element has reached the bottom and no segment is in the non-affected areas, apply gravity
-    if (!inverted){
-  if (!stopGravity && GravityApplied === true && direction !== 'down') {
-    for (let i = 0; i < snake.length; i++) {
-    if (direction === 'up'){
-  snake[i].y += 1;
+  if (!inverted) {
+    if (!stopGravity && GravityApplied === true && direction !== 'down') {
+      for (let i = 0; i < snake.length; i++) {
+        // Handle collision and wrap around logic before applying gravity
+        if (!handleCollision(snake[i])) {
+          snake[i].y += 1;
+        }
+      }
     }
-      snake[i].y += 1;
+  }
+  
+  if (inverted) {
+    if (!stopGravity && GravityApplied === true && direction !== 'up') {
+      for (let i = 0; i < snake.length; i++) {
+        // Handle collision and wrap around logic before applying gravity
+        if (!handleCollision(snake[i])) {
+          snake[i].y += 1;
+        }
+      }
     }
   }
 }
-if (inverted){
-  if (!stopGravity && GravityApplied === true && direction !== 'up') {
-    for (let i = 0; i < snake.length; i++) {
-      snake[i].y += 1;
-        if (direction === 'down'){
-  snake[i].y += 1;
-    }
-    }
-  }
-}
-}
+
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
