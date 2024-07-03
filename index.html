@@ -345,10 +345,10 @@ function shouldStopGravity() {
 
 // Function to check if a segment is touching or one away from any obstacles
 function isTouchingOrOneAway(segment) {
-  const obstacles = mirrors.concat(obstaclesArray, reflector);
+  const walls = mirrors.concat(obstacles, reflector);
 
-  for (let obstacle of obstacles) {
-    if (Math.abs(segment.x - obstacle.x) <= 1 && Math.abs(segment.y - obstacle.y) <= 1) {
+  for (let wall of walls) {
+    if (Math.abs(segment.x - wall.x) <= 1 && Math.abs(segment.y - wall.y) <= 1) {
       return true;
     }
   }
