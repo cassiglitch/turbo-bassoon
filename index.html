@@ -382,6 +382,10 @@ function applyGravity() {
       for (let i = 0; i < snake.length; i++) {
         // Handle collision and wrap around logic before applying gravity
         if (!handleCollision(snake[i])) {
+            
+    if (direction === 'up'){
+  snake[i].y += 1;
+    }
           snake[i].y += 1;
         }
       }
@@ -393,6 +397,10 @@ function applyGravity() {
       for (let i = 0; i < snake.length; i++) {
         // Handle collision and wrap around logic before applying gravity
         if (!handleCollision(snake[i])) {
+            
+    if (direction === 'down'){
+  snake[i].y += 1;
+    }
           snake[i].y += 1;
         }
       }
