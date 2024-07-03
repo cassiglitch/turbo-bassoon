@@ -343,30 +343,17 @@ function shouldStopGravity() {
   return false;
 }
 
-// Function to check for collision and wrap around obstacles
-function handleCollision(segment) {
+// Function to check if a segment is touching or one away from any obstacles
+function isTouchingOrOneAway(segment) {
   const walls = mirrors.concat(obstacles, reflector);
-  
+
   for (let wall of walls) {
-    if (segment.x === wall.x && segment.y === wall.y) {
-      // Wrap around logic: move the segment to the opposite side of the obstacle
-      if (segment.y === wall.y) {
-        if (segment.x < wall.x) {
-          segment.x = wall.x + 1;
-        } else {
-          segment.x = wall.x - 1;
-        }
-      } else if (segment.x === wall.x) {
-        if (segment.y < wall.y) {
-          segment.y = wall.y + 1;
-        } else {
-          segment.y = wall.y - 1;
-        }
-      }
-      return true; // Collision handled
+    if (Math.abs(segment.x - wall.x) <= 1 && Math.abs(segment.y - wall.y) <= 1) {
+      return true;
     }
   }
-  return false; // No collision
+
+  return false;
 }
 
 // Function to apply gravity to the snake
@@ -380,25 +367,26 @@ function applyGravity() {
   if (!inverted) {
     if (!stopGravity && GravityApplied === true && direction !== 'down') {
       for (let i = 0; i < snake.length; i++) {
-        // Handle collision and wrap around logic before applying gravity
-        if (!handleCollision(snake[i])) {
+        // Apply gravity only if the segment is not touching or one away from any obstacles
+        if (!isTouchingOrOneAway(snake[i])) {
           snake[i].y += 1;
         }
       }
     }
   }
-  
+
   if (inverted) {
     if (!stopGravity && GravityApplied === true && direction !== 'up') {
       for (let i = 0; i < snake.length; i++) {
-        // Handle collision and wrap around logic before applying gravity
-        if (!handleCollision(snake[i])) {
+        // Apply gravity only if the segment is not touching or one away from any obstacles
+        if (!isTouchingOrOneAway(snake[i])) {
           snake[i].y += 1;
         }
       }
     }
   }
 }
+
 
 function kamekUpdate(){
             if (kamek.length > 1) {
