@@ -370,7 +370,7 @@ let causeDuisconnect = willCauseDisconnection()
 
   // If no element has reached the bottom and no segment is in the non-affected areas, apply gravity
   if (!inverted) {
-    if (!stopGravity && GravityApplied === true && direction !== 'down' && causeDuisconnect === false) {
+    if (!stopGravity && GravityApplied === true && direction !== 'down' && causeDuisconnect === true) {
       for (let i = 0; i < snake.length; i++) {
         snake[i].y += 1;
           if (direction === 'up'){
@@ -381,7 +381,7 @@ snake[i].y += 1;
   }
 
   if (inverted) {
-    if (!stopGravity && GravityApplied === true && direction !== 'up'&& causeDuisconnect === false) {
+    if (!stopGravity && GravityApplied === true && direction !== 'up'&& causeDuisconnect === true) {
       for (let i = 0; i < snake.length; i++) {
         snake[i].y += 1;
           if (direction === 'down'){
