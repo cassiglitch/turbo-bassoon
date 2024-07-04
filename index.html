@@ -365,11 +365,8 @@ function applyGravity() {
 
   // Check if any element of the snake has reached the bottom or is in the non-affected areas
   let stopGravity = shouldStopGravity() || snake.some(segment => segment.y === maxY);
-let causeDuisconnect = false
+let causeDuisconnect = willCauseDisconnection()
   // Check if applying gravity would cause disconnection
-  if (willCauseDisconnection()) {
-    causeDuisconnect = true; // Don't apply gravity
-  }
 
   // If no element has reached the bottom and no segment is in the non-affected areas, apply gravity
   if (!inverted) {
