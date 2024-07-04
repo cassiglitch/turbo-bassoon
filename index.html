@@ -323,9 +323,9 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
-     function hasConsecutiveDifferenceGreaterThanOne(snake) {
-    for (let i = 0; i < snake.length - 1; i++) {
-        if (Math.abs(snake[i] - snake[i + 1]) > 1) {
+     function hasConsecutiveDifferenceGreaterThanOne(array) {
+    for (let i = 0; i < array.length - 1; i++) {
+        if (Math.abs(array[i] - array[i + 1]) > 1) {
             return true;  // If difference is greater than 1, return true
         }
     }
