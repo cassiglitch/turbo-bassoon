@@ -378,9 +378,9 @@ function applyGravity() {
       // Apply gravity only if the segment is not touching or one away from any obstacles
       if (!isTouchingOrOneAway(snake[i])) {
         if (inverted && direction !== 'up') {
-          snake[i].y -= 1;
+          snake[i].y += 1;
           if (direction === 'down') {
-            snake[i].y -= 1;
+            snake[i].y += 1;
           }
         } else if (!inverted && direction !== 'down') {
           snake[i].y += 1;
