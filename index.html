@@ -323,19 +323,28 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
+     function hasConsecutiveDifferenceGreaterThanOne(snake) {
+    for (let i = 0; i < snake.length - 1; i++) {
+        if (Math.abs(snake[i] - snake[i + 1]) > 1) {
+            return true;  // If difference is greater than 1, return true
+        }
+    }
+    return false;  // If no such difference found, return false
+}
+   
 // Function to check if any segment of the snake is in the non-affected areas
 function shouldStopGravity() {
   const maxY = (canvas.height / gridSize) - 1;
   const maxX = (canvas.width / gridSize) - 1;
 
-  // Check if any segment of the snake is at the edges
+  // Check if any segment of the snake is in the non-affected areas
   for (let segment of snake) {
     if (segment.x === 0 || segment.x === maxX || segment.y === 0) {
       return true;
     }
   }
 
-  // Check if the last segment of the snake is at the bottom
+  // Check if the last segment of the snake is in the non-affected areas
   let lastSegment = snake[snake.length - 1];
   if (lastSegment.y === maxY) {
     return true;
@@ -344,53 +353,56 @@ function shouldStopGravity() {
   return false;
 }
 
-// Function to check if applying gravity would cause disconnection
-function willCauseDisconnection() {
-  const maxY = (canvas.height / gridSize) - 1;
+// Function to check if a segment is touching or one away from any obstacles
+function isTouchingOrOneAway(segment) {
+  const obstacles = mirrors.concat(obstaclesArray, reflector);
 
-  // Iterate over each segment of the snake except the head (index 0)
-  for (let i = 1; i < snake.length; i++) {
-    // Check if the segment would fall into an empty space (y + 1 is empty)
-    if (snake[i].y < maxY && !snake.some(seg => seg.x === snake[i].x && seg.y === snake[i].y + 1)) {
-      return true; // Disconnection would occur
+  for (let obstacle of obstacles) {
+    if (Math.abs(segment.x - obstacle.x) <= 1 && Math.abs(segment.y - obstacle.y) <= 1) {
+      return true;
     }
   }
 
-  return false; // No disconnection would occur
+  return false;
 }
 
 // Function to apply gravity to the snake
 function applyGravity() {
   const maxY = (canvas.height / gridSize) - 1;
-
-  // Check if any element of the snake has reached the bottom or is in the non-affected areas
-  let stopGravity = shouldStopGravity() || snake.some(segment => segment.y === maxY);
-let causeDuisconnect = willCauseDisconnection()
-  // Check if applying gravity would cause disconnection
+let disconected = hasConsecutiveDifferenceGreaterThanOne(snake)
+  // Check if any element of the snake has reached the bottom
+  let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
 
   // If no element has reached the bottom and no segment is in the non-affected areas, apply gravity
   if (!inverted) {
-    if (!stopGravity && GravityApplied === true && direction !== 'down' && causeDuisconnect === true) {
+    if (!stopGravity && GravityApplied === true && direction !== 'down') {
       for (let i = 0; i < snake.length; i++) {
-        snake[i].y += 1;
-          if (direction === 'up'){
+        // Apply gravity only if the segment is not touching or one away from any obstacles
+        if (!isTouchingOrOneAway(snake[i])|| disconected === false) {
+          snake[i].y += 1;
+            if (direction === 'up'){
 snake[i].y += 1;
-          }
+            }
+        }
       }
     }
   }
 
   if (inverted) {
-    if (!stopGravity && GravityApplied === true && direction !== 'up'&& causeDuisconnect === true) {
+    if (!stopGravity && GravityApplied === true && direction !== 'up') {
       for (let i = 0; i < snake.length; i++) {
-        snake[i].y += 1;
-          if (direction === 'down'){
+        // Apply gravity only if the segment is not touching or one away from any obstacles
+        if (!isTouchingOrOneAway(snake[i])|| disconected === false) {
+          snake[i].y += 1;
+            if (direction === 'down'){
 snake[i].y += 1;
-          }
+            }
+        }
       }
     }
   }
 }
+
 
 
 
