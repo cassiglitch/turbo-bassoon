@@ -379,7 +379,7 @@ function applyGravity() {
   // Check if any element of the snake has reached the bottom or is in non-affected areas
   let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
 
-  if (GravityApplied && !stopGravity && !disconnected) {
+  if (GravityApplied && !stopGravity && disconnected) {
     for (let i = 0; i < snake.length; i++) {
       // Apply gravity only if the segment is not touching or one away from any obstacles
       if (!isTouchingOrOneAway(snake[i])) {
