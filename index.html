@@ -329,7 +329,7 @@ scoreArea(middleX,1,4)
         let current = snake[i];
         let next = snake[i + 1];
         
-        if (Math.abs(next.x - current.x) === 2 || Math.abs((next.y - current.y + 1) === 2) {
+        if (Math.abs(next.x - current.x) === 2 || Math.abs((next.y - current.y + 1) === 2)) {
             console.log(`Item at index ${i + 1} is 2 units away from item at index ${i}.`);
             return false;
         }
