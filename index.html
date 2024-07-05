@@ -323,7 +323,7 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
-     function isNextItemTwoAway(snake) {
+     function isNextItemTwoAway() {
     // Loop through the snake array, except the last item
     for (let i = 0; i < snake.length - 1; i++) {
         let current = snake[i];
@@ -374,7 +374,7 @@ function isTouchingOrOneAway(segment) {
 
 function applyGravity() {
   const maxY = (canvas.height / gridSize) - 1;
-  let disconnected = isNextItemTwoAway(snake)
+  let disconnected = isNextItemTwoAway()
 
   // Check if any element of the snake has reached the bottom or is in non-affected areas
   let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
