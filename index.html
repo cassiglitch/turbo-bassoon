@@ -323,13 +323,19 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
-     function hasConsecutiveDifferenceGreaterThanOne(array) {
-    for (let i = 0; i < array.length - 1; i++) {
-        if (Math.abs(array[i] - array[i + 1]) > 1) {
-            return true;  // If difference is greater than 1, return true
+     function isNextItemTwoAway(snake) {
+    // Loop through the snake array, except the last item
+    for (let i = 0; i < snake.length - 1; i++) {
+        let current = snake[i];
+        let next = snake[i + 1];
+        
+        if (Math.abs(next.x - current.x) === 2 || Math.abs(next.y - current.y) === 2) {
+            console.log(`Item at index ${i + 1} is 2 units away from item at index ${i}.`);
+            return false;
         }
     }
-    return false;  // If no such difference found, return false
+    console.log('No item found 2 units away from the previous one.');
+    return true;
 }
    
 // Function to check if any segment of the snake is in the non-affected areas
@@ -368,15 +374,11 @@ function isTouchingOrOneAway(segment) {
 
 function applyGravity() {
   const maxY = (canvas.height / gridSize) - 1;
-  let disconnected = hasConsecutiveDifferenceGreaterThanOne(snake);
+  let disconnected = isNextItemTwoAway(snake)
 
   // Check if any element of the snake has reached the bottom or is in non-affected areas
   let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
-for (let i = 0; i < snake.length - 1; i++) {
-        let current = snake[i];
-        let next = snake[i + 1];
-        
-        if (Math.abs(next.x - current.x) !== 2 && Math.abs(next.y - current.y) !== 2) {
+
   if (GravityApplied && !stopGravity && !disconnected) {
     for (let i = 0; i < snake.length; i++) {
       // Apply gravity only if the segment is not touching or one away from any obstacles
@@ -395,8 +397,6 @@ for (let i = 0; i < snake.length - 1; i++) {
       }
     }
   }
-}
-}
 }
 
 
