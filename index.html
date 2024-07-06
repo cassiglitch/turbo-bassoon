@@ -3097,27 +3097,27 @@ previousDirection = direction;
 switch (direction) {
     case 'up':
         head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
-        head2.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        head2.y = (head2.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
         track = []
         track = [{x:head.x, y:head.y + 1}]
         break;
     case 'down':
         head.y = (head.y + 1) % (canvas.height / gridSize);
-        head2.y = (head.y + 1) % (canvas.height / gridSize);
+        head2.y = (head2.y + 1) % (canvas.height / gridSize);
         
         track = []
         track = [{x:head.x, y:head.y - 1}]
         break;
     case 'left':
         head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
-            head2.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+            head2.x = (head2.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
             
         track = []
         track = [{x:head.x + 1, y:head.y}]
         break;
     case 'right':
         head.x = (head.x + 1) % (canvas.width / gridSize);
-      head2.x = (head.x + 1) % (canvas.width / gridSize);
+      head2.x = (head2.x + 1) % (canvas.width / gridSize);
   
         track = []
         track = [{x:head.x - 1, y:head.y}]
@@ -3127,28 +3127,28 @@ switch (direction) {
            switch (direction) {
     case 'down':
         head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
-        head2.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        head2.y = (head2.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
         
         track = []
         track = [{x:head.x, y:head.y + 1}]
         break;
     case 'up':
         head.y = (head.y + 1) % (canvas.height / gridSize);
-       head2.y = (head.y + 1) % (canvas.height / gridSize);
+       head2.y = (head2.y + 1) % (canvas.height / gridSize);
         
                    track = []
         track = [{x:head.x, y:head.y - 1}]
         break;
     case 'right':
         head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
-        head2.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+        head2.x = (head2.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
         
         track = []
         track = [{x:head.x + 1, y:head.y}]
         break;
     case 'left':
         head.x = (head.x + 1) % (canvas.width / gridSize);
-    head2.x = (head.x + 1) % (canvas.width / gridSize);
+    head2.x = (head2.x + 1) % (canvas.width / gridSize);
       
                    track = []
         track = [{x:head.x - 1, y:head.y}]
