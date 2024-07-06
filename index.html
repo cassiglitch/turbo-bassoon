@@ -61,6 +61,7 @@
         const ctx = canvas.getContext('2d');
 
 let isSlow = false
+        let snakecutgravoty = false
         let lavacoords = []
         let goombadirection = 'left'
         let goombaoffset = 1.00
@@ -79,6 +80,7 @@ let isSlow = false
         let flaming = false
         let startingLength = 5;
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
+        let snake2 = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
         let obstacles = []
         let kamekappears = false
@@ -546,6 +548,7 @@ if (isConfused === true && effect === 'confuse'){
 }
 if (isBurned === true && effect === 'burn'){
     snake.pop()
+    snake2.pop()
     effectApplied = currentTime
 }
 if(isTaxed === true && effect === 'taxes' && esnake[0].damage === false){
@@ -3001,6 +3004,16 @@ function HaHaNoCollision(duration) {
                     isInvincible = false;
                 }
             }
+            if (GravityApplied && !snakecutgravity){
+ if (snake.length > 10){
+                snake.length = 10
+ }
+                snakecutgravity = true
+            }
+            if (!GravityApplied){
+snake = snake2
+            snakecutgravity = false
+            }
             ManageTurrets()
             if (kamek.length !== 0){
                 kamekUpdate()
@@ -3066,6 +3079,7 @@ for (let index = ice.length - 1; index >= 0; index--) {
             
             // Update Snake position
             const head = { ...snake[0] };
+            const head2 = { ...snake2[0] };
 // Define a variable to store the previous direction
  isIced = ice.some((ice) => {
     return ice.x === head.x && ice.y === head.y;
@@ -3083,22 +3097,28 @@ previousDirection = direction;
 switch (direction) {
     case 'up':
         head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        head2.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
         track = []
         track = [{x:head.x, y:head.y + 1}]
         break;
     case 'down':
         head.y = (head.y + 1) % (canvas.height / gridSize);
+        head2.y = (head.y + 1) % (canvas.height / gridSize);
+        
         track = []
         track = [{x:head.x, y:head.y - 1}]
         break;
     case 'left':
         head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+            head2.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
             
         track = []
         track = [{x:head.x + 1, y:head.y}]
         break;
     case 'right':
         head.x = (head.x + 1) % (canvas.width / gridSize);
+      head2.x = (head.x + 1) % (canvas.width / gridSize);
+  
         track = []
         track = [{x:head.x - 1, y:head.y}]
         break;
@@ -3107,22 +3127,30 @@ switch (direction) {
            switch (direction) {
     case 'down':
         head.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        head2.y = (head.y - 1 + canvas.height / gridSize) % (canvas.height / gridSize);
+        
         track = []
         track = [{x:head.x, y:head.y + 1}]
         break;
     case 'up':
         head.y = (head.y + 1) % (canvas.height / gridSize);
-        track = []
+       head2.y = (head.y + 1) % (canvas.height / gridSize);
+        
+                   track = []
         track = [{x:head.x, y:head.y - 1}]
         break;
     case 'right':
         head.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+        head2.x = (head.x - 1 + canvas.width / gridSize) % (canvas.width / gridSize);
+        
         track = []
         track = [{x:head.x + 1, y:head.y}]
         break;
     case 'left':
         head.x = (head.x + 1) % (canvas.width / gridSize);
-        track = []
+    head2.x = (head.x + 1) % (canvas.width / gridSize);
+      
+                   track = []
         track = [{x:head.x - 1, y:head.y}]
         break;
 }
@@ -3148,6 +3176,7 @@ GoombaCollision = isPointInGoombaBoundingBox(snake[0].x* gridSize, snake[0].y * 
 const numSegmentsToRemove = Math.ceil(snake.length * lives);
         if (snake.length > numSegmentsToRemove) {
             snake.splice(0, numSegmentsToRemove);
+            snake2.splice(0, numSegmentsToRemove);
             lives = (lives * 2);
             livecount = livecount - 1;
             HaHaNoCollision(10)
@@ -3205,6 +3234,8 @@ checkIfInScoreArea(thwomps, true);
         const numSegmentsToRemove = Math.ceil(snake.length * lives);
         if (snake.length > numSegmentsToRemove) {
             snake.splice(0, numSegmentsToRemove);
+            snake2.splice(0, numSegmentsToRemove);
+          
             lives = (lives * 2);
             livecount = livecount - 1;
             HaHaNoCollision(10)
@@ -3221,6 +3252,8 @@ if (!isInvincible &&  (esnake.some(esnake => (esnake.x === (snake[1].x) && esnak
              const numSegmentsToRemove2 = Math.ceil(snake.length * lives);
         if (snake.length > numSegmentsToRemove2) {
             snake.splice(0, numSegmentsToRemove2);
+            snake2.splice(0, numSegmentsToRemove2);
+            
             lives = (lives * 2);
             livecount = livecount - 1;
             HaHaNoCollision(10)
@@ -3258,6 +3291,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
                 cancelEffects()
                 direction = 'left';
                 snake[0].x -= 1;
+                snake2[0].x -= 1;
                 isConfused = true
             }
             break;
@@ -3266,6 +3300,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
                 cancelEffects()
                 direction = 'right';
                 snake[0].x += 1
+                snake2[0].x += 1
                 isConfused = true
 
             }
@@ -3275,6 +3310,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
                 cancelEffects()
                 direction = 'down';
                 snake[0].y -= 1
+                snake2[0].y -= 1
                 isConfused = true
 
             }
@@ -3284,6 +3320,7 @@ if (!isInvincible && mirrors.some(obstacle => obstacle.x === head.x && obstacle.
                 cancelEffects()
                 direction = 'up';
                 snake[0].y += 1
+                snake2[0].y += 1
                 isConfused = true
             }
             break;
@@ -3320,6 +3357,8 @@ projectiles.forEach((projectile, index) => { esnake.forEach((esnake, obstacleInd
                     score += 2;
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
+snake2.unshift({ ...snake2[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
 
                     if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
@@ -3333,12 +3372,16 @@ projectiles.forEach((projectile, index) => { esnake.forEach((esnake, obstacleInd
                     snake.pop()
                     snake.pop()
                     snake.pop()
+                    snake2.pop()
+                    snake2.pop()
+                    snake2.pop()
                 } else if (food.type === 'teleport') {
                     gamefoods.push('teleport')
     // Teleport the snake to a random location
     cancelEffects()
         score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
     const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
     const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
     head.x = randomX;
@@ -3364,6 +3407,7 @@ HaHaNoCollision(100);
                     cancelEffects()
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                     gamefoods.push('ice')
                     let pcolor = 'lightblue';
  if (freeze === false){                    
@@ -3378,6 +3422,7 @@ HaHaNoCollision(100);
                     cancelEffects()
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                     gamefoods.push('earth')
                     let x = getSnakeHeadX()
                     let y = getSnakeHeadY()
@@ -3387,6 +3432,7 @@ HaHaNoCollision(100);
                     cancelEffects()
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                     isBurned = true
                     gamefoods.push('fire')
                 pX = snake[0].x * gridSize + gridSize / 2;
@@ -3399,6 +3445,9 @@ HaHaNoCollision(100);
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                 if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
                     esnake.unshift({ ...esnake[0], color: timeslow });
@@ -3410,6 +3459,7 @@ cancelEffects()
     let pcolourr = 'lightgrey'
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, projectileSpeed, pcolourr, obstacles, dynamicObstacles, gridSize, direction, 10, 60, true, 3, false, 20, 1, false,snake)
@@ -3417,13 +3467,15 @@ cancelEffects()
                 cancelEffects()
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                 pX = snake[0].x * gridSize + gridSize / 2;
                 pY = snake[0].y * gridSize + gridSize / 2;
                 shootWaveOfProjectiles(pX, pY, 1, 1, 30, neoncolor, obstacles, dynamicObstacles, gridSize, direction, 30, 70, true, 3, true, 100, 2, false,snake)
                 }else if (food.type === 'breath'){
                     cancelEffects()
                     score += 1;
-                    snake.unshift({ ...snake[0], color: 'green' });
+                    snake.unshift({ ...snake[0], color: 'green' })
+                    snake2.unshift({ ...snake2[0], color: 'green' });
     let repeat = 30; // Initial size
     let timeInteger = 1;
     // Define a function for shooting projectiles with a delay
@@ -3455,6 +3507,7 @@ cancelEffects()
                     isSlow = true
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                       changeInterval(150)
                     
 // Set timeout to reset the interval back to 100ms after 6000 milliseconds
@@ -3467,6 +3520,7 @@ setTimeout(() => {
                     isFast = true
                         score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
                     changeInterval(50)   
                 setTimeout(function() {
     changeInterval(100);
@@ -3477,6 +3531,7 @@ setTimeout(() => {
                     gamefoods.push('normal')
                     score += 1;
                     snake.unshift({ ...snake[0], color: 'green' });
+                    snake2.unshift({ ...snake2[0], color: 'green' });
 if (esnake.length !== 0) {
                     esnake.unshift({ ...esnake[0], color: timeslow });
 }
@@ -3588,6 +3643,8 @@ checkForEffects()
         if (!isParalyzed){
         snake.pop();
         snake.unshift(head);
+        snake2.pop()
+        snake2.unshift(head2)
         }
 if (!freeze) {
         // Move Dynamic Obstacles
