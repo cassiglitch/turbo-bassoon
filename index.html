@@ -324,11 +324,12 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
 scoreArea(middleX,1,4)
 }
      function isNextItemTwoAway() {
-    // Loop through the snake array, except the last item
+    // Loop through the snake array, except the last ite
     for (let i = 0; i < snake.length - 1; i++) {
         let current = snake[i];
         let next = snake[i + 1];
-        
+      // Apply gravity only if the segment is not touching or one away from any obstacles
+      if (!isTouchingOrOneAway(snake[i])) {
         if (Math.abs(next.x - current.x) === 2 || Math.abs((next.y - current.y + 1) === 2)) {
             console.log(`Item at index ${i + 1} is 2 units away from item at index ${i}.`);
             return false;
@@ -337,6 +338,7 @@ scoreArea(middleX,1,4)
     console.log('No item found 2 units away from the previous one.');
     return true;
 }
+     }
    
 // Function to check if any segment of the snake is in the non-affected areas
 function shouldStopGravity() {
