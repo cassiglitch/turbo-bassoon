@@ -3011,7 +3011,7 @@ function HaHaNoCollision(duration) {
                 snakecutgravity = true
             }
             if (!GravityApplied){
-snake = snake2
+snake = snake2.slice();
             snakecutgravity = false
             }
             ManageTurrets()
