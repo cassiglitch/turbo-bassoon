@@ -83,7 +83,7 @@ let isSlow = false
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let snake2 = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
-        let obstacles = []
+        let obstacles = [{x:4,y:11}]
         let kamekappears = false
         let firstControlSchemeSet = false;
         let dynamicObstacles = [];
@@ -158,7 +158,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
-let GravityApplied = true
+let GravityApplied = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
