@@ -158,6 +158,7 @@ let effectApplied = 0
 let isConfused = false
 let isBurned = false
 let isTaxed = false
+let paratime = 5
 let GravityApplied = true
 let magicstatus = 0
 let lightbrown = '#C4A484'
@@ -170,6 +171,8 @@ let magictype = 'bolt'
         let lavacolor = '#ffa50080'
         let electric = []
         let ice =[]
+        let isStunnedFrFall = false
+        let fallingVelociy = 0
         let icecolor = '#77A0F280'
         let electriccolor = '#CFFF0480'
         let earthcolor = '#BD978E'
@@ -379,12 +382,15 @@ scoreArea(middleX,1,4)
         const maxY = (canvas.height / gridSize) - 1;
         let disconnected = isNextItemTwoAway();
         let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
-
+if (stopGravity){
+fallingVelociy = 0
+}
         physicsActive = false;
 
         if (GravityApplied && !stopGravity && disconnected) {
             for (let i = 0; i < snake.length; i++) {
                 if (!isTouchingOrOneAway(snake[i])) {
+                    fallingVelociy += 1
                     if (inverted && direction !== 'up') {
                         snake[i].y += 1;
                         if (direction === 'down') {
@@ -422,6 +428,16 @@ scoreArea(middleX,1,4)
         if (physicsActive) {
             applyRopePhysics();
             direction = 'down'
+            if (isStunnedFrFall === false){
+            isParalyzed = true
+                isStunnedFrFall = true
+          setTimeout(function() {
+  fallingVelociy = 0;
+  isParalyzed = false
+}, fallingVelociy * 1000);
+
+            
+            }
         }
     }
 
@@ -3276,7 +3292,7 @@ checkCollisions(wells, false);
 checkCollisions(dynamicObstacles, true);
 checkCollisions(thwomps, true);
 
-if(kamek.length === 0){
+if(kamek.length === 0 && !physicsActive){
 isParalyzed = electric.some((electric) => {
     return electric.x === head.x && electric.y === head.y;
 });
