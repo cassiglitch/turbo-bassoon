@@ -386,7 +386,9 @@ if (stopGravity){
 fallingVelociy = 0
 }
         physicsActive = false;
-
+if (!physicsActive){
+isStunnedFrFall = false
+}
         if (GravityApplied && !stopGravity && disconnected) {
             for (let i = 0; i < snake.length; i++) {
                 if (!isTouchingOrOneAway(snake[i])) {
