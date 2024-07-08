@@ -182,7 +182,8 @@ let magictype = 'bolt'
         const scorecolorarray = [scorecolornoalpha, alphacolor];
 const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
-
+let physicsActive = false;  // Flag to activate physics on collision
+        
 function checkAndToggleGravity() {
     if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused) { 
         GravityApplied = !GravityApplied;
@@ -328,7 +329,10 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
         
 scoreArea(middleX,1,4)
 }
-   function isNextItemTwoAway() {
+
+
+
+    function isNextItemTwoAway() {
         for (let i = 0; i < snake.length - 1; i++) {
             let current = snake[i];
             let next = snake[i + 1];
@@ -376,6 +380,8 @@ scoreArea(middleX,1,4)
         let disconnected = isNextItemTwoAway();
         let stopGravity = snake.some(segment => segment.y === maxY) || shouldStopGravity();
 
+        physicsActive = false;
+
         if (GravityApplied && !stopGravity && disconnected) {
             for (let i = 0; i < snake.length; i++) {
                 if (!isTouchingOrOneAway(snake[i])) {
@@ -390,6 +396,8 @@ scoreArea(middleX,1,4)
                             snake[i].y += 1;
                         }
                     }
+                } else {
+                    physicsActive = true;  // Activate physics on collision
                 }
             }
             for (let i = 0; i < snake2.length; i++) {
@@ -405,11 +413,18 @@ scoreArea(middleX,1,4)
                             snake2[i].y += 1;
                         }
                     }
+                } else {
+                    physicsActive = true;  // Activate physics on collision
                 }
             }
         }
 
-        // Rope physics to update positions based on gravity
+        if (physicsActive) {
+            applyRopePhysics();
+        }
+    }
+
+    function applyRopePhysics() {
         for (let i = 0; i < snake.length - 1; i++) {
             let segment = snake[i];
             let nextSegment = snake[i + 1];
@@ -437,7 +452,6 @@ scoreArea(middleX,1,4)
         }
     }
 
-    // Function to calculate Catmull-Rom spline interpolation
     function catmullRomSpline(t, p0, p1, p2, p3) {
         let t2 = t * t;
         let t3 = t2 * t;
@@ -450,7 +464,6 @@ scoreArea(middleX,1,4)
         return a * p1 + b * v0 + c * v1 + d * p2;
     }
 
-    // Calculate rope points using Catmull-Rom splines
     function calculateRopePoints(nodes, numSegments) {
         let ropePoints = [];
 
@@ -469,9 +482,9 @@ scoreArea(middleX,1,4)
 
         return ropePoints;
     }
+l
 
-
-
+    
 function kamekUpdate(){
             if (kamek.length > 1) {
     kamek.length = 1;
