@@ -83,7 +83,7 @@ let isSlow = false
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let snake2 = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
-        let obstacles = []
+        let obstacles = [{x:3,y:3}]
         let kamekappears = false
         let firstControlSchemeSet = false;
         let dynamicObstacles = [];
@@ -4243,7 +4243,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw()
-                    possession()
+            possession()
                         if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
     applyStatus(5000, 'gravity');
 } else {
