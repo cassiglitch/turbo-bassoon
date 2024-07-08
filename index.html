@@ -187,74 +187,7 @@ const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
 let physicsActive = false;  // Flag to activate physics on collision
 
-function PossessionObject(snake, obstacles, thwomps, dynamicObstacles) {
-    let closestDistance = Infinity;
-    let closestItem = null;
 
-    // Function to calculate Euclidean distance between two points
-    function calculateDistance(point1, point2) {
-        return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
-    }
-
-    // Loop through each segment of the snake
-    for (let segment of snake) {
-        // Compare distance to each type of item (obstacles, thwomps, dynamicObstacles)
-        for (let obstacle of obstacles) {
-            let distance = calculateDistance(segment, obstacle);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestItem = obstacle;
-            }
-        }
-        for (let thwomp of thwomps) {
-            let distance = calculateDistance(segment, thwomp);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestItem = thwomp;
-            }
-        }
-        for (let dynamicObstacle of dynamicObstacles) {
-            let distance = calculateDistance(segment, dynamicObstacle);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestItem = dynamicObstacle;
-            }
-        }
-    }
-
-    return closestItem;
-}
-
-function determineDirection(snake, closestItem) {
-    // Assuming snake[0] is the head of the snake
-    let head = snake[0];
-
-    // Calculate distances to adjacent positions
-    let distances = {
-        up: calculateDistance({ x: head.x, y: head.y - 1 }, closestItem),
-        down: calculateDistance({ x: head.x, y: head.y + 1 }, closestItem),
-        left: calculateDistance({ x: head.x - 1, y: head.y }, closestItem),
-        right: calculateDistance({ x: head.x + 1, y: head.y }, closestItem),
-    };
-
-    // Determine the direction with the smallest distance
-    let minDistance = Math.min(distances.up, distances.down, distances.left, distances.right);
-    if (minDistance === distances.up) {
-        return 'up';
-    } else if (minDistance === distances.down) {
-        return 'down';
-    } else if (minDistance === distances.left) {
-        return 'left';
-    } else {
-        return 'right';
-    }
-}
-
-        function possession(){
-let closestItem = PossessionObject(snake, obstacles, thwomps, dynamicObstacles);
-let optimalDirection = determineDirection(snake, closestItem);
-direction = optimalDirection
-        }
 function checkAndToggleGravity() {
     if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused) { 
         GravityApplied = !GravityApplied;
@@ -4243,7 +4176,7 @@ function animateExplosion() {
             resizeCanvasHeight();
             update();
             draw()
-            possession()
+            physicsActive = false
                         if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
     applyStatus(5000, 'gravity');
 } else {
