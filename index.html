@@ -83,7 +83,7 @@ let isSlow = false
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let snake2 = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
-        let obstacles = []
+        let obstacles = [{x:3,y:3}]
         let kamekappears = false
         let firstControlSchemeSet = false;
         let dynamicObstacles = [];
@@ -109,6 +109,7 @@ let isSlow = false
         let pausetimer = 900;
         let TaxFormGot = false
         let isParalyzed = false
+        let choseobject = false
         let snakeprojectilecollisiontime = 2000
         let originalSnakeColor = '#00FF00';
         let neoncolor = '#39ff14';
@@ -605,7 +606,65 @@ if (spawner !== goombas){
         }
     }
 }
+function findClosestItem(snake, ...arrays) {
+    // Helper function to calculate the Euclidean distance between two points
+    function calculateDistancePossess(point1, point2) {
+        return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+    }
 
+    const snakeHead = snake[0];
+    let closestItem = null;
+    let minDistance = Infinity;
+
+    // Iterate over each array and their items
+    arrays.forEach(array => {
+        array.forEach(item => {
+            const distance = calculateDistancePossess(snakeHead, item);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestItem = item;
+            }
+        });
+    });
+
+    return closestItem
+}
+function possessionmove(){
+let object = 'm'
+if (!choseobject){
+object = findClosestItem(snake, obstacles, mirrors, dynamicObstacles, thwomps, reflector)
+choseobject = true
+} 
+    if (object !== 'm' && snake[0].x !== object.x && snake[0].y !== object.y){
+    if (snake[0].x < object.x) {
+if(inverted === false){
+direction = 'right'
+}else{
+direction = 'left'
+}
+}else if (snake[0].x > object.x) {
+if(inverted === false){
+direction = 'left'
+}else{
+direction = 'right';
+}
+        } 
+          if (snake[0].y < object.y) {
+         if(inverted === false){
+direction = 'down'
+}else{
+direction = 'up'
+}        } else if (snake[0].y > object.y) {
+          if(inverted === false){
+direction = 'up'
+}else{
+direction = 'down'
+}
+          }
+}else if (snake[0].x === object.x && snake[0].y === object.y){
+choseobject = false
+    }
+}
 function cancelEffects(){
     isConfused = false
     isBurned = false
@@ -3091,6 +3150,7 @@ function HaHaNoCollision(duration) {
     timezone.type = types[randomIndex];
         }
         function update() {
+            possessionmove()
             // If the snake is invincible, decrement the invincibility duration
             if (isInvincible) {
                 invincibilityDuration--;
