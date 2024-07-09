@@ -190,11 +190,11 @@ let physicsActive = false;  // Flag to activate physics on collision
 
 
 function checkAndToggleGravity() {
-    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused && gravitycount !== 0) { 
+    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused) { 
         GravityApplied = !GravityApplied;
+        gravitycount += 1
     } else {
         GravityApplied = false;
-        gravitycount += 1
         }
     }
 
