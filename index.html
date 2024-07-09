@@ -160,7 +160,7 @@ let isConfused = false
 let isBurned = false
 let isTaxed = false
 let paratime = 5
-let GravityApplied = true
+let GravityApplied = false
 let magicstatus = 0
 let lightbrown = '#C4A484'
 let kamekcanteleport = true
@@ -190,9 +190,12 @@ let physicsActive = false;  // Flag to activate physics on collision
 
 
 function checkAndToggleGravity() {
+    if (gravitycount === 0 && GravityApplied === false){
+        gravitycount += 1
+            return
+        }
     if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused) { 
         GravityApplied = !GravityApplied;
-        gravitycount += 1
     } else {
         GravityApplied = false;
     }
@@ -630,12 +633,12 @@ function findClosestItem(snake, ...arrays) {
     return closestItem
 }
 function possessionmove(){
-let object = 'm'
+let object
 if (!choseobject){
 object = findClosestItem(snake, obstacles, mirrors, dynamicObstacles, thwomps, reflector)
 choseobject = true
 } 
-    if (object !== 'm' && snake[0].x !== object.x && snake[0].y !== object.y){
+    if (snake[0].x !== object.x && snake[0].y !== object.y){
     if (snake[0].x < object.x) {
 if(inverted === false){
 direction = 'right'
