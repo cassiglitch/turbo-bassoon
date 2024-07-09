@@ -74,6 +74,7 @@ let isSlow = false
         let lives = 0.5;
         let gamefoods = [];
         let maxscore = 100;
+        let isPossessed = false
         let psize = 20;
         let item = []
         let startingGridSize = 20;
@@ -3150,7 +3151,9 @@ function HaHaNoCollision(duration) {
     timezone.type = types[randomIndex];
         }
         function update() {
+            if (isPossessed){
             possessionmove()
+            }
             // If the snake is invincible, decrement the invincibility duration
             if (isInvincible) {
                 invincibilityDuration--;
