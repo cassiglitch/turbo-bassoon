@@ -688,7 +688,12 @@ direction = 'down'
 choseobject = false
         isPossessed = false
     }
+    if (obstacles.length !== 0 || mirrors.length !== 0 || dynamicObstacles.length !== 0 || thwomps.length !== 0 || reflector.length !== 0){
+choseobject = false
+isPossessed = false
+    }
 }
+        
 function cancelEffects(){
     isConfused = false
     isBurned = false
