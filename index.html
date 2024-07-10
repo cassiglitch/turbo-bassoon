@@ -190,6 +190,7 @@ let magictype = 'bolt'
 const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
 let physicsActive = false;  // Flag to activate physics on collision
+let ghostcolor = '40E0D080'
 
 
 function checkAndToggleGravity() {
@@ -2895,7 +2896,7 @@ function draw() {
     clearAndDrawObstacles(electric, electriccolor);
     clearAndDrawObstacles(ice, icecolor);
     clearAndDrawObstacles(lava, lavacolor);
-    clearAndDrawObstacles(ectoplasm, '40E0D080')
+    clearAndDrawObstacles(ectoplasm, ghostcolor)
 
     // Draw Kamek
     if (kamek.length !== 0) {
