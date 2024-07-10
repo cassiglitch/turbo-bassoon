@@ -3182,7 +3182,7 @@ function HaHaNoCollision(duration) {
     timezone.type = types[randomIndex];
         }
         function update() {
-            if (isPossessed){
+            if (isPossessed && !GravityApplied){
             possessionmove()
             }
             // If the snake is invincible, decrement the invincibility duration
