@@ -181,7 +181,7 @@ let magictype = 'bolt'
         let earthcolor = '#BD978E'
         let earth = []
         let wellWarning = []
-        let ectoplasm = []
+        let ectoplasm = [{x:3,y:5}]
         let isEarthed = false
         let scoreAreaArray = []
         let scorecolornoalpha = '#FF0000'
@@ -2989,7 +2989,8 @@ function draw() {
     clearAndDrawObstacles(electric, electriccolor);
     clearAndDrawObstacles(ice, icecolor);
     clearAndDrawObstacles(lava, lavacolor);
-
+    clearAndDrawObstacles(ectoplasm, '00808080')
+    
     // Draw special entities
     firelord.forEach(firelord => {
         clearArea(firelord.x, firelord.y, 1, 1);
