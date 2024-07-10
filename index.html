@@ -142,7 +142,7 @@ let thwomps = []
 let pX = 0;
 let wellStrength = 4
 let firelord = []
-     let lightninglord = []
+     let lightninglord = [{x:4,y:3}]
         let icelord = []
         let earthlord = []
         let ghost = []
@@ -173,7 +173,7 @@ let magictype = 'bolt'
         let lava = []
         let lavacolor = '#ffa50080'
         let electric = []
-        let ice =[{x:5,y:5}]
+        let ice =[]
         let isStunnedFrFall = false
         let fallingVelociy = 0
         let icecolor = '#77A0F280'
@@ -181,7 +181,7 @@ let magictype = 'bolt'
         let earthcolor = '#BD978E'
         let earth = []
         let wellWarning = []
-        let ectoplasm = [{x:3,y:5}]
+        let ectoplasm = []
         let isEarthed = false
         let scoreAreaArray = []
         let scorecolornoalpha = '#FF0000'
@@ -2892,7 +2892,10 @@ function draw() {
     // Draw the earth obstacles
     ctx.fillStyle = earthcolor;
     earth.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
-
+clearAndDrawObstacles(electric, electriccolor);
+    clearAndDrawObstacles(ice, icecolor);
+    clearAndDrawObstacles(lava, lavacolor);
+    clearAndDrawObstacles(ectoplasm, ghostcolor)
     
     // Draw Kamek
     if (kamek.length !== 0) {
@@ -2988,10 +2991,6 @@ function draw() {
     clearAndDrawObstacles(obstacles, 'black');
     clearAndDrawObstacles(timezone, 'lightgreen');
     clearAndDrawObstacles(reflector, '#5B8DFF');
-    clearAndDrawObstacles(electric, electriccolor);
-    clearAndDrawObstacles(ice, icecolor);
-    clearAndDrawObstacles(lava, lavacolor);
-    clearAndDrawObstacles(ectoplasm, ghostcolor)
 
     
     // Draw special entities
@@ -3258,7 +3257,15 @@ for (let index = ice.length - 1; index >= 0; index--) {
         }
     }
         
-            
+            for (let index = ectoplasm.length - 1; index >= 0; index--) {
+        let ectoplasmElement = ectoplasm[index];
+        if (ectoplasmElement.countdown > 0) {
+            ectoplasmElement.countdown -= 0.1;
+        }
+        if (ectoplasmElement.countdown <= 0) {
+            ectoplasm.splice(index, 1);
+        }
+    }
             // Update Snake position
             const head = { ...snake[0] };
             const head2 = { ...snake2[0] };
@@ -3384,7 +3391,9 @@ isParalyzed = electric.some((electric) => {
     return electric.x === head.x && electric.y === head.y;
 });
 }
-
+isPossessed = ectoplasm.some((ectoplasm) => {
+    return ectoplasm.x === head.x && ectoplasm.y === head.y;
+});
 const checkIfInScoreArea = (obstacles, isDynamic) => {
     obstacles.forEach((obstacle, index) => {
         scoreAreaArray.forEach((lava) => {
