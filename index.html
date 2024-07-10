@@ -190,7 +190,7 @@ let magictype = 'bolt'
 const fruitString = scorecolorarray.join("");
 let scorecolor = fruitString
 let physicsActive = false;  // Flag to activate physics on collision
-let ghostcolor = '#40e0d0'
+let ghostcolor = '#1F635780'
 
 
 function checkAndToggleGravity() {
@@ -2893,11 +2893,7 @@ function draw() {
     ctx.fillStyle = earthcolor;
     earth.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
-    clearAndDrawObstacles(electric, electriccolor);
-    clearAndDrawObstacles(ice, icecolor);
-    clearAndDrawObstacles(lava, lavacolor);
-    clearAndDrawObstacles(ectoplasm, ghostcolor)
-
+    
     // Draw Kamek
     if (kamek.length !== 0) {
         kamek.forEach(kamek => {
@@ -2992,7 +2988,12 @@ function draw() {
     clearAndDrawObstacles(obstacles, 'black');
     clearAndDrawObstacles(timezone, 'lightgreen');
     clearAndDrawObstacles(reflector, '#5B8DFF');
-        
+    clearAndDrawObstacles(electric, electriccolor);
+    clearAndDrawObstacles(ice, icecolor);
+    clearAndDrawObstacles(lava, lavacolor);
+    clearAndDrawObstacles(ectoplasm, ghostcolor)
+
+    
     // Draw special entities
     firelord.forEach(firelord => {
         clearArea(firelord.x, firelord.y, 1, 1);
