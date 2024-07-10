@@ -2892,6 +2892,11 @@ function draw() {
     ctx.fillStyle = earthcolor;
     earth.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
 
+    clearAndDrawObstacles(electric, electriccolor);
+    clearAndDrawObstacles(ice, icecolor);
+    clearAndDrawObstacles(lava, lavacolor);
+    clearAndDrawObstacles(ectoplasm, '40E0D080')
+
     // Draw Kamek
     if (kamek.length !== 0) {
         kamek.forEach(kamek => {
@@ -2986,11 +2991,7 @@ function draw() {
     clearAndDrawObstacles(obstacles, 'black');
     clearAndDrawObstacles(timezone, 'lightgreen');
     clearAndDrawObstacles(reflector, '#5B8DFF');
-    clearAndDrawObstacles(electric, electriccolor);
-    clearAndDrawObstacles(ice, icecolor);
-    clearAndDrawObstacles(lava, lavacolor);
-    clearAndDrawObstacles(ectoplasm, '00808080')
-    
+        
     // Draw special entities
     firelord.forEach(firelord => {
         clearArea(firelord.x, firelord.y, 1, 1);
