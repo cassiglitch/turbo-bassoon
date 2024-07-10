@@ -145,6 +145,7 @@ let firelord = []
      let lightninglord = []
         let icelord = []
         let earthlord = []
+        let ghost = []
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -180,6 +181,7 @@ let magictype = 'bolt'
         let earthcolor = '#BD978E'
         let earth = []
         let wellWarning = []
+        let ectoplasm = []
         let isEarthed = false
         let scoreAreaArray = []
         let scorecolornoalpha = '#FF0000'
@@ -243,6 +245,21 @@ function earthArea(x, y, size, countdown) {
     for (let i = -offset; i <= offset; i++) {
         for (let j = -offset; j <= offset; j++) {
             earth.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
+        }
+    }
+    
+}
+
+        function ghostArea(x, y, size, countdown) {
+    let offset = Math.floor(size / 2);
+
+    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+    let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
+    let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
+    
+    for (let i = -offset; i <= offset; i++) {
+        for (let j = -offset; j <= offset; j++) {
+            ectoplasm.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
         }
     }
     
@@ -633,9 +650,11 @@ function findClosestItem(snake, ...arrays) {
 function possessionmove(){
 let object = {x:3,y:3}
 if (!choseobject){
+    if (obstacles.length !== 0 || mirrors.length !== 0 || dynamicObstacles.length !== 0 || thwomps.length !== 0 || reflector.length !== 0){
 object = findClosestItem(snake, obstacles, mirrors, dynamicObstacles, thwomps, reflector)
 choseobject = true
-} 
+}
+}
     if (choseobject){
     if (snake[0].x < object.x) {
 if(inverted === false){
@@ -664,6 +683,7 @@ direction = 'down'
           }
 }else if (snake[0].x === object.x && snake[0].y === object.y){
 choseobject = false
+        isPossessed = false
     }
 }
 function cancelEffects(){
