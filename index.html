@@ -655,7 +655,7 @@ function possessionmove(){
 let object = {x:3,y:3}
 if (!choseobject){
     if (obstacles.length !== 0 || mirrors.length !== 0 || dynamicObstacles.length !== 0 || thwomps.length !== 0 || reflector.length !== 0){
-object = findClosestItem(snake, obstacles, mirrors, dynamicObstacles, thwomps, reflector)
+object = findClosestItem(snake, obstacles, dynamicObstacles, thwomps)
 choseobject = true
 }
 }
