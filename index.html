@@ -69,7 +69,7 @@ let isSlow = false
         let reflector = []
         let isFast = false
         let timezone = []
-        let mirrors = [{x:3,y:3}]
+        let mirrors = []
         let gotextralife = false;
         let lives = 0.5;
         let gamefoods = [];
@@ -143,7 +143,7 @@ let pX = 0;
 let wellStrength = 4
 let firelord = []
      let lightninglord = []
-        let icelord = []
+        let icelord = [{x:3,y:4}]
         let earthlord = []
         let ghost = []
 let pY = 0;
@@ -266,7 +266,6 @@ function earthArea(x, y, size, countdown) {
     
 }
 
-ghostArea(0,0,70,2000)
         
 function iceArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
@@ -2900,11 +2899,16 @@ function draw() {
     // Draw the earth obstacles
     ctx.fillStyle = earthcolor;
     earth.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
-clearAndDrawObstacles(electric, electriccolor);
-    clearAndDrawObstacles(ice, icecolor);
-    clearAndDrawObstacles(lava, lavacolor);
+
     clearAndDrawObstacles(ectoplasm, ghostcolor)
+    ctx.fillStyle = electriccolor;
+    electric.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
     
+    ctx.fillStyle = icecolor;
+    ice.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
+    // Draw the earth obstacles
+    ctx.fillStyle = lavacolor;
+    lava.forEach(obstacle => ctx.fillRect(obstacle.x * gridSize, obstacle.y * gridSize, gridSize, gridSize));
     // Draw Kamek
     if (kamek.length !== 0) {
         kamek.forEach(kamek => {
