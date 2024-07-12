@@ -670,7 +670,7 @@ choseobject = true
 }
    const exists = objectExistsInArrays(object, obstacles)||objectExistsInArrays(object, thwomps)||objectExistsInArrays(object, dynamicObstacles)
 
-    if (choseobject && exists){
+    if (choseobject){
     if (snake[0].x < object.x) {
 if(inverted === false){
 direction = 'right'
@@ -696,7 +696,7 @@ direction = 'up'
 direction = 'down'
 }
           }
-}else if ((snake[0].x === object.x && snake[0].y === object.y) || !exists) {
+}else if ((snake[0].x === object.x && snake[0].y === object.y)) {
     choseobject = false;
     isPossessed = false;
 }
