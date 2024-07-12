@@ -359,16 +359,9 @@ let middleX = getMiddleXCoordinate(scoreDisplay)
 scoreArea(middleX,1,4)
 }
 
-function isObjectEqual(obj1, obj2) {
-  return JSON.stringify(obj1) === JSON.stringify(obj2);
-}
 
-// Function to check if an object exists within a set of arrays
-function objectExistsInArrays(object, arrayOfArrays) {
-  return arrayOfArrays.some(array => 
-    array.some(item => isObjectEqual(item, object))
-  );
-}
+
+
 
 
     function isNextItemTwoAway() {
