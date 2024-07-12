@@ -696,10 +696,10 @@ direction = 'up'
 direction = 'down'
 }
           }
-}else if (snake[0].x === object.x && snake[0].y === object.y){
-choseobject = false
-        isPossessed = false
-    }
+}else if ((snake[0].x === object.x && snake[0].y === object.y) || !exists) {
+    choseobject = false;
+    isPossessed = false;
+}
     if (obstacles.length === 0 ||  dynamicObstacles.length === 0 || thwomps.length === 0){
 choseobject = false
 isPossessed = false
