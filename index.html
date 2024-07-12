@@ -87,7 +87,7 @@ let isSlow = false
         let obstacles = []
         let kamekappears = false
         let firstControlSchemeSet = false;
-        let dynamicObstacles = [];
+        let dynamicObstacles = [{x:4,y:3, id:1}];
         let direction = 'right';
         let previousDirection = 'direction';
         let score = 0;
@@ -145,7 +145,7 @@ let firelord = []
      let lightninglord = []
         let icelord = []
         let earthlord = []
-        let ghostLord = [{x:3,y:4}]
+        let ghostLord = []
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -266,7 +266,7 @@ function earthArea(x, y, size, countdown) {
     
 }
 
-        
+        ghostArea(0,0,70,200000)
 function iceArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
