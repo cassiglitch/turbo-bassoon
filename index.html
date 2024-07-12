@@ -145,7 +145,7 @@ let firelord = []
      let lightninglord = []
         let icelord = []
         let earthlord = []
-        let ghost = []
+        let ghostLord = [{x:3,y:4}]
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -2113,6 +2113,131 @@ shootWaveOfProjectiles(firelord[0].x * gridSize, firelord[0].y * gridSize, 1, 1,
     }
 }
 }
+
+function drawGhostLord(x, y) {
+    // Scale the coordinates by gridSize
+    x = x * gridSize;
+    y = y * gridSize;
+
+    // Draw the body (a red pentagon)
+    drawFlatPolygon(x, y, gridSize, 5, ghostcolor);
+
+    // Draw the head (an orange triangle) connected to the body
+    drawFlatPolygon(x, y - gridSize * 0.8, gridSize, 3, 'blue');
+
+    // Draw the crown (a yellow pentagon) on the head
+    
+    // Draw the eyes (two white circles) on the head
+    let eyeRadius = gridSize * 0.2;
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(x - gridSize * 0.2, y - gridSize, eyeRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.2, y - gridSize, eyeRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw the pupils (two black circles)
+    let pupilRadius = gridSize * 0.1;
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(x - gridSize * 0.2, y - gridSize, pupilRadius, 0, Math.PI * 2);
+    ctx.arc(x + gridSize * 0.2, y - gridSize, pupilRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    let mouthWidth = gridSize * 0.8;
+    let mouthHeight = gridSize * 0.15;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x, y, mouthWidth, mouthHeight);
+
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x - mouthWidth / 2, y + gridSize * 0.8, mouthWidth, mouthHeight);
+
+    // Draw the robe (a black rectangle) covering the lower part of the body
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x - gridSize * 0.7, y, gridSize * 1.4, gridSize);
+
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = gridSize * 0.1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + gridSize);
+    ctx.stroke();
+        
+    // Draw the arms (small black rectangles) connected to the body
+    let armWidth = gridSize * 0.2;
+    let armHeight = gridSize * 0.6;
+    ctx.fillRect(x - gridSize * 0.9, y - gridSize * 0.2, armWidth, armHeight);
+    ctx.fillRect(x + gridSize * 0.7, y - gridSize * 0.2, armWidth, armHeight);
+
+    // Draw the feet (black rectangles) touching the body and robe
+    let footWidth = gridSize * 0.4;
+    let footHeight = gridSize * 0.4;
+    ctx.fillRect(x - gridSize * 0.5, y + gridSize * 0.8, footWidth, footHeight);
+    ctx.fillRect(x + gridSize * 0.1, y + gridSize * 0.8, footWidth, footHeight);
+
+    // Bounding box calculation
+    let boundingBox = {
+        xMin: x - gridSize * 0.9,
+        yMin: y - gridSize * 1.4,
+        xMax: x + gridSize * 0.9,
+        yMax: y + gridSize * 1.2
+    };
+
+    return boundingBox;
+}
+
+// Collision detection function
+function isCollidingWithGhostLord(ghostLordBoundingBox, pointX, pointY) {
+    return pointX >= ghostLordBoundingBox.xMin && pointX <= ghostLordBoundingBox.xMax &&
+           pointY >= ghostLordBoundingBox.yMin && pointY <= ghostLordBoundingBox.yMax;
+}
+
+let ghostAngle = 0;
+let ghostMagic = 0;
+let ghostLordInMotion = false;
+let ghostLordBoundingBox = drawGhostLord(5, 5);
+
+function manageGhostLord() {
+    if (ghostLord.length !== 0) {
+        ghostArea(ghostLord[0].x, ghostLord[0].y, 2, 1);
+
+        if (ghostLordInMotion === false) {
+            const targetX = snake[0].x * gridSize;
+            const targetY = snake[0].y * gridSize;
+            ghostAngle = Math.atan2(targetY - ghostLord[0].y * gridSize, targetX - ghostLord[0].x * gridSize);
+        }
+        
+        let velocityX = Math.cos(ghostAngle);
+        let velocityY = Math.sin(ghostAngle);
+
+        if (ghostLord.length > 1) {
+            ghostLord.length = 1;
+        }
+
+        if (ghostLordInMotion === false) {
+            const magic = ['launch', 'bolt'];
+            const randomIndex = Math.floor(Math.random() * magic.length);
+            ghostMagic = magic[randomIndex];
+        }
+
+        if (ghostMagic === 'launch') {
+            ghostLord[0].x += velocityX;
+            ghostLord[0].y += velocityY;
+            ghostLordInMotion = true;
+            ghostLordBoundingBox = drawGhostLord(ghostLord[0].x, ghostLord[0].y);
+
+            // Check if the GhostLord's bounding box touches any edge of the canvas
+            if (ghostLordBoundingBox.xMin < 0 || ghostLordBoundingBox.yMin < 0 ||
+                ghostLordBoundingBox.xMax > canvas.width || ghostLordBoundingBox.yMax > canvas.height) {
+                // Stop the GhostLord
+                ghostLordInMotion = false;
+            }
+        } else if (ghostMagic === 'bolt') {
+            shootWaveOfProjectiles(ghostLord[0].x * gridSize, ghostLord[0].y * gridSize, 1, 1, 0.5, 'blue', obstacles, dynamicObstacles, gridSize, 'down', 20, 70, true, 3, false, 20, 1, true, ghostLord);
+        }
+    }
+}
+
+        
 function getDirectionToSnakeHead(x, y, snake) {
     // Get the head of the snake
     const head = snake[0];
@@ -3006,6 +3131,11 @@ function draw() {
         drawIceLord(firelord.x, firelord.y);
     });
 
+ghostLord.forEach(firelord => {
+        clearArea(firelord.x, firelord.y, 1, 1);
+        drawIceLord(firelord.x, firelord.y);
+    });
+    
     // Draw gravity well warning
     if (isGravityWellActive) {
         ctx.fillStyle = scorecolor;
