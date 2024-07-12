@@ -2123,7 +2123,7 @@ function drawGhostLord(x, y) {
     drawFlatPolygon(x, y, gridSize, 5, ghostcolor);
 
     // Draw the head (an orange triangle) connected to the body
-    drawFlatPolygon(x, y - gridSize * 0.8, gridSize, 3, 'blue');
+    drawFlatPolygon(x, y - gridSize * 0.8, gridSize, 3, 'lightgreen');
 
     // Draw the crown (a yellow pentagon) on the head
     
@@ -2155,7 +2155,7 @@ function drawGhostLord(x, y) {
     ctx.fillStyle = 'black';
     ctx.fillRect(x - gridSize * 0.7, y, gridSize * 1.4, gridSize);
 
-    ctx.strokeStyle = 'white';
+    ctx.strokeStyle = 'lightgray';
     ctx.lineWidth = gridSize * 0.1;
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -3133,7 +3133,7 @@ function draw() {
 
 ghostLord.forEach(firelord => {
         clearArea(firelord.x, firelord.y, 1, 1);
-        drawIceLord(firelord.x, firelord.y);
+        drawGhostLord(firelord.x, firelord.y);
     });
     
     // Draw gravity well warning
