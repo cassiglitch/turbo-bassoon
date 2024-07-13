@@ -4422,7 +4422,9 @@ function animateExplosion() {
 } else {
     GravityApplied = false;
 }
-
+if (firelord.length !== 0 || icelord.length !== 0 || lightninglord.length !== 0 || earthlord.length !== 0 || kamek.length !== 0 || ghostLord.length !== 0){
+GravityApplied = false;
+}
             applyGravity()
                     physicsActive = false;
                     if (DoDisplayCheck){
