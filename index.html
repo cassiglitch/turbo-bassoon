@@ -273,18 +273,12 @@ function createGhosts() {
 }
 
 // Render function for the snake
-function renderSnake(snake) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = 'black';
-    snake.forEach((segment, index) => {
-        context.fillRect(index * 20, canvas.height / 2, 20, 20);
-    });
-}
+
 
 // Render function for the ghosts
 function renderGhosts() {
     ghosts.forEach(ghost => {
-        ghost.render(context, 30); // Example size
+        ghost.render(ctx, 30); // Example size
     });
 }
         createGhosts();
