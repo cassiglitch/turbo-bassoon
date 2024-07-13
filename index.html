@@ -220,7 +220,74 @@ function addLavaArea(x, y, size, countdown) {
     }
     
 }
-        
+
+class Ghost {
+    constructor(name, damage, color) {
+        this.name = name;
+        this.damage = damage;
+        this.color = color;
+        this.position = { x: 0, y: 0 };
+    }
+
+    attack(snake) {
+        console.log(`${this.name} attacks the snake and removes ${this.damage} segments!`);
+        snake.splice(0, this.damage);
+    }
+
+    // Method to set ghost position
+    setPosition(x, y) {
+        this.position.x = x;
+        this.position.y = y;
+    }
+
+    // Method to render the ghost
+    render(context, size) {
+        context.fillStyle = this.color;
+        context.beginPath();
+        context.moveTo(this.position.x, this.position.y);
+        context.lineTo(this.position.x + size, this.position.y);
+        context.lineTo(this.position.x + size / 2, this.position.y - size);
+        context.closePath();
+        context.fill();
+    }
+}
+
+// Example Snake
+
+// Array to store ghosts
+const ghosts = [];
+
+// Function to create ghosts and add them to the array
+function createGhosts() {
+    const phantom = new Ghost('Creeping Phantom', 2, 'purple');
+    phantom.setPosition(50, 50);
+    ghosts.push(phantom);
+
+    const wraith = new Ghost('Soul-Draining Wraith', 3, 'green');
+    wraith.setPosition(150, 50);
+    ghosts.push(wraith);
+
+    const specter = new Ghost('Elusive Specter', 1, 'blue');
+    specter.setPosition(250, 50);
+    ghosts.push(specter);
+}
+
+// Render function for the snake
+function renderSnake(snake) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = 'black';
+    snake.forEach((segment, index) => {
+        context.fillRect(index * 20, canvas.height / 2, 20, 20);
+    });
+}
+
+// Render function for the ghosts
+function renderGhosts() {
+    ghosts.forEach(ghost => {
+        ghost.render(context, 30); // Example size
+    });
+}
+        createGhosts();
 function lightningArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -4425,6 +4492,7 @@ function animateExplosion() {
 if (firelord.length !== 0 || icelord.length !== 0 || lightninglord.length !== 0 || earthlord.length !== 0 || kamek.length !== 0 || ghostLord.length !== 0){
 GravityApplied = false;
 }
+                    renderGhosts();
             applyGravity()
                     physicsActive = false;
                     if (DoDisplayCheck){
