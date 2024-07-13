@@ -87,7 +87,7 @@ let isSlow = false
         let obstacles = []
         let kamekappears = false
         let firstControlSchemeSet = false;
-        let dynamicObstacles = [{x:4,y:3, id:1}];
+        let dynamicObstacles = [];
         let direction = 'right';
         let previousDirection = 'direction';
         let score = 0;
@@ -145,7 +145,7 @@ let firelord = []
      let lightninglord = []
         let icelord = []
         let earthlord = []
-        let ghostLord = []
+        let ghostLord = [{x:4,y:6}]
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -266,7 +266,7 @@ function earthArea(x, y, size, countdown) {
     
 }
 
-        ghostArea(0,0,70,200000)
+    
 function iceArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -2438,6 +2438,15 @@ createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dy
 }
 })
 
+ghostLord.forEach((firelord,findex) => {
+let ghostlordhit = isCollidingWithFireLord(ghostLordBoundingBox, projectile.x, projectile.y)
+if (ghostlordhit === true){
+    ghostLord.splice(findex,1)
+createExplosion(ctx, projectile.x, projectile.y, projectile.color, obstacles, dynamicObstacles, gridSize, explode);
+                        projectiles.splice(index, 1);
+}
+})
+            
 lightninglord.forEach((firelord,findex) => {
 let lightninglordhit = isCollidingWithFireLord(lightningLordBoundingBox, projectile.x, projectile.y)
 if (lightninglordhit === true){
@@ -2877,6 +2886,11 @@ if (isfirelordhit === true) {
 firelord = []
 }
 
+let isghostlordhit = isCollidingWithFireLord(ghostLordBoundingBox, x, y)
+if (isghostlordhit === true) {
+ghostLord = []
+}
+            
 let islightninglordhit = isCollidingWithFireLord(lightningLordBoundingBox, x, y)
 if (islightninglordhit === true) {
 lightninglord = []
