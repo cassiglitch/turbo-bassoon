@@ -2194,18 +2194,12 @@ let ghostMagic = 0;
 let ghostLordInMotion = false;
 let ghostLordBoundingBox = drawGhostLord(5, 5);
 let ghostcanteleport = true
-    let ghostsheild = false  
-        
-let ghostsises = 3
+
 
 function manageGhostLord() {
     if (ghostLord.length !== 0) {
-        applyStatus(1000, 'magic');
         ghostArea(ghostLord[0].x, ghostLord[0].y, 2, 1);
 
-        if (ghostLord[0].health === undefined) {
-            ghostLord[0].health = 100;
-        }
 
         if (ghostLordInMotion === false) {
             const targetX = snake[0].x * gridSize;
@@ -2220,23 +2214,9 @@ function manageGhostLord() {
             ghostLord.length = 1;
         }
 
-        const distance = Math.abs(snake[0].x - ghostLord[0].x) + Math.abs(snake[0].y - ghostLord[0].y);
-        if (distance <= 5) {
-            const randomX = Math.floor(Math.random() * (canvas.width / gridSize));
-            const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
-            ghostLord[0].x = randomX;
-            ghostLord[0].y = randomY;
-            timezone = [];
-            ghostcanteleport = true;
-
-            if (ghostsheild === true) {
-                timezone = [];
-                generatePolygonCoordinates(ghostLord[0].x, ghostLord[0].y, 5, ghostsises, ectoplasm);
-            }
-        }
-
+        
         if (ghostLordInMotion === false) {
-            const magic = ['launch', 'bolt', 'port', 'wall', 'status', 'obstacle'];
+            const magic = ['launch', 'bolt', 'port'];
             const randomIndex = Math.floor(Math.random() * magic.length);
             ghostMagic = magic[randomIndex];
         }
@@ -2258,44 +2238,8 @@ function manageGhostLord() {
             const randomY = Math.floor(Math.random() * (canvas.height / gridSize));
             ghostLord[0].x = randomX;
             ghostLord[0].y = randomY;
-            timezone = [];
-        } else if (ghostMagic === 'wall') {
-            generatePolygonCoordinates(ghostLord[0].x, ghostLord[0].y, 5, sideshield, timezone);
-            ghostsheild = true;
-            ghostcanteleport = false;
-        } else if (ghostMagic === 'status') {
-            const status = ['paralyzed'];
-            const randomIndex = Math.floor(Math.random() * status.length);
-            const magicstatus = status[randomIndex];
-
-            if (magicstatus === 'paralyzed') {
-                isParalyzed = true;
-                setTimeout(turnoffpara, 1000);
-            }
-        } else if (ghostMagic === 'obstacle') {
-            const obstacles2 = [turrets, goombas];
-            const randomIndex = Math.floor(Math.random() * obstacles2.length);
-            const spawner = obstacles2[randomIndex];
-
-            const x = Math.floor(Math.random() * (canvas.width / gridSize));
-            let y = Math.floor(Math.random() * (canvas.height / gridSize));
-
-            if (spawner !== goombas) {
-                if (spawner === turrets) {
-                    if (turrets.length < 5) {
-                        spawnTurrets(x, y);
-                    }
-                } else {
-                    spawner.push({ x: x, y: y });
-                }
-            } else if (spawner === goombas) {
-                y -= 6;
-                if (y < 0) {
-                    y = 6;
-                }
-                spawnGoombas(x, y);
-            }
-        }
+            
+        } 
     }
 }
 
