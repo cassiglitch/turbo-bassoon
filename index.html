@@ -194,7 +194,7 @@ let ghostcolor = '#1F635780'
 
 
 function checkAndToggleGravity() {
-    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused) { 
+    if (kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && !isPaused && ghostLord.length === 0) { 
         GravityApplied = !GravityApplied;
         gravitycount += 1
     } else {
@@ -757,7 +757,7 @@ if (effect === 'magic' && kamek.length !== 0){
     kamekMagic()
     effectApplied = currentTime
 }
-        if (effect === 'gravity' && kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0) {
+        if (effect === 'gravity' && kamek.length === 0 && firelord.length === 0 && icelord.length === 0 && lightninglord.length === 0 && earthlord.length === 0 && ghostLord.length === 0) {
     GravityApplied = !GravityApplied;
             effectApplied = currentTime
         }
@@ -4473,6 +4473,9 @@ const randomIndex = Math.floor(Math.random() * lords.length);
         selectedLord.push({ x: startX/gridSize, y: startY/gridSize });
         
     lords.splice(randomIndex, 1);
+}
+if (lords.length === 0 && firelord.length ===0&& icelord.length ===0 && lightninglord.length === 0 && earthlord.length === 0){
+        ghostLord.push({ x: startX/gridSize, y: startY/gridSize });
 }
 // Handle eating animation
             if (isEating) {
