@@ -2585,7 +2585,31 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 } else {
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
+if (projectile.shooter === chaosLord){
+const functions2 = [
+    lightningArea,
+    ghostArea,
+    earthArea,
+    iceArea,
+    addLavaArea
+];
 
+// Choose a random function
+const randomArea = functions2[Math.floor(Math.random() * functions2.length)];
+
+randomArea(projectile.x/gridSize,projectile.y/gridSize, 2, 3);
+    const colors = [
+    electriccolor,
+    ghostcolor,
+    earthcolor,
+    icecolor,
+    lavacolor
+];
+
+// Choose a random function
+const randomcolor = colors[Math.floor(Math.random() * colors.length)];
+    projectile.color = randomcolor
+}
                 if (!projectile.homing){
                 timezone.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
