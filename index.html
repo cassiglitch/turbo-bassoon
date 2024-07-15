@@ -236,7 +236,6 @@ function lightningArea(x, y, size, countdown) {
             electric.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
         }
     }
-    
 }
 
 function earthArea(x, y, size, countdown) {
@@ -251,7 +250,6 @@ function earthArea(x, y, size, countdown) {
             earth.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
         }
     }
-    
 }
 
         function ghostArea(x, y, size, countdown) {
@@ -266,10 +264,8 @@ function earthArea(x, y, size, countdown) {
             ectoplasm.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
         }
     }
-    
 }
 
-    
 function iceArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
 
@@ -282,7 +278,6 @@ function iceArea(x, y, size, countdown) {
             ice.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown:countdown});
         }
     }
-    
 }
         
 function scoreArea(x, y, size) {
@@ -297,7 +292,6 @@ function scoreArea(x, y, size) {
             scoreAreaArray.push({ x: Math.floor(x + i), y: Math.floor(y + j)});
         }
     }
-    
 }
 
 function wellWarningArea(x, y, size) {
@@ -312,7 +306,6 @@ function wellWarningArea(x, y, size) {
             wellWarning.push({ x: Math.floor(x + i), y: Math.floor(y + j)});
         }
     }
-    
 }
 function addRandomArea(x, y, size, countdown) {
     let offset = Math.floor(size / 2);
@@ -3423,7 +3416,7 @@ ghostLord.forEach(firelord => {
 
     // Draw score
     const scoreDisplay = document.getElementById('scoreDisplay');
-    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount} <br> ${isPossessed} ${choseobject}`;
+    scoreDisplay.innerHTML = `Score: ${score}<br>Lives: ${livecount}`;
     drawLaser();
 }
 
