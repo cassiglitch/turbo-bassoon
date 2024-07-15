@@ -660,7 +660,7 @@ function findClosestItem(snake, ...arrays) {
     return array.includes(object);
 }
 function possessionmove(){
-let object = {x:3,y:3}
+let object = {}
 if (!choseobject){
     if (obstacles.length !== 0 ||  dynamicObstacles.length !== 0 || thwomps.length !== 0){
 object = findClosestItem(snake, obstacles, dynamicObstacles, thwomps)
@@ -699,6 +699,8 @@ direction = 'down'
           }
 } else if ((snake[0].x === object.x && snake[0].y === object.y)) {
     isPossessed = false;
+    exists = false
+        object = {}
 }
     if (!exists){
 choseobject = false;
