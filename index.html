@@ -2603,7 +2603,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
 if (projectile.shooter === chaosLord){
-addRandomArea(projectile.x,projectile.y, 2, 3);
+addRandomArea(projectile.x/gridSize, projectile.y/gridSize, 2, 3);
     const colors = [
     electriccolor,
     ghostcolor,
