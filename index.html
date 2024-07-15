@@ -147,7 +147,7 @@ let firelord = []
         let icelord = []
         let earthlord = []
         let ghostLord = []
-         let chaosLord = [];
+         let chaosLord = [{x:4,y:5}];
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -313,6 +313,26 @@ function wellWarningArea(x, y, size) {
         }
     }
     
+}
+function addRandomArea(x, y, size, countdown) {
+    let offset = Math.floor(size / 2);
+
+    // Assuming canvasWidth and canvasHeight are the dimensions of your canvas
+    let canvasWidth = Math.floor(canvas.width / gridSize); // Example canvas width
+    let canvasHeight = Math.floor(canvas.height / gridSize); // Example canvas height
+
+    // Array of possible area types
+    let areaTypes = ['lava', 'ice', 'earth', 'electric', 'ectoplasm'];
+    
+    // Randomly select an area type
+    let selectedType = areaTypes[Math.floor(Math.random() * areaTypes.length)];
+
+    for (let i = -offset; i <= offset; i++) {
+        for (let j = -offset; j <= offset; j++) {
+            // Push to the selected area type array
+            window[selectedType].push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown: countdown });
+        }
+    }
 }
 
 function removeDuplicatesWithSameCoordinates(arr) {
@@ -2583,18 +2603,7 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
 if (projectile.shooter === chaosLord){
-const functions2 = [
-    lightningArea,
-    ghostArea,
-    earthArea,
-    iceArea,
-    addLavaArea
-];
-
-// Choose a random function
-const randomArea = functions2[Math.floor(Math.random() * functions2.length)];
-
-randomArea(projectile.x/gridSize,projectile.y/gridSize, 2, 3);
+addRandomArea(projectile.x,projectile.y, 2, 3);
     const colors = [
     electriccolor,
     ghostcolor,
