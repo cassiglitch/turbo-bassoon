@@ -330,6 +330,7 @@ function addRandomArea(x, y, size, countdown) {
     for (let i = -offset; i <= offset; i++) {
         for (let j = -offset; j <= offset; j++) {
             // Push to the selected area type array
+            selectedType = areaTypes[Math.floor(Math.random() * areaTypes.length)];
             selectedType.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown: countdown });
         }
     }
