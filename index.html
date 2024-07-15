@@ -2602,26 +2602,25 @@ ectoplasm.forEach((ghost) => {
         earth.forEach((earth) => {
             ice.forEach((ice) => {
                 electric.forEach((electric) => {
-if (projectile.shooter === chaosLord && projectile.x !== ice.x && projectile.y !== ice.y && projectile.x !== earth.x && projectile.y !== earth.y && projectile.x !== lava.x && projectile.y !== lava.y && projectile.x !== ghost.x && projectile.y !== ghost.y && projectile.x !== electric.x && projectile.y !== electric.y){
-addRandomArea(projectile.x/gridSize, projectile.y/gridSize, 2, 3);
-    const colors = [
-    electriccolor,
-    ghostcolor,
-    earthcolor,
-    icecolor,
-    lavacolor
-];
-const randomcolor = colors[Math.floor(Math.random() * colors.length)];
-    projectile.color = randomcolor
-}
-                }
-                                )}
-                        )}
-                      )
-    }
-                )
-}
-                 )
+                    if (projectile.shooter === chaosLord && 
+                        projectile.x !== ice.x && projectile.y !== ice.y && 
+                        projectile.x !== earth.x && projectile.y !== earth.y && 
+                        projectile.x !== lava.x && projectile.y !== lava.y && 
+                        projectile.x !== ghost.x && projectile.y !== ghost.y && 
+                        projectile.x !== electric.x && projectile.y !== electric.y) {
+                        
+                        addRandomArea(projectile.x / gridSize, projectile.y / gridSize, 2, 3);
+                        
+                        const colors = [electriccolor, ghostcolor, earthcolor, icecolor, lavacolor];
+                        const randomcolor = colors[Math.floor(Math.random() * colors.length)];
+                        projectile.color = randomcolor;
+                    }
+                });
+            });
+        });
+    });
+});
+
                 if (!projectile.homing){
                 timezone.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
