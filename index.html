@@ -3764,11 +3764,16 @@ isParalyzed = electric.some((electric) => {
     return electric.x === head.x && electric.y === head.y;
 });
 }
-            ectoplasm.forEach((ectoplasm) => {
-if (ectoplasm.x === head.x && ectoplasm.y === head.y){
-isPossessed = true
-}
-            })
+// Assume `ectoplasm` is an array of objects with properties `x` and `y`
+// `head` is an object with properties `x` and `y`
+// `isPossessed` is a boolean variable
+
+ectoplasm.forEach((ghost) => {
+    if (ghost.x === head.x && ghost.y === head.y) {
+        isPossessed = true;
+    }
+});
+
 const checkIfInScoreArea = (obstacles, isDynamic) => {
     obstacles.forEach((obstacle, index) => {
         scoreAreaArray.forEach((lava) => {
