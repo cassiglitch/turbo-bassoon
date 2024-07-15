@@ -84,7 +84,7 @@ let isSlow = false
         let snake = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let snake2 = Array.from({ length: startingLength }, (_, index) => ({ x: 10, y: 10 - index, color: 'green' }));
         let food = { x: 0, y: 0};
-        let obstacles = []
+        let obstacles = [{x:9,y:3}]
         let kamekappears = false
         let firstControlSchemeSet = false;
         let dynamicObstacles = [];
@@ -184,7 +184,7 @@ let magictype = 'bolt'
         let earth = []
         let wellWarning = []
         let isghostdead = false
-        let ectoplasm = []
+        let ectoplasm = [{x:3,y:5}]
         let isEarthed = false
         let scoreAreaArray = []
         let scorecolornoalpha = '#FF0000'
@@ -3764,9 +3764,11 @@ isParalyzed = electric.some((electric) => {
     return electric.x === head.x && electric.y === head.y;
 });
 }
-isPossessed = ectoplasm.some((ectoplasm) => {
-    return ectoplasm.x === head.x && ectoplasm.y === head.y;
-});
+            ectoplasm.forEach((ectoplasm) => {
+if (ectoplasm.x === head.x && ectoplasm.y === head.y){
+isPossessed = true
+}
+            })
 const checkIfInScoreArea = (obstacles, isDynamic) => {
     obstacles.forEach((obstacle, index) => {
         scoreAreaArray.forEach((lava) => {
