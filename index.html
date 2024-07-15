@@ -2597,30 +2597,26 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                 } else {
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
-ectoplasm.forEach((ghost) => {
-    lava.forEach((lava) => {
-        earth.forEach((earth) => {
-            ice.forEach((ice) => {
-                electric.forEach((electric) => {
-                    if (projectile.shooter === chaosLord && 
-                        projectile.x !== ice.x && projectile.y !== ice.y && 
-                        projectile.x !== earth.x && projectile.y !== earth.y && 
-                        projectile.x !== lava.x && projectile.y !== lava.y && 
-                        projectile.x !== ghost.x && projectile.y !== ghost.y && 
-                        projectile.x !== electric.x && projectile.y !== electric.y) {
-                        
-                        addRandomArea(projectile.x / gridSize, projectile.y / gridSize, 2, 3);
-                        
-                        const colors = [electriccolor, ghostcolor, earthcolor, icecolor, lavacolor];
-                        const randomcolor = colors[Math.floor(Math.random() * colors.length)];
-                        projectile.color = randomcolor;
-                    }
-                });
-            });
-        });
-    });
-});
+                
+if (projectile.shooter === chaosLord &&
+    !ice.some(iceObject => projectile.x === iceObject.x && projectile.y === iceObject.y) &&
+    !earth.some(earthObject => projectile.x === earthObject.x && projectile.y === earthObject.y) &&
+    !lava.some(lavaObject => projectile.x === lavaObject.x && projectile.y === lavaObject.y) &&
+    !ectoplasm.some(ghostObject => projectile.x === ghostObject.x && projectile.y === ghostObject.y) &&
+    !electric.some(electricObject => projectile.x === electricObject.x && projectile.y === electricObject.y)) {
 
+    addRandomArea(projectile.x / gridSize, projectile.y / gridSize, 2, 3);
+
+    const colors = [electriccolor, ghostcolor, earthcolor, icecolor, lavacolor];
+    if (colors.length > 0) {
+        const randomcolor = colors[Math.floor(Math.random() * colors.length)];
+        projectile.color = randomcolor;
+    } else {
+        console.error('No colors defined!');
+    }
+}
+
+                
                 if (!projectile.homing){
                 timezone.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
