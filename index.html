@@ -330,11 +330,11 @@ function addRandomArea(x, y, size, countdown) {
     for (let i = -offset; i <= offset; i++) {
         for (let j = -offset; j <= offset; j++) {
             // Push to the selected area type array
-            window[selectedType].push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown: countdown });
+            selectedType.push({ x: Math.floor(x + i), y: Math.floor(y + j), countdown: countdown });
         }
     }
 }
-
+addRandomArea(6,6,4,3)
 function removeDuplicatesWithSameCoordinates(arr) {
     // Iterate through the array
     for (let i = 0; i < arr.length; i++) {
