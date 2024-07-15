@@ -689,10 +689,11 @@ function possessionmove() {
         } else if (snake[0].y > object.y) {
             direction = inverted ? 'down' : 'up';
         }
-    } else if (snake[0].x === object.x && snake[0].y === object.y) {
+    }
+    if (snake[0].x === object.x && snake[0].y === object.y) {
         // If the snake reaches the object, reset the possession state
         isPossessed = false;
-        exists = false;
+        choseobject = false;
         object = {};
     }
 
