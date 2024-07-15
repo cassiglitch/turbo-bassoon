@@ -697,10 +697,13 @@ direction = 'up'
 direction = 'down'
 }
           }
-}else if ((snake[0].x === object.x && snake[0].y === object.y) || !exists) {
-    choseobject = false;
+}
+    if ((snake[0].x === object.x && snake[0].y === object.y)) {
     isPossessed = false;
 }
+    if (!exists){
+choseobject = false;
+    }
 }
         
 function cancelEffects(){
