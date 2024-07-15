@@ -697,8 +697,7 @@ direction = 'up'
 direction = 'down'
 }
           }
-}
-    if ((snake[0].x === object.x && snake[0].y === object.y)) {
+} else if ((snake[0].x === object.x && snake[0].y === object.y)) {
     isPossessed = false;
 }
     if (!exists){
@@ -4499,6 +4498,7 @@ const randomValue = Math.random()
             lords = [firelord, lightninglord, icelord, earthlord]
             goombas = []
             TaxFormGot = false
+            isPossessed = false
             createParticles('red');
             animateExplosion();
             pauseGame();
