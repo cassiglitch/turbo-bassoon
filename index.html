@@ -2598,12 +2598,30 @@ function shootWaveOfProjectiles(pX, pY, numberOfProjectiles, waveSpreadAngle, pr
                     drawPolygon(projectile.x, projectile.y, projectile.size, projectile.sides, projectile.color);
                 }
                 
+// Assuming projectile, chaosLord, ice, lava, ectoplasm, earth, electric are defined elsewhere
+const offset = projectile.size /2; // Adjust the offset value as needed
+
 if (projectile.shooter === chaosLord &&
-    !ice.some(iceObject => projectile.x === iceObject.x && projectile.y === iceObject.y) &&
-    !earth.some(earthObject => projectile.x === earthObject.x && projectile.y === earthObject.y) &&
-    !lava.some(lavaObject => projectile.x === lavaObject.x && projectile.y === lavaObject.y) &&
-    !ectoplasm.some(ghostObject => projectile.x === ghostObject.x && projectile.y === ghostObject.y) &&
-    !electric.some(electricObject => projectile.x === electricObject.x && projectile.y === electricObject.y)) {
+    !ice.some(iceObject => 
+        iceObject.x >= projectile.x - offset && iceObject.x <= projectile.x + offset &&
+        iceObject.y >= projectile.y - offset && iceObject.y <= projectile.y + offset
+    ) &&
+    !earth.some(earthObject => 
+        earthObject.x >= projectile.x - offset && earthObject.x <= projectile.x + offset &&
+        earthObject.y >= projectile.y - offset && earthObject.y <= projectile.y + offset
+    ) &&
+    !lava.some(lavaObject => 
+        lavaObject.x >= projectile.x - offset && lavaObject.x <= projectile.x + offset &&
+        lavaObject.y >= projectile.y - offset && lavaObject.y <= projectile.y + offset
+    ) &&
+    !ectoplasm.some(ghostObject => 
+        ghostObject.x >= projectile.x - offset && ghostObject.x <= projectile.x + offset &&
+        ghostObject.y >= projectile.y - offset && ghostObject.y <= projectile.y + offset
+    ) &&
+    !electric.some(electricObject => 
+        electricObject.x >= projectile.x - offset && electricObject.x <= projectile.x + offset &&
+        electricObject.y >= projectile.y - offset && electricObject.y <= projectile.y + offset
+    )) {
 
     addRandomArea(projectile.x / gridSize, projectile.y / gridSize, 2, 3);
 
@@ -2615,8 +2633,7 @@ if (projectile.shooter === chaosLord &&
         console.error('No colors defined!');
     }
 }
-
-                
+    
                 if (!projectile.homing){
                 timezone.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
@@ -4882,7 +4899,6 @@ if ((controltype === 'set' || controltype === 'mobile') && controltype !== 'arro
 
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
-
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 // Horizontal swipe
                 direction = deltaX > 0 ? 'right' : 'left';
@@ -4894,18 +4910,15 @@ if ((controltype === 'set' || controltype === 'mobile') && controltype !== 'arro
                     controltype = 'mobile';
                 }
             }
-
             // Perform actions based on direction if needed
             if (!firstControlSchemeSet) {
                 firstControlSchemeSet = true;
             }
         }
-
         canvas.addEventListener('touchstart', handleTouchStart);
         canvas.addEventListener('touchend', handleTouchEnd);
     }
 }
-
         // Start the game loop
         let gameInterval = setInterval(gameLoop, 100); // Adjust the interval as needed
 
@@ -4914,7 +4927,6 @@ function changeInterval(interval) {
     gameInterval = setInterval(gameLoop, interval);
     currentInterval = interval/100
 }
-
         function getZoomFactor() {
             var deviceWidth, landscape = Math.abs(window.orientation) == 90
             // workaround for strange screen.height on the iPhone (v3.1.3)
@@ -4942,13 +4954,10 @@ function resizeCanvasHeight() {
     const canvasHeight = closestNumber(window.innerHeight, gridSize);; // Adjust the canvas height to be a multiple of gridSize
     canvas.height = canvasHeight; // Set the canvas height
 }
-
 // Call the resizeCanvasHeight function initially to set the canvas height
 resizeCanvasHeight();
-
 // Call the resizeCanvasHeight function whenever the window is resized
 window.addEventListener('resize', resizeCanvasHeight);
-
                 function adjustForZoom() {
             // Calculate the zoom factor
             const zoomFactor = window.innerWidth / window.screen.availWidth;
@@ -4963,7 +4972,6 @@ window.addEventListener('resize', getZoomFactor);
         // Call the adjustForZoom function initially and on window resize
         window.addEventListener('resize', adjustForZoom);
         adjustForZoom();
-
     canvas.addEventListener('touchstart', PauseHoldStart) 
 let touchStartTime; // Variable to store the time when touch starts
 canvas.addEventListener('touchstart', PauseHoldStart); // Listen for touchstart event
@@ -4981,11 +4989,8 @@ function checkHold() {
         pauseGame(); // Trigger the action if touch is held for 1.5 seconds
     }
 }
-
-
 // Listen for touchend event to reset the timer if touch is released before 1.5 seconds
 canvas.addEventListener('touchend', PauseHoldEnd);
-
 // Function to handle touchend event
 function PauseHoldEnd() {
     touchStartTime = null; // Reset the touch start time
