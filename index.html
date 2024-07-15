@@ -147,7 +147,7 @@ let firelord = []
         let icelord = []
         let earthlord = []
         let ghostLord = []
-         let chaosLord = [];
+         let chaosLord = [{x:4,y:4}];
 let pY = 0;
 let numberOfProjectiles = 10; // Number of projectiles in the wave
 const waveSpreadAngle = 180; // Spread angle of the wave (in degrees)
@@ -2612,7 +2612,15 @@ addRandomArea(projectile.x/gridSize, projectile.y/gridSize, 2, 3);
 ];
 const randomcolor = colors[Math.floor(Math.random() * colors.length)];
     projectile.color = randomcolor
-}})})})})})
+}
+                }
+                                )}
+                        )}
+                      )
+    }
+                )
+}
+                 )
                 if (!projectile.homing){
                 timezone.forEach((mirror) => {
                     if (projectile.x >= mirror.x * gridSize && projectile.x <= (mirror.x + 1) * gridSize &&
