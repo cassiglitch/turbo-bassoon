@@ -661,10 +661,9 @@ function findClosestItem(snake, ...arrays) {
 function objectExistsInArrays(object, ...arrays) {
     return arrays.some(array => array.includes(object));
 }
-
+let object = {}
 // Function to handle the snake's movement towards the closest item
-function possessionMove() {
-    let object = {};
+function possessionmove() {
 
     // If no object is chosen yet, find the closest one
     if (!choseobject) {
