@@ -4886,7 +4886,7 @@ function resizeCanvas() {
     // Set canvas width and height
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-gravitytimer = getAverageOrMinInMilliseconds(canvasHeight, canvasWidth) 
+gravitytimer = getAverageOrMinInMilliseconds(canvasHeight/gridSize, canvasWidth/gridSize) 
     // Adjust food position if it's out of bounds
     if (food.x >= canvasWidth / gridSize) {
         food.x = canvasWidth / gridSize - 1;
